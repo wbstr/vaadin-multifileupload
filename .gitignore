@@ -4,3 +4,9 @@
 *.jar
 *.war
 *.ear
+/.project
+nb-configuration.xml
+nbactions.xml
+target/
+gwt-unitCache/
+widgetsets/
