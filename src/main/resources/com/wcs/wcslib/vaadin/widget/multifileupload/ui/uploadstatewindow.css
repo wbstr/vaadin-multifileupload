@@ -1,0 +1,34 @@
+.multiple-upload-state-window{
+    position: fixed;
+    bottom: 0;
+    right: 0 ;
+    left: auto !important;
+    top: auto !important;
+}
+
+.v-slot-multiple-upload-state-panel{
+    margin-top:5px;
+}
+
+.multiple-upload-state-window-layout{
+    padding: 0px 5px 5px 5px;
+}
+
+.v-panel-content-multiple-upload-state-panel{
+    padding: 5px;
+}
+
+.multiple-upload-state-table .v-table-body{
+    overflow-x: hidden !important;
+}
+
+.multiple-upload-state-table-nooverflowy .v-table-body{
+    overflow-y: hidden !important;
+}
+.multiple-upload-state-cancelbutton{
+    float:right;
+}
+.multiple-upload-state-cancelbuttonlayout{
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+}
