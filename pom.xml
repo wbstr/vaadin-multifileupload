@@ -6,7 +6,7 @@
     <artifactId>wcslib-vaadin-widget-multifileupload</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>wcslib-vaadin-widget-multifileupload</name>
+    <name>MultiFileUpload</name>
 
     <licenses>
         <license>
