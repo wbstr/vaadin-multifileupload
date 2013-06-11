@@ -34,6 +34,7 @@ public class FileDetailBean implements Serializable {
     private long id;
     private String fileName;
     private long contentLength;
+    private long bytesReceived;
     private String readableContentLength;
     private Button cancelButton;
 
@@ -63,6 +64,14 @@ public class FileDetailBean implements Serializable {
 
     public Button getCancelButton() {
         return cancelButton;
+    }
+
+    public long getBytesReceived() {
+        return bytesReceived;
+    }
+
+    public void setBytesReceived(long bytesReceived) {
+        this.bytesReceived = bytesReceived;
     }
 
     @Override
@@ -97,7 +106,6 @@ public class FileDetailBean implements Serializable {
         });
         cancelButton.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
         cancelButton.setStyleName(BaseTheme.BUTTON_LINK);
-        cancelButton.setDescription(uploadStatePanel.getWindow().getCancelButtonCaption());
         return cancelButton;
     }
 }

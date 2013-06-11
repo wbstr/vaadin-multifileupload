@@ -114,15 +114,21 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     @Override
     public void onProgress(StreamVariable.StreamingProgressEvent event) {
+        long difference = event.getBytesReceived() - currentUploadingLayout.getFileDetailBean().getBytesReceived();
         currentUploadingLayout.setProgress(event.getBytesReceived(), event.getContentLength());
+        currentUploadingLayout.getFileDetailBean().setBytesReceived(event.getBytesReceived());
+        window.setTotalBytesReceived(window.getTotalBytesReceived() + difference);
     }
 
     @Override
     public void filesQueued(Collection<FileDetail> pendingFileNames) {
+        long totalContentLength = 0;
         for (FileDetail fileDetail : pendingFileNames) {
             uploadQueue.add(new FileDetailBean(fileDetail, this));
+            totalContentLength += fileDetail.getContentLength();
         }
         table.refreshContainerDatasource(uploadQueue);
+        window.setTotalContentLength(window.getTotalContentLength() + totalContentLength);
     }
 
     private void show() {
@@ -158,6 +164,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     public void interruptUpload(FileDetailBean fileDetail) {
         multiUpload.interruptUpload(fileDetail.getId());
         removeFromQueue(fileDetail);
+        window.setTotalContentLength(window.getTotalContentLength() - fileDetail.getContentLength());
+        window.setTotalBytesReceived(window.getTotalBytesReceived() - fileDetail.getBytesReceived());
     }
 
     public void interruptAll() {

@@ -86,10 +86,6 @@ public class UploadQueueTable extends Table {
                 FileDetailBean bean = (FileDetailBean) itemId;
                 return bean.getFileName();
             }
-            if (FileDetailBean.READABLE_CONTENT_LENGTH.equals(propertyId)) {
-                FileDetailBean bean = (FileDetailBean) itemId;
-                return bean.getReadableContentLength();
-            }
             return null;
         }
     }

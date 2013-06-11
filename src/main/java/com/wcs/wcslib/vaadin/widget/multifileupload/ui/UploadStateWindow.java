@@ -41,6 +41,8 @@ public class UploadStateWindow extends Window {
     private String cancelButtonCaption = "Cancel";
     private Resource cancelIconResource = new ClassResource(UploadStateWindow.class, CANCEL_ICON);
     private ConfirmDialog confirmDialog = new ConfirmDialog();
+    private long totalContentLength = 0;
+    private long totalBytesReceived = 0;
 
     public UploadStateWindow() {
         super();
@@ -83,6 +85,8 @@ public class UploadStateWindow extends Window {
         } else {
             confirmDialog.hide();
             hide();
+            setTotalContentLength(0);
+            setTotalBytesReceived(0);
         }
     }
 
@@ -111,6 +115,11 @@ public class UploadStateWindow extends Window {
             UploadStatePanel panel = uploadStatePanels.get(i);
             panel.interruptAll();
         }
+    }
+
+    public void updateOverallProgress() {
+        int overallProgress = (int) ((totalBytesReceived * 100.0f) / totalContentLength);
+        setCaption(uploadStatusCaption + " (" + overallProgress + "%)");
     }
 
     public void addPanel(UploadStatePanel panel) {
@@ -150,5 +159,22 @@ public class UploadStateWindow extends Window {
 
     public void setConfirmDialog(ConfirmDialog confirmDialog) {
         this.confirmDialog = confirmDialog;
+    }
+
+    public long getTotalContentLength() {
+        return totalContentLength;
+    }
+
+    public void setTotalContentLength(long totalContentLength) {
+        this.totalContentLength = Math.max(totalContentLength, 0);
+    }
+
+    public long getTotalBytesReceived() {
+        return totalBytesReceived;
+    }
+
+    public void setTotalBytesReceived(long totalBytesReceived) {
+        this.totalBytesReceived = Math.max(totalBytesReceived, 0);
+        updateOverallProgress();
     }
 }
