@@ -162,9 +162,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public void interruptAll() {
         for (int i = uploadQueue.size() - 1; i >= 0; i--) {
-            multiUpload.interruptUpload(uploadQueue.get(i).getId());
+            interruptUpload(uploadQueue.get(i));
         }
-        window.removePanel(this);
         window.refreshVisibility();
     }
 

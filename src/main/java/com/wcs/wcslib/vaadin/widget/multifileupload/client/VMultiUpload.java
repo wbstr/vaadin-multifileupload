@@ -170,8 +170,8 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         if (uidl.hasAttribute("acceptFilter")) {
             getInput().setAccept(uidl.getStringAttribute("acceptFilter"));
         }
-        if (uidl.hasAttribute("removedFileId")) {
-            removeFromFileQueue(uidl.getLongAttribute("removedFileId"));
+        if (uidl.hasAttribute("interruptedFileIds")) {
+            removeFromFileQueue(uidl.getIntArrayAttribute("interruptedFileIds"));
         }
         if (uidl.hasAttribute("ready")) {
             postNextFileFromQueue();
@@ -185,12 +185,14 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         return input;
     }
 
-    private void removeFromFileQueue(long fileId) {
+    private void removeFromFileQueue(int[] interruptedFileIds) {
         for (ListIterator<FileWrapper> it = fileQueue.listIterator(); it.hasNext();) {
             FileWrapper fileWrapper = it.next();
-            if (fileWrapper.getId() == fileId) {
-                it.remove();
-                return;
+            for (int id : interruptedFileIds) {
+                if (fileWrapper.getId() == id) {
+                    it.remove();
+                    break;
+                }
             }
         }
     }

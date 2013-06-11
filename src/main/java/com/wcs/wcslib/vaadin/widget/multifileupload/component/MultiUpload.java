@@ -31,6 +31,7 @@ import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.server.StreamVariable.StreamingStartEvent;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.LegacyComponent;
+import java.lang.reflect.Array;
 import java.util.ListIterator;
 
 /**
@@ -46,7 +47,7 @@ import java.util.ListIterator;
 public class MultiUpload extends AbstractComponent implements LegacyComponent, UploadComponent {
 
     List<FileDetail> pendingFiles = new ArrayList<FileDetail>();
-    private Long removedFileId;
+    private List<Long> interruptedFileIds = new ArrayList<Long>();
     private MultiUploadHandler receiver;
     private String buttonCaption = "...";
     private boolean uploading;
@@ -162,9 +163,9 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             ready = false;
         }
         target.addAttribute("buttoncaption", getButtonCaption());
-        if (removedFileId != null) {
-            target.addAttribute("removedFileId", removedFileId.longValue());
-            removedFileId = null;
+        if (!interruptedFileIds.isEmpty()) {
+            target.addAttribute("interruptedFileIds", interruptedFileIds.toArray(new Long[interruptedFileIds.size()]));
+            interruptedFileIds = new ArrayList<Long>();
         }
     }
 
@@ -198,7 +199,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
                     return;
                 } else {
                     it.remove();
-                    removedFileId = fileId;
+                    interruptedFileIds.add(fileId);
                     markAsDirty();
                     return;
                 }

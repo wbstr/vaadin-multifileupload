@@ -22,6 +22,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -35,23 +36,42 @@ public class UploadStateWindow extends Window {
     private static final String WINDOW_STYLE_CLASS = "multiple-upload-state-window";
     private static final String WINDOW_LAYOUT_STYLE_CLASS = "multiple-upload-state-window-layout";
     private List<UploadStatePanel> uploadStatePanels = new ArrayList<UploadStatePanel>();
-    private VerticalLayout windowLayout;
+    private VerticalLayout windowLayout = new VerticalLayout();
     private String uploadStatusCaption = "Upload status";
     private String cancelButtonCaption = "Cancel";
     private Resource cancelIconResource = new ClassResource(UploadStateWindow.class, CANCEL_ICON);
+    private ConfirmDialog confirmDialog = new ConfirmDialog();
 
     public UploadStateWindow() {
         super();
+        initWindow();
+    }
+
+    private void initWindow() {
         setCaption(uploadStatusCaption);
         addStyleName(WINDOW_STYLE_CLASS);
 
         setResizable(false);
         setDraggable(false);
-        setClosable(false);
+
         setVisible(false);
         setWidth(350, Unit.PIXELS);
+        setClosable(true);
+        addCloseListener(new CloseListener() {
+            @Override
+            public void windowClose(CloseEvent e) {
+                show();
+                confirmDialog.show();
+            }
+        });
 
-        windowLayout = new VerticalLayout();
+        confirmDialog.setAction(new ConfirmAction() {
+            @Override
+            public void execute() {
+                interruptAll();
+            }
+        });
+
         windowLayout.setStyleName(WINDOW_LAYOUT_STYLE_CLASS);
         setContent(windowLayout);
         windowLayout.setMargin(false);
@@ -61,6 +81,7 @@ public class UploadStateWindow extends Window {
         if (hasVisibleContent()) {
             show();
         } else {
+            confirmDialog.hide();
             hide();
         }
     }
@@ -75,16 +96,21 @@ public class UploadStateWindow extends Window {
     }
 
     private void show() {
-        if (!isVisible()) {
-            if (this.getParent() == null) {
-                UI.getCurrent().addWindow(this);
-            }
-            setVisible(true);
+        if (this.getParent() == null) {
+            UI.getCurrent().addWindow(this);
         }
+        setVisible(true);
     }
 
     private void hide() {
         setVisible(false);
+    }
+
+    public void interruptAll() {
+        for (int i = uploadStatePanels.size() - 1; i >= 0; i--) {
+            UploadStatePanel panel = uploadStatePanels.get(i);
+            panel.interruptAll();
+        }
     }
 
     public void addPanel(UploadStatePanel panel) {
@@ -116,5 +142,13 @@ public class UploadStateWindow extends Window {
 
     public void setCancelIconResource(Resource cancelIconResource) {
         this.cancelIconResource = cancelIconResource;
+    }
+
+    public ConfirmDialog getConfirmDialog() {
+        return confirmDialog;
+    }
+
+    public void setConfirmDialog(ConfirmDialog confirmDialog) {
+        this.confirmDialog = confirmDialog;
     }
 }
