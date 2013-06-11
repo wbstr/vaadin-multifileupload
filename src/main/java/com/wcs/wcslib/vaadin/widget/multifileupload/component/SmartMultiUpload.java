@@ -1,7 +1,6 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
 import com.vaadin.server.WebBrowser;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Upload;
 import java.io.OutputStream;
@@ -13,12 +12,15 @@ import java.io.OutputStream;
 public class SmartMultiUpload extends CustomComponent {
 
     private static final String DEFAULT_UPLOAD_BUTTON_CAPTION = "...";
+    private static final int MAXIMUM_FILE_SIZE = 1073741824; //1GB
     private MultiUploadHandler handler;
-    private AbstractComponent upload;
+    private UploadComponent upload;
     private WebBrowser webBrowser;
     private String singleUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
     private String multiUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
     private boolean multiple;
+    private int maxFileSize = Integer.MAX_VALUE;
+    private String sizeErrorMsgPattern = "File is too big:";
 
     public SmartMultiUpload(MultiUploadHandler handler, final boolean multiple) {
         this.handler = handler;
@@ -32,6 +34,8 @@ public class SmartMultiUpload extends CustomComponent {
         createUpload(multiple);
         setCompositionRoot(upload);
         initUploadButtonCaptions();
+        initMaxFileSize();
+        initSizeErrorMsg();
     }
 
     public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
@@ -40,23 +44,21 @@ public class SmartMultiUpload extends CustomComponent {
         initUploadButtonCaptions();
     }
 
-    public AbstractComponent getUpload() {
+    public UploadComponent getUpload() {
         return upload;
     }
 
     public void interruptUpload(long fileId) {
-        if (upload instanceof Upload) {
-            ((Upload) upload).interruptUpload();
-        } else {
-            ((MultiUpload) upload).interruptUpload(fileId);
+        if (upload != null) {
+            upload.interruptUpload(fileId);
         }
     }
 
     private void initUploadButtonCaptions() {
         if (upload instanceof MultiUpload) {
-            ((MultiUpload) upload).setButtonCaption(multiUploadCaption);
+            upload.setButtonCaption(multiUploadCaption);
         } else if (upload instanceof Upload) {
-            ((Upload) upload).setButtonCaption(singleUploadCaption);
+            upload.setButtonCaption(singleUploadCaption);
         }
     }
 
@@ -76,7 +78,7 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     private void initSingleUpload() {
-        upload = new Upload();
+        upload = new CustomUpload();
         Upload singleUpload = (Upload) upload;
         singleUpload.setReceiver(new Upload.Receiver() {
             @Override
@@ -97,5 +99,35 @@ public class SmartMultiUpload extends CustomComponent {
         return webBrowser.isOpera()
                 || (webBrowser.isIE())
                 || webBrowser.isTooOldToFunctionProperly();
+    }
+
+    public void setMaxFileSize(int maxFileSize) {
+        this.maxFileSize = Math.min(maxFileSize, MAXIMUM_FILE_SIZE);
+        initMaxFileSize();
+    }
+
+    public int getMaxFileSize() {
+        return maxFileSize;
+    }
+
+    public String getSizeErrorMsg() {
+        return sizeErrorMsgPattern;
+    }
+
+    public void setSizeErrorMsgPattern(String sizeErrorMsgPattern) {
+        this.sizeErrorMsgPattern = sizeErrorMsgPattern;
+        initSizeErrorMsg();
+    }
+
+    private void initSizeErrorMsg() {
+        if (upload != null) {
+            upload.setSizeErrorMsgPattern(sizeErrorMsgPattern);
+        }
+    }
+
+    private void initMaxFileSize() {
+        if (upload != null) {
+            upload.setMaxFileSize(maxFileSize);
+        }
     }
 }

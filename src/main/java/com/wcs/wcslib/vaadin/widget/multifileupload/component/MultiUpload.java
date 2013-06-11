@@ -28,7 +28,7 @@ import java.util.ListIterator;
  *
  */
 @SuppressWarnings("serial")
-public class MultiUpload extends AbstractComponent implements LegacyComponent {
+public class MultiUpload extends AbstractComponent implements LegacyComponent, UploadComponent {
 
     List<FileDetail> pendingFiles = new ArrayList<FileDetail>();
     private Long removedFileId;
@@ -37,6 +37,8 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent {
     private boolean uploading;
     private boolean ready;
     private boolean interrupted = false;
+    private long maxFileSize;
+    private String sizeErrorMsg;
     StreamVariable streamVariable = new StreamVariable() {
         @Override
         public void streamingStarted(StreamingStartEvent event) {
@@ -136,6 +138,8 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent {
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addVariable(this, "target", streamVariable);
+        target.addAttribute("maxFileSize", maxFileSize);
+        target.addAttribute("sizeErrorMsg", sizeErrorMsg);
         if (ready) {
             target.addAttribute("ready", true);
             ready = false;
@@ -155,8 +159,9 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent {
             for (String string : filequeue) {
                 newFiles.add(new FileDetail(string));
             }
-            receiver.filesQueued(newFiles);
+
             pendingFiles.addAll(newFiles);
+            receiver.filesQueued(newFiles);
 
             markAsDirty();
             if (!isUploading()) {
@@ -165,6 +170,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent {
         }
     }
 
+    @Override
     public void interruptUpload(long fileId) {
         int ndx = 0;
         for (ListIterator<FileDetail> it = pendingFiles.listIterator(); it.hasNext();) {
@@ -188,6 +194,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent {
         return Collections.unmodifiableCollection(pendingFiles);
     }
 
+    @Override
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
     }
@@ -198,5 +205,15 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent {
 
     public boolean isUploading() {
         return uploading;
+    }
+
+    @Override
+    public void setMaxFileSize(int maxFileSize) {
+        this.maxFileSize = maxFileSize;
+    }
+
+    @Override
+    public void setSizeErrorMsgPattern(String sizeErrorMsg) {
+        this.sizeErrorMsg = sizeErrorMsg;
     }
 }

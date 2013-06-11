@@ -7,6 +7,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
+import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 
 /**
  *
@@ -54,7 +55,21 @@ public class UploadStateLayout extends CssLayout {
     }
 
     private Button createNewCancelButton() {
-        return FileUploadUtil.createCancelBtn(uploadStatePanel, fileDetailBean, true, false);
+        return createCancelBtn();
+    }
+
+    private Button createCancelBtn() {
+        Button cancelButton = new Button();
+        cancelButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(final Button.ClickEvent event) {
+                uploadStatePanel.interruptUpload(fileDetailBean);
+            }
+        });
+        cancelButton.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
+        cancelButton.setStyleName("small");
+        cancelButton.setCaption(uploadStatePanel.getWindow().getCancelButtonCaption());
+        return cancelButton;
     }
 
     public void setFileName(String fileName) {
@@ -64,9 +79,9 @@ public class UploadStateLayout extends CssLayout {
     public void setProgress(long bytesReceived, long contentLength) {
         pi.setValue(new Float(bytesReceived / (float) contentLength));
         textualProgress.setValue(
-                FileUploadUtil.getHumanReadableByteCount(bytesReceived, false)
+                UploadUtil.getHumanReadableByteCount(bytesReceived, false)
                 + " / "
-                + FileUploadUtil.getHumanReadableByteCount(contentLength, false));
+                + UploadUtil.getHumanReadableByteCount(contentLength, false));
     }
 
     public void startStreaming(FileDetailBean fileDetailBean) {

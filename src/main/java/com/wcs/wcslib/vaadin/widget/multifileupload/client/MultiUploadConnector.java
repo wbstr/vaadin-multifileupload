@@ -14,7 +14,7 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUpload;
  * which is part of the EasyUploads 7.0.0 Vaadin addon. 
  */
 @Connect(MultiUpload.class)
-public class Multiuploadconnector extends AbstractComponentConnector implements Paintable {
+public class MultiUploadConnector extends AbstractComponentConnector implements Paintable {
 
     @Override
     protected Widget createWidget() {

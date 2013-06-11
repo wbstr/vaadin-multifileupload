@@ -19,9 +19,10 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VButton;
+import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
+import java.text.MessageFormat;
 import java.util.ListIterator;
 
 /**
@@ -35,6 +36,9 @@ import java.util.ListIterator;
  * Not finished enough for extension.
  */
 public class VMultiUpload extends SimplePanel implements Paintable {
+
+    private int maxFileSize;
+    private String sizeErrorMsg;
 
     private final class MyFileUpload extends FileUpload {
 
@@ -82,7 +86,6 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         public void onReadyStateChange(XMLHttpRequest xhr) {
             if (xhr.getReadyState() == XMLHttpRequest.DONE) {
                 xhr.clearOnReadyStateChange();
-                VConsole.log("Ready state + " + xhr.getReadyState());
 
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
@@ -141,11 +144,16 @@ public class VMultiUpload extends SimplePanel implements Paintable {
             enableUpload();
         }
 
+        if (uidl.hasAttribute("maxFileSize")) {
+            maxFileSize = uidl.getIntAttribute("maxFileSize");
+        }
+        if (uidl.hasAttribute("sizeErrorMsg")) {
+            sizeErrorMsg = uidl.getStringAttribute("sizeErrorMsg");
+        }
         if (uidl.hasAttribute("removedFileId")) {
             removeFromFileQueue(uidl.getLongAttribute("removedFileId"));
         }
         if (uidl.hasAttribute("ready")) {
-            VConsole.log("The server knows about coming files. Start posting files");
             postNextFileFromQueue();
         }
     }
@@ -163,8 +171,6 @@ public class VMultiUpload extends SimplePanel implements Paintable {
     private void postNextFileFromQueue() {
         if (!fileQueue.isEmpty()) {
             final VHtml5File file = fileQueue.remove(0).getFile();
-            VConsole.log("Posting file " + file.getName() + " to "
-                    + receiverUri);
             ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR.create();
             extendedXHR.setOnReadyStateChange(readyStateChangeHandler);
             extendedXHR.open("POST", receiverUri);
@@ -212,14 +218,26 @@ public class VMultiUpload extends SimplePanel implements Paintable {
 
     private void submit() {
         int files = getFileCount(fu.getElement());
-        String[] filedetails = new String[files];
+        List<String> filedetails = new ArrayList<String>();
+        StringBuilder errorMsg = new StringBuilder();
         for (int i = 0; i < files; i++) {
             VHtml5File file = getFile(fu.getElement(), i);
-            FileWrapper wrapper = queueFilePost(file);
-            filedetails[i] = wrapper.serialize();
-        }
-        client.updateVariable(paintableId, "filequeue", filedetails, true);
+            if (file.getSize() > maxFileSize || file.getSize() <= 0) {
+                String formattedErrorMsg = UploadClientUtil.getSizeErrorMessage(
+                        sizeErrorMsg, maxFileSize, file.getSize(), file.getName());
 
+                errorMsg.append(formattedErrorMsg).append("<br/>");
+                continue;
+            }
+            FileWrapper wrapper = queueFilePost(file);
+            filedetails.add(wrapper.serialize());
+        }
+        client.updateVariable(paintableId, "filequeue", filedetails.toArray(new String[filedetails.size()]), true);
+
+        if (!errorMsg.toString().isEmpty()) {
+            VNotification.createNotification(1000, client.getUIConnector().getWidget()).show(
+                    errorMsg.toString(), VNotification.CENTERED, "warning");
+        }
         disableUpload();
     }
     private List<FileWrapper> fileQueue = new ArrayList<FileWrapper>();

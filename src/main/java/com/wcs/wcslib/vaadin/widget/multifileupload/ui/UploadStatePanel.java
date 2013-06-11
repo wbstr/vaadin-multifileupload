@@ -1,11 +1,13 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
 import com.vaadin.server.StreamVariable;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.FileDetail;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUploadHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
+import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.DefaultUploadReceiver;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.UploadReceiver;
 import java.io.InputStream;
@@ -55,6 +57,18 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     @Override
     public void streamingStarted(StreamVariable.StreamingStartEvent event) {
         if (!uploadQueue.isEmpty()) {
+            if (event.getContentLength() > multiUpload.getMaxFileSize() || event.getContentLength() <= 0) {
+                //the client side file size check may not work in old browsers
+                interruptUpload(uploadQueue.get(0));
+                String formattedErrorMsg = UploadUtil.getSizeErrorMessage(
+                        multiUpload.getSizeErrorMsg(),
+                        multiUpload.getMaxFileSize(),
+                        (int) event.getContentLength(),
+                        event.getFileName());
+                Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+
             currentUploadingLayout.startStreaming(uploadQueue.get(0));
             show();
         }
@@ -124,6 +138,11 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public UploadStateWindow getWindow() {
         return window;
+    }
+
+    public void interruptUpload(FileDetailBean fileDetail) {
+        multiUpload.interruptUpload(fileDetail.getId());
+        removeFromQueue(fileDetail);
     }
 
     public void interruptAll() {

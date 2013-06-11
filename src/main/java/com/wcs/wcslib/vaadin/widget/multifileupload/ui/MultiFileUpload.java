@@ -49,4 +49,33 @@ public class MultiFileUpload extends CustomComponent {
     public void interruptAll() {
         uploadStatePanel.interruptAll();
     }
+
+    public void setMaxFileSize(int maxFileSizeInBytes) {
+        smartUpload.setMaxFileSize(maxFileSizeInBytes);
+    }
+
+    public int getMaxFileSize() {
+        return smartUpload.getMaxFileSize();
+    }
+
+    public String getSizeErrorMsg() {
+        return smartUpload.getSizeErrorMsg();
+    }
+
+    /**
+     *
+     * @param pattern Pattern of the error message, which occurs when a user uploaded too big file.
+     *  ({0} maxFileSize, {1} fileSize, {2} fileName)
+     */
+    public void setSizeErrorMsgPattern(String pattern) {
+        smartUpload.setSizeErrorMsgPattern(pattern);
+    }
+
+    /**
+     *
+     * @param maxVisibleRows The number of rows which after the upload queue table renders a scrollbar.
+     */
+    public void setMaxVisibleRows(int maxVisibleRows) {
+        uploadStatePanel.getTable().setMaxVisibleRows(maxVisibleRows);
+    }
 }

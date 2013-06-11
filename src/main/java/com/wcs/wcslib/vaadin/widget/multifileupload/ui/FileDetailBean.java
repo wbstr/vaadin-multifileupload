@@ -3,6 +3,7 @@ package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.themes.BaseTheme;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.FileDetail;
+import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 import java.io.Serializable;
 
 /**
@@ -25,9 +26,8 @@ public class FileDetailBean implements Serializable {
         this.id = fileDetail.getId();
         this.fileName = fileDetail.getFileName();
         this.contentLength = fileDetail.getContentLength();
-        this.readableContentLength = FileUploadUtil.getHumanReadableByteCount(contentLength, false);
-        cancelButton = FileUploadUtil.createCancelBtn(uploadStatePanel, this, false, true);
-        cancelButton.setStyleName(BaseTheme.BUTTON_LINK);
+        this.readableContentLength = UploadUtil.getHumanReadableByteCount(contentLength, false);
+        createCancelBtn(uploadStatePanel);
     }
 
     public long getId() {
@@ -70,5 +70,19 @@ public class FileDetailBean implements Serializable {
             return false;
         }
         return true;
+    }
+
+    private Button createCancelBtn(final UploadStatePanel uploadStatePanel) {
+        cancelButton = new Button();
+        cancelButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(final Button.ClickEvent event) {
+                uploadStatePanel.interruptUpload(FileDetailBean.this);
+            }
+        });
+        cancelButton.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
+        cancelButton.setStyleName(BaseTheme.BUTTON_LINK);
+        cancelButton.setDescription(uploadStatePanel.getWindow().getCancelButtonCaption());
+        return cancelButton;
     }
 }

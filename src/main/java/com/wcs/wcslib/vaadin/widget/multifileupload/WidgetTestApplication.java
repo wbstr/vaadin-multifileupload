@@ -9,6 +9,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.wcs.wcslib.vaadin.widget.multifileupload.client.UploadClientUtil;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStatePanel;
@@ -70,6 +71,10 @@ public class WidgetTestApplication extends UI {
 
     private void addSlowUploadExample(String caption, boolean multiple) {
         SlowUpload slowUpload = new SlowUpload(uploadFinishedHandler, uploadStateWindow, multiple);
+        int maxFileSize = 5242880; //5 MB
+        slowUpload.setMaxFileSize(maxFileSize);
+        String errorMsgPattern = "File is too big (max = {0}): {2} ({1})";
+        slowUpload.setSizeErrorMsgPattern(errorMsgPattern);
         slowUpload.setCaption(caption);
         slowUpload.setPanelCaption(caption);
         slowUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
