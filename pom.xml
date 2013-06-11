@@ -205,4 +205,16 @@
             </build>
         </profile>
     </profiles>
+    
+    <distributionManagement>
+        <repository>
+            <id>nexus.wcs.local</id>
+            <url>http://nexus.wcs.local:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus.wcs.local</id>
+            <url>http://nexus.wcs.local:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
 </project>
