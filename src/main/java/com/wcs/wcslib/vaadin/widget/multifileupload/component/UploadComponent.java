@@ -21,11 +21,15 @@ import com.vaadin.ui.Component;
  *
  * @author gergo
  */
-public interface UploadComponent extends Component{
+public interface UploadComponent extends Component {
 
     public void setMaxFileSize(int maxFileSize);
+
     public void setSizeErrorMsgPattern(String pattern);
+
+    public void setAcceptFilter(String acceptFilter);
+
     public void setButtonCaption(String buttonCaption);
+
     public void interruptUpload(long fileId);
-    
 }

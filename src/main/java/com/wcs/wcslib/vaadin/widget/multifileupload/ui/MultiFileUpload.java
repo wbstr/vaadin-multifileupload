@@ -64,8 +64,8 @@ public class MultiFileUpload extends CustomComponent {
 
     /**
      *
-     * @param pattern Pattern of the error message, which occurs when a user uploaded too big file.
-     *  ({0} maxFileSize, {1} fileSize, {2} fileName)
+     * @param pattern Pattern of the error message, which occurs when a user uploaded too big file. ({0} maxFileSize,
+     * {1} fileSize, {2} fileName)
      */
     public void setSizeErrorMsgPattern(String pattern) {
         smartUpload.setSizeErrorMsgPattern(pattern);
@@ -77,5 +77,18 @@ public class MultiFileUpload extends CustomComponent {
      */
     public void setMaxVisibleRows(int maxVisibleRows) {
         uploadStatePanel.getTable().setMaxVisibleRows(maxVisibleRows);
+    }
+
+    /**
+     * Sets mime types that browser should let users upload. This check is done by the client side and not supported by
+     * all browsers. Some browser us the accept filter just as a initial filter for their file chooser dialog. Note that
+     * using this method does not invalidate need for server side checks.
+     *
+     * See https://developer.mozilla.org/en-US/docs/HTML/Element/Input
+     *
+     * @param accept
+     */
+    public void setAcceptFilter(String accept) {
+        smartUpload.setAcceptFilter(accept);
     }
 }

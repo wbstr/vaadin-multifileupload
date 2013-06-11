@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
@@ -22,7 +24,6 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
-import java.text.MessageFormat;
 import java.util.ListIterator;
 
 /**
@@ -39,6 +40,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
 
     private int maxFileSize;
     private String sizeErrorMsg;
+    private InputElement input;
 
     private final class MyFileUpload extends FileUpload {
 
@@ -150,12 +152,22 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         if (uidl.hasAttribute("sizeErrorMsg")) {
             sizeErrorMsg = uidl.getStringAttribute("sizeErrorMsg");
         }
+        if (uidl.hasAttribute("acceptFilter")) {
+            getInput().setAccept(uidl.getStringAttribute("acceptFilter"));
+        }
         if (uidl.hasAttribute("removedFileId")) {
             removeFromFileQueue(uidl.getLongAttribute("removedFileId"));
         }
         if (uidl.hasAttribute("ready")) {
             postNextFileFromQueue();
         }
+    }
+
+    private InputElement getInput() {
+        if (input == null || !getElement().isOrHasChild((Node) input)) {
+            input = fu.getElement().cast();
+        }
+        return input;
     }
 
     private void removeFromFileQueue(long fileId) {

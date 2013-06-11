@@ -39,6 +39,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     private boolean interrupted = false;
     private long maxFileSize;
     private String sizeErrorMsg;
+    private String acceptFilter;
     StreamVariable streamVariable = new StreamVariable() {
         @Override
         public void streamingStarted(StreamingStartEvent event) {
@@ -140,6 +141,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         target.addVariable(this, "target", streamVariable);
         target.addAttribute("maxFileSize", maxFileSize);
         target.addAttribute("sizeErrorMsg", sizeErrorMsg);
+        target.addAttribute("acceptFilter", acceptFilter);
         if (ready) {
             target.addAttribute("ready", true);
             ready = false;
@@ -215,5 +217,10 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     @Override
     public void setSizeErrorMsgPattern(String sizeErrorMsg) {
         this.sizeErrorMsg = sizeErrorMsg;
+    }
+
+    @Override
+    public void setAcceptFilter(String acceptFilter) {
+        this.acceptFilter = acceptFilter;
     }
 }

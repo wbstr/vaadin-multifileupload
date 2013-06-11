@@ -5,8 +5,8 @@ import com.vaadin.client.ui.VUpload;
 import com.vaadin.client.ui.dd.VHtml5File;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Node;
 import com.vaadin.client.VConsole;
-import java.text.MessageFormat;
 
 /**
  *
@@ -16,6 +16,7 @@ public class VCustomUpload extends VUpload {
 
     private int maxFileSize;
     private String sizeErrorMsg;
+    private InputElement input;
 
     @Override
     public void submit() {
@@ -50,11 +51,22 @@ public class VCustomUpload extends VUpload {
      return ie.files;
      }-*/;
 
+    private InputElement getInput() {
+        if (input == null || !getElement().isOrHasChild((Node) input)) {
+            input = fu.getElement().cast();
+        }
+        return input;
+    }
+
     public void setMaxFileSize(int maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
 
     public void setSizeErrorMsg(String sizeErrorMsg) {
         this.sizeErrorMsg = sizeErrorMsg;
+    }
+
+    public void setAcceptFilter(String acceptFilter) {
+        getInput().setAccept(acceptFilter);
     }
 }

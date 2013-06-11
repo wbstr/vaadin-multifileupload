@@ -27,12 +27,14 @@ public class CustomUpload extends Upload implements UploadComponent {
 
     private long maxFileSize;
     private String sizeErrorMsg;
+    private String acceptFilter;
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         target.addAttribute("maxFileSize", maxFileSize);
         target.addAttribute("sizeErrorMsg", sizeErrorMsg);
+        target.addAttribute("acceptFilter", acceptFilter);
     }
 
     @Override
@@ -48,5 +50,10 @@ public class CustomUpload extends Upload implements UploadComponent {
     @Override
     public void interruptUpload(long fileId) {
         interruptUpload();
+    }
+
+    @Override
+    public void setAcceptFilter(String acceptFilter) {
+        this.acceptFilter = acceptFilter;
     }
 }

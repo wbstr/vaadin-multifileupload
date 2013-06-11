@@ -39,6 +39,9 @@ public class CustomUploadConnector extends UploadConnector {
         if (uidl.hasAttribute("sizeErrorMsg")) {
             getWidget().setSizeErrorMsg(uidl.getStringAttribute("sizeErrorMsg"));
         }
+        if (uidl.hasAttribute("acceptFilter")) {
+            getWidget().setAcceptFilter(uidl.getStringAttribute("acceptFilter"));
+        }
     }
 
     @Override
