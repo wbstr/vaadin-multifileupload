@@ -42,6 +42,7 @@ public class UploadStateWindow extends Window {
     private ConfirmDialog confirmDialog = new ConfirmDialog();
     private long totalContentLength = 0;
     private long totalBytesReceived = 0;
+    private boolean overallProgressVisible;
     private WindowPosition windowPosition;
 
     public enum WindowPosition {
@@ -81,6 +82,7 @@ public class UploadStateWindow extends Window {
         setVisible(false);
         setWidth(350, Unit.PIXELS);
         setWindowPosition(WindowPosition.BOTTOM_RIGHT);
+        setOverallProgressVisible(true);
         setClosable(true);
         addCloseListener(new CloseListener() {
             @Override
@@ -141,8 +143,12 @@ public class UploadStateWindow extends Window {
     }
 
     public void updateOverallProgress() {
-        int overallProgress = (int) ((totalBytesReceived * 100.0f) / totalContentLength);
-        setCaption(uploadStatusCaption + " (" + overallProgress + "%)");
+        if (overallProgressVisible) {
+            int overallProgress = (int) ((totalBytesReceived * 100.0f) / totalContentLength);
+            setCaption(uploadStatusCaption + " (" + overallProgress + "%)");
+        }else{
+            setCaption(uploadStatusCaption);
+        }
     }
 
     public void addPanel(UploadStatePanel panel) {
@@ -199,6 +205,14 @@ public class UploadStateWindow extends Window {
     public void setTotalBytesReceived(long totalBytesReceived) {
         this.totalBytesReceived = Math.max(totalBytesReceived, 0);
         updateOverallProgress();
+    }
+
+    public boolean isOverallProgressVisible() {
+        return overallProgressVisible;
+    }
+
+    public void setOverallProgressVisible(boolean overallProgressVisible) {
+        this.overallProgressVisible = overallProgressVisible;
     }
 
     @Override

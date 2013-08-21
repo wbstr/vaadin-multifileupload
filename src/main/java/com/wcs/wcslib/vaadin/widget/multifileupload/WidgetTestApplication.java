@@ -18,6 +18,7 @@ package com.wcs.wcslib.vaadin.widget.multifileupload;
 import com.vaadin.data.Property;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
@@ -65,6 +66,7 @@ public class WidgetTestApplication extends UI {
 
         addWindowPositionSwitcher();
         addUploadSpeedSlider();
+        addOverallProgressSwitcher();
     }
 
     private void addLabels() {
@@ -116,6 +118,7 @@ public class WidgetTestApplication extends UI {
 
     private void addWindowPositionSwitcher() {
         final ComboBox cb = new ComboBox("Window position");
+        cb.setNullSelectionAllowed(false);
         for (UploadStateWindow.WindowPosition windowPosition : UploadStateWindow.WindowPosition.values()) {
             cb.addItem(windowPosition);
             cb.setItemCaption(windowPosition, windowPosition.name());
@@ -125,6 +128,18 @@ public class WidgetTestApplication extends UI {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
                 uploadStateWindow.setWindowPosition((UploadStateWindow.WindowPosition) cb.getValue());
+            }
+        });
+        form.addComponent(cb);
+    }
+
+    private void addOverallProgressSwitcher() {
+        final CheckBox cb = new CheckBox("Overall progress");
+        cb.setValue(true);
+        cb.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                uploadStateWindow.setOverallProgressVisible(cb.getValue());
             }
         });
         form.addComponent(cb);
