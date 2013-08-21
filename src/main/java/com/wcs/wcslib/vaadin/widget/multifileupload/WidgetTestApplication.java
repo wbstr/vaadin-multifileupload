@@ -18,13 +18,13 @@ package com.wcs.wcslib.vaadin.widget.multifileupload;
 import com.vaadin.data.Property;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.wcs.wcslib.vaadin.widget.multifileupload.client.UploadClientUtil;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStatePanel;
@@ -62,6 +62,8 @@ public class WidgetTestApplication extends UI {
 
         addSlowUploadExample("Single upload", false);
         addSlowUploadExample("Multiple upload", true);
+
+        addWindowPositionSwitcher();
         addUploadSpeedSlider();
     }
 
@@ -110,6 +112,22 @@ public class WidgetTestApplication extends UI {
             }
         });
         form.addComponent(slider);
+    }
+
+    private void addWindowPositionSwitcher() {
+        final ComboBox cb = new ComboBox("Window position");
+        for (UploadStateWindow.WindowPosition windowPosition : UploadStateWindow.WindowPosition.values()) {
+            cb.addItem(windowPosition);
+            cb.setItemCaption(windowPosition, windowPosition.name());
+        }
+        cb.setValue(UploadStateWindow.WindowPosition.BOTTOM_RIGHT);
+        cb.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                uploadStateWindow.setWindowPosition((UploadStateWindow.WindowPosition) cb.getValue());
+            }
+        });
+        form.addComponent(cb);
     }
 
     private class SlowUpload extends MultiFileUpload {

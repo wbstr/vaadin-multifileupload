@@ -1,9 +1,4 @@
 .multiple-upload-state-window{
-    position: fixed;
-    bottom: 0;
-    right: 0 ;
-    left: auto !important;
-    top: auto !important;
 }
 
 .v-slot-multiple-upload-state-panel{
@@ -31,4 +26,46 @@
 .multiple-upload-state-cancelbuttonlayout{
     margin-top: 5px !important;
     margin-bottom: 5px !important;
+}
+
+/* WINDOW-POSITION */
+.multiple-upload-state-window.position-bottom{
+    bottom: 0 !important;
+    top: auto !important;
+}
+.multiple-upload-state-window.position-bottom-right{
+    bottom: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    top: auto !important;
+}
+.multiple-upload-state-window.position-bottom-left{
+    bottom: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    top: auto !important;
+}
+.multiple-upload-state-window.position-top{
+    top: 0 !important;
+    bottom: auto !important;
+}
+.multiple-upload-state-window.position-top-right{
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+}
+.multiple-upload-state-window.position-top-left{
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+}
+.multiple-upload-state-window.position-left{
+    left: 0 !important;
+    right: auto !important;
+}
+.multiple-upload-state-window.position-right{
+    right: 0 !important;
+    left: auto !important;
 }

@@ -22,7 +22,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,6 +42,29 @@ public class UploadStateWindow extends Window {
     private ConfirmDialog confirmDialog = new ConfirmDialog();
     private long totalContentLength = 0;
     private long totalBytesReceived = 0;
+    private WindowPosition windowPosition;
+
+    public enum WindowPosition {
+
+        BOTTOM("position-bottom"),
+        BOTTOM_LEFT("position-bottom-left"),
+        BOTTOM_RIGHT("position-bottom-right"),
+        TOP("position-top"),
+        TOP_LEFT("position-top-left"),
+        TOP_RIGHT("position-top-right"),
+        LEFT("position-left"),
+        RIGHT("position-right"),
+        CENTER("");
+        private String style;
+
+        private WindowPosition(String style) {
+            this.style = style;
+        }
+
+        public String getStyle() {
+            return style;
+        }
+    }
 
     public UploadStateWindow() {
         super();
@@ -58,6 +80,7 @@ public class UploadStateWindow extends Window {
 
         setVisible(false);
         setWidth(350, Unit.PIXELS);
+        setWindowPosition(WindowPosition.BOTTOM_RIGHT);
         setClosable(true);
         addCloseListener(new CloseListener() {
             @Override
@@ -176,5 +199,23 @@ public class UploadStateWindow extends Window {
     public void setTotalBytesReceived(long totalBytesReceived) {
         this.totalBytesReceived = Math.max(totalBytesReceived, 0);
         updateOverallProgress();
+    }
+
+    @Override
+    public void center() {
+        setWindowPosition(WindowPosition.CENTER);
+    }
+
+    public WindowPosition getWindowPosition() {
+        return windowPosition;
+    }
+
+    public void setWindowPosition(WindowPosition windowPosition) {
+        String oldPositionStyle = this.windowPosition != null ? this.windowPosition.getStyle() : "";
+        removeStyleName(oldPositionStyle);
+        super.center();
+
+        this.windowPosition = windowPosition;
+        addStyleName(windowPosition.getStyle());
     }
 }
