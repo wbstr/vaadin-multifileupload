@@ -16,6 +16,7 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Notification;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
 
 /**
@@ -26,6 +27,7 @@ public class MultiFileUpload extends CustomComponent {
 
     private SmartMultiUpload smartUpload;
     private UploadStatePanel uploadStatePanel;
+    private String interruptedMsg = "All uploads have been interrupted.";
 
     public MultiFileUpload(UploadFinishedHandler handler, UploadStateWindow uploadStateWindow, boolean multiple) {
         uploadStatePanel = createStatePanel(uploadStateWindow);
@@ -73,6 +75,14 @@ public class MultiFileUpload extends CustomComponent {
         return smartUpload.getMaxFileSize();
     }
 
+    public String getInterruptedMsg() {
+        return interruptedMsg;
+    }
+
+    public void setInterruptedMsg(String interruptedMsg) {
+        this.interruptedMsg = interruptedMsg;
+    }
+
     public String getSizeErrorMsg() {
         return smartUpload.getSizeErrorMsg();
     }
@@ -117,5 +127,15 @@ public class MultiFileUpload extends CustomComponent {
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         smartUpload.setEnabled(!readOnly);
+    }
+
+    @Override
+    public void detach() {
+        if (uploadStatePanel.hasUploadInProgress()) {
+            interruptAll();
+            Notification.show(uploadStatePanel.getCaption(), interruptedMsg, Notification.Type.WARNING_MESSAGE);
+        }
+
+        super.detach();
     }
 }

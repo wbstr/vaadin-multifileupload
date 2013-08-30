@@ -178,4 +178,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     public UploadQueueTable getTable() {
         return table;
     }
+
+    public boolean hasUploadInProgress() {
+        return !uploadQueue.isEmpty();
+    }
 }
