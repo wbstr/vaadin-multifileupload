@@ -36,6 +36,7 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
@@ -60,7 +61,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
     private final class MyFileUpload extends FileUpload {
 
         public MyFileUpload() {
-            getElement().setPropertyString("multiple", "multiple");
+            getElement().setAttribute("multiple", "multiple");
         }
 
         @Override
@@ -137,6 +138,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
 
         setStyleName(CLASSNAME);
         fu.sinkEvents(Event.ONCHANGE);
+        fu.sinkEvents(Event.ONFOCUS);
         addStyleName(CLASSNAME + "-immediate");
     }
 
@@ -154,11 +156,12 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
-        if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
-            disableUpload();
-        } else if (!uidl.getBooleanAttribute("state")) {
-            // Enable the button only if an upload is not in progress
-            enableUpload();
+        if (uidl.hasAttribute("enabled")) {
+            if (uidl.getBooleanAttribute("enabled")) {
+                enableUpload();
+            } else {
+                disableUpload();
+            }
         }
 
         if (uidl.hasAttribute("maxFileSize")) {
@@ -246,6 +249,10 @@ public class VMultiUpload extends SimplePanel implements Paintable {
     }
 
     private void submit() {
+        if (!enabled) {
+            VConsole.log("Submit cancelled (disabled)");
+            return;
+        }
         int files = getFileCount(fu.getElement());
         List<String> filedetails = new ArrayList<String>();
         StringBuilder errorMsg = new StringBuilder();

@@ -106,4 +106,16 @@ public class MultiFileUpload extends CustomComponent {
     public void setAcceptFilter(String accept) {
         smartUpload.setAcceptFilter(accept);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        smartUpload.setEnabled(enabled);
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+        smartUpload.setEnabled(!readOnly);
+    }
 }

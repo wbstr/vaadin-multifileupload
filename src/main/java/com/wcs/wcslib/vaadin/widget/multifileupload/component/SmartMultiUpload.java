@@ -37,6 +37,7 @@ public class SmartMultiUpload extends CustomComponent {
     private int maxFileSize = Integer.MAX_VALUE;
     private String sizeErrorMsgPattern = "File is too big:";
     private String acceptFilter = "";
+    private boolean enabled = true;
 
     public SmartMultiUpload(MultiUploadHandler handler, final boolean multiple) {
         this.handler = handler;
@@ -53,6 +54,7 @@ public class SmartMultiUpload extends CustomComponent {
         initMaxFileSize();
         initSizeErrorMsg();
         initAcceptFilter();
+        initEnabled();
     }
 
     public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
@@ -160,6 +162,19 @@ public class SmartMultiUpload extends CustomComponent {
     private void initAcceptFilter() {
         if (upload != null) {
             upload.setAcceptFilter(acceptFilter);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        this.enabled = enabled;
+        initEnabled();
+    }
+
+    private void initEnabled() {
+        if (upload != null) {
+            upload.setEnabled(enabled);
         }
     }
 }
