@@ -115,8 +115,8 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     private boolean isBrowserNotHtml5Capable() {
-        return webBrowser.isOpera()
-                || (webBrowser.isIE())
+        return (webBrowser.isOpera() && webBrowser.getBrowserMajorVersion() < 15)
+                || (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() < 10)
                 || webBrowser.isTooOldToFunctionProperly();
     }
 

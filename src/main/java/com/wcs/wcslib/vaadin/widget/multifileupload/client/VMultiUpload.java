@@ -67,7 +67,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
-            if (hasFiles()) {
+            if (event.getTypeInt() == Event.ONCHANGE && hasFiles()) {
                 submit();
             }
         }
