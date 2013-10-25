@@ -15,6 +15,7 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
+import com.vaadin.server.Resource;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
@@ -61,6 +62,14 @@ public class MultiFileUpload extends CustomComponent {
         uploadStatePanel.setFinishedHandler(handler);
 
         setCompositionRoot(smartUpload);
+    }
+    
+    public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
+        smartUpload.setUploadButtonCaptions(singleUploadCaption, multiUploadCaption);
+    }
+    
+    public void setUploadButtonIcon(Resource icon) {
+        smartUpload.setUploadButtonIcon(icon);
     }
 
     public void interruptAll() {
