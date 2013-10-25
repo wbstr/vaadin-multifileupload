@@ -15,6 +15,7 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
+import com.vaadin.server.Resource;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Upload;
@@ -38,6 +39,7 @@ public class SmartMultiUpload extends CustomComponent {
     private String sizeErrorMsgPattern = "File is too big:";
     private String acceptFilter = "";
     private boolean enabled = true;
+    private Resource icon;
 
     public SmartMultiUpload(MultiUploadHandler handler, final boolean multiple) {
         this.handler = handler;
@@ -55,12 +57,7 @@ public class SmartMultiUpload extends CustomComponent {
         initSizeErrorMsg();
         initAcceptFilter();
         initEnabled();
-    }
-
-    public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
-        this.singleUploadCaption = singleUploadCaption;
-        this.multiUploadCaption = multiUploadCaption;
-        initUploadButtonCaptions();
+        initUploadButtonIcon();
     }
 
     public UploadComponent getUpload() {
@@ -73,12 +70,49 @@ public class SmartMultiUpload extends CustomComponent {
         }
     }
 
-    private void initUploadButtonCaptions() {
-        if (upload instanceof MultiUpload) {
-            upload.setButtonCaption(multiUploadCaption);
-        } else if (upload instanceof Upload) {
-            upload.setButtonCaption(singleUploadCaption);
-        }
+    public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
+        this.singleUploadCaption = singleUploadCaption;
+        this.multiUploadCaption = multiUploadCaption;
+        initUploadButtonCaptions();
+    }
+
+    public void setMaxFileSize(int maxFileSize) {
+        this.maxFileSize = Math.min(maxFileSize, MAXIMUM_FILE_SIZE);
+        initMaxFileSize();
+    }
+
+    public int getMaxFileSize() {
+        return maxFileSize;
+    }
+
+    public String getSizeErrorMsg() {
+        return sizeErrorMsgPattern;
+    }
+
+    public void setSizeErrorMsgPattern(String sizeErrorMsgPattern) {
+        this.sizeErrorMsgPattern = sizeErrorMsgPattern;
+        initSizeErrorMsg();
+    }
+
+    public String getAcceptFilter() {
+        return acceptFilter;
+    }
+
+    public void setAcceptFilter(String acceptFilter) {
+        this.acceptFilter = acceptFilter;
+        initAcceptFilter();
+    }
+
+    public void setUploadButtonIcon(Resource icon) {
+        this.icon = icon;
+        initUploadButtonIcon();
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        this.enabled = enabled;
+        initEnabled();
     }
 
     private void createUpload(boolean multiple) {
@@ -120,22 +154,12 @@ public class SmartMultiUpload extends CustomComponent {
                 || webBrowser.isTooOldToFunctionProperly();
     }
 
-    public void setMaxFileSize(int maxFileSize) {
-        this.maxFileSize = Math.min(maxFileSize, MAXIMUM_FILE_SIZE);
-        initMaxFileSize();
-    }
-
-    public int getMaxFileSize() {
-        return maxFileSize;
-    }
-
-    public String getSizeErrorMsg() {
-        return sizeErrorMsgPattern;
-    }
-
-    public void setSizeErrorMsgPattern(String sizeErrorMsgPattern) {
-        this.sizeErrorMsgPattern = sizeErrorMsgPattern;
-        initSizeErrorMsg();
+    private void initUploadButtonCaptions() {
+        if (upload instanceof MultiUpload) {
+            upload.setButtonCaption(multiUploadCaption);
+        } else if (upload instanceof Upload) {
+            upload.setButtonCaption(singleUploadCaption);
+        }
     }
 
     private void initSizeErrorMsg() {
@@ -150,31 +174,21 @@ public class SmartMultiUpload extends CustomComponent {
         }
     }
 
-    public String getAcceptFilter() {
-        return acceptFilter;
-    }
-
-    public void setAcceptFilter(String acceptFilter) {
-        this.acceptFilter = acceptFilter;
-        initAcceptFilter();
-    }
-
     private void initAcceptFilter() {
         if (upload != null) {
             upload.setAcceptFilter(acceptFilter);
         }
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        this.enabled = enabled;
-        initEnabled();
-    }
-
     private void initEnabled() {
         if (upload != null) {
             upload.setEnabled(enabled);
+        }
+    }
+
+    private void initUploadButtonIcon() {
+        if (upload != null) {
+            upload.setIcon(icon);
         }
     }
 }

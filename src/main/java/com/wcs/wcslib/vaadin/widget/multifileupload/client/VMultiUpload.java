@@ -37,6 +37,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
@@ -96,7 +97,8 @@ public class VMultiUpload extends SimplePanel implements Paintable {
     /**
      * Button that initiates uploading
      */
-    private final VButton submitButton;
+    public final VButton submitButton;
+    public Icon icon;
     private boolean enabled = true;
     private String receiverUri;
     private ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {

@@ -22,6 +22,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Node;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.Icon;
 
 /**
  *
@@ -32,6 +33,7 @@ public class VCustomUpload extends VUpload {
     private int maxFileSize;
     private String sizeErrorMsg;
     private InputElement input;
+    public Icon icon;
 
     @Override
     public void submit() {

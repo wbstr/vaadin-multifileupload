@@ -16,9 +16,12 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.shared.ui.Connect;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.CustomUpload;
@@ -52,5 +55,30 @@ public class CustomUploadConnector extends UploadConnector {
     @Override
     public VCustomUpload getWidget() {
         return (VCustomUpload) super.getWidget();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        addStateChangeHandler("resources", new StateChangeEvent.StateChangeHandler() {
+            @Override
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                if (getIcon() != null) {
+                    if (getWidget().icon == null) {
+                        getWidget().icon = new Icon(getConnection());
+                        Element iconElement = getWidget().icon.getElement();
+                        getWidget().submitButton.wrapper.insertBefore(iconElement,
+                                getWidget().submitButton.captionElement);
+                    }
+                    getWidget().icon.setUri(getIcon());
+                } else {
+                    if (getWidget().icon != null) {
+                        getWidget().submitButton.wrapper.removeChild(getWidget().icon
+                                .getElement());
+                        getWidget().icon = null;
+                    }
+                }
+            }
+        });
     }
 }
