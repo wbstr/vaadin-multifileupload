@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Node;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.Icon;
+import java.util.List;
 
 /**
  *
@@ -32,29 +33,48 @@ public class VCustomUpload extends VUpload {
 
     private int maxFileSize;
     private String sizeErrorMsg;
+    private String mimeTypeErrorMsg;
+    private List<String> acceptedMimeTypes;
     private InputElement input;
     public Icon icon;
 
     @Override
     public void submit() {
-        if (checkSize(maxFileSize)) {
+        if (checkSize()) {
             super.submit();
         } else {
             ((InputElement) fu.getElement().cast()).setValue(null);
         }
     }
 
-    private boolean checkSize(int maxSize) {
+    private boolean isValidFileSize(VHtml5File file) {
+        if (file.getSize() > maxFileSize || file.getSize() <= 0) {
+            String formattedErrorMsg = UploadClientUtil.getSizeErrorMessage(
+                    sizeErrorMsg, maxFileSize, file.getSize(), file.getName());
+            VNotification.createNotification(1000,
+                    client.getUIConnector().getWidget()).show(formattedErrorMsg, VNotification.CENTERED, "warning");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidMimeType(VHtml5File file) {
+        if (acceptedMimeTypes != null && !acceptedMimeTypes.isEmpty() && !acceptedMimeTypes.contains(file.getType())) {
+            String formattedErrorMsg = UploadClientUtil.getMimeTypeErrorMessage(mimeTypeErrorMsg, file.getName());
+            VNotification.createNotification(1000,
+                    client.getUIConnector().getWidget()).show(formattedErrorMsg, VNotification.CENTERED, "warning");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkSize() {
         try {
             InputElement ie = (InputElement) fu.getElement().cast();
             JsArray<VHtml5File> files = getFiles(ie);
             for (int i = 0; i < files.length(); i++) {
                 VHtml5File file = files.get(i);
-                if (file.getSize() > maxSize || file.getSize() <= 0) {
-                    String formattedErrorMsg = UploadClientUtil.getSizeErrorMessage(
-                            sizeErrorMsg, maxFileSize, file.getSize(), file.getName());
-                    VNotification.createNotification(1000,
-                            client.getUIConnector().getWidget()).show(formattedErrorMsg, VNotification.CENTERED, "warning");
+                if (!isValidFileSize(file) || !isValidMimeType(file)) {
                     return false;
                 }
             }
@@ -85,5 +105,13 @@ public class VCustomUpload extends VUpload {
 
     public void setAcceptFilter(String acceptFilter) {
         getInput().setAccept(acceptFilter);
+    }
+
+    public void setMimeTypeErrorMsg(String mimeTypeErrorMsg) {
+        this.mimeTypeErrorMsg = mimeTypeErrorMsg;
+    }
+
+    public void setAcceptedMimeTypes(List<String> acceptedMimeTypes) {
+        this.acceptedMimeTypes = acceptedMimeTypes;
     }
 }

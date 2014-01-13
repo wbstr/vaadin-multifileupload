@@ -18,6 +18,7 @@ package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.Upload;
+import java.util.List;
 
 /**
  *
@@ -28,6 +29,8 @@ public class CustomUpload extends Upload implements UploadComponent {
     private long maxFileSize;
     private String sizeErrorMsg;
     private String acceptFilter;
+    private List<String> acceptedMimeTypes;
+    private String mimeTypeErrorMsg;
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -35,6 +38,12 @@ public class CustomUpload extends Upload implements UploadComponent {
         target.addAttribute("maxFileSize", maxFileSize);
         target.addAttribute("sizeErrorMsg", sizeErrorMsg);
         target.addAttribute("acceptFilter", acceptFilter);
+        if (acceptedMimeTypes != null) {
+            target.addAttribute("acceptedMimeTypes", acceptedMimeTypes.toArray(new String[acceptedMimeTypes.size()]));
+        } else {
+            target.addAttribute("acceptedMimeTypes", new String[]{});
+        }
+        target.addAttribute("mimeTypeErrorMsg", mimeTypeErrorMsg);
     }
 
     @Override
@@ -55,5 +64,15 @@ public class CustomUpload extends Upload implements UploadComponent {
     @Override
     public void setAcceptFilter(String acceptFilter) {
         this.acceptFilter = acceptFilter;
+    }
+
+    @Override
+    public void setAcceptedMimeTypes(List<String> acceptedMimeTypes) {
+        this.acceptedMimeTypes = acceptedMimeTypes;
+    }
+
+    @Override
+    public void setMimeTypeErrorMsgPattern(String pattern) {
+        this.mimeTypeErrorMsg = pattern;
     }
 }

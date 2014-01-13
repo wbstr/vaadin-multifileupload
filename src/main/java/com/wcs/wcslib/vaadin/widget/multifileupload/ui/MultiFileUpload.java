@@ -19,6 +19,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
+import java.util.List;
 
 /**
  *
@@ -63,11 +64,11 @@ public class MultiFileUpload extends CustomComponent {
 
         setCompositionRoot(smartUpload);
     }
-    
+
     public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
         smartUpload.setUploadButtonCaptions(singleUploadCaption, multiUploadCaption);
     }
-    
+
     public void setUploadButtonIcon(Resource icon) {
         smartUpload.setUploadButtonIcon(icon);
     }
@@ -124,6 +125,26 @@ public class MultiFileUpload extends CustomComponent {
      */
     public void setAcceptFilter(String accept) {
         smartUpload.setAcceptFilter(accept);
+    }
+
+    /**
+     * Sets valid mime types.
+     *
+     * See http://reference.sitepoint.com/html/mime-types-full
+     *
+     * @param mimeTypes Mime types should be accepted.
+     */
+    public void setAcceptedMimeTypes(List<String> mimeTypes) {
+        smartUpload.setAcceptedMimeTypes(mimeTypes);
+    }
+
+    /**
+     *
+     * @param pattern Pattern of the error message, which occurs when a user uploaded a file that is not match to the
+     * given mime types. ({0} fileName)
+     */
+    public void setMimeTypeErrorMsgPattern(String pattern) {
+        smartUpload.setMimeTypeErrorMsgPattern(pattern);
     }
 
     @Override

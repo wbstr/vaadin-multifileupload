@@ -40,4 +40,8 @@ public class UploadUtil {
                 getHumanReadableByteCount(fileSize, false),
                 fileName);
     }
+
+    public static String getMimeTypeErrorMessage(String pattern, String fileName) {
+        return MessageFormat.format(pattern, fileName);
+    }
 }

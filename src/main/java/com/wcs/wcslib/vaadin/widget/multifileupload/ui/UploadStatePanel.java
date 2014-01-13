@@ -30,6 +30,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +39,7 @@ import java.util.List;
  */
 public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
+    private static final Logger logger = Logger.getLogger(UploadStatePanel.class.getName());
     private static final String PANEL_STLYE_CLASS = "multiple-upload-state-panel";
     private List<FileDetailBean> uploadQueue = new ArrayList<FileDetailBean>();
     private UploadStateLayout currentUploadingLayout;
@@ -69,18 +72,42 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         panelLayout.addComponent(table);
     }
 
+    private boolean isValidFileSize(StreamVariable.StreamingStartEvent event) {
+        if (event.getContentLength() > multiUpload.getMaxFileSize() || event.getContentLength() <= 0) {
+            //the client side file size check may not work in old browsers
+            interruptUpload(uploadQueue.get(0));
+            String formattedErrorMsg = UploadUtil.getSizeErrorMessage(
+                    multiUpload.getSizeErrorMsg(),
+                    multiUpload.getMaxFileSize(),
+                    (int) event.getContentLength(),
+                    event.getFileName());
+            Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidMimeType(StreamVariable.StreamingStartEvent event) {
+        if (multiUpload.getAcceptedMimeTypes() != null && !multiUpload.getAcceptedMimeTypes().isEmpty()
+                && !multiUpload.getAcceptedMimeTypes().contains(event.getMimeType())) {
+            logger.log(Level.FINE, "Mime type is not valid! File name: {0}, Mime type: {1}",
+                    new Object[]{event.getFileName(), event.getMimeType()});
+
+            interruptUpload(uploadQueue.get(0));
+            String formattedErrorMsg = UploadUtil.getMimeTypeErrorMessage(
+                    multiUpload.getMimeTypeErrorMsgPattern(),
+                    event.getFileName());
+            Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void streamingStarted(StreamVariable.StreamingStartEvent event) {
         if (!uploadQueue.isEmpty()) {
-            if (event.getContentLength() > multiUpload.getMaxFileSize() || event.getContentLength() <= 0) {
-                //the client side file size check may not work in old browsers
-                interruptUpload(uploadQueue.get(0));
-                String formattedErrorMsg = UploadUtil.getSizeErrorMessage(
-                        multiUpload.getSizeErrorMsg(),
-                        multiUpload.getMaxFileSize(),
-                        (int) event.getContentLength(),
-                        event.getFileName());
-                Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
+            if (!isValidFileSize(event) || !isValidMimeType(event)) {
                 return;
             }
 

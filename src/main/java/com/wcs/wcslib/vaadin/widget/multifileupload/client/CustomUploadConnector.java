@@ -25,6 +25,7 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.shared.ui.Connect;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.CustomUpload;
+import java.util.Arrays;
 
 /**
  *
@@ -44,6 +45,12 @@ public class CustomUploadConnector extends UploadConnector {
         }
         if (uidl.hasAttribute("acceptFilter")) {
             getWidget().setAcceptFilter(uidl.getStringAttribute("acceptFilter"));
+        }
+        if (uidl.hasAttribute("mimeTypeErrorMsg")) {
+            getWidget().setMimeTypeErrorMsg(uidl.getStringAttribute("mimeTypeErrorMsg"));
+        }
+        if (uidl.hasAttribute("acceptedMimeTypes")) {
+            getWidget().setAcceptedMimeTypes(Arrays.asList(uidl.getStringArrayAttribute("acceptedMimeTypes")));
         }
     }
 

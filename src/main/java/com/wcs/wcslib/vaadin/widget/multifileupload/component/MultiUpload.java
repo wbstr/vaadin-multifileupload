@@ -31,7 +31,6 @@ import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.server.StreamVariable.StreamingStartEvent;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.LegacyComponent;
-import java.lang.reflect.Array;
 import java.util.ListIterator;
 
 /**
@@ -56,7 +55,9 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     private long maxFileSize;
     private String sizeErrorMsg;
     private String acceptFilter;
+    private List<String> acceptedMimeTypes;
     private boolean enabled = true;
+    private String mimeTypeErrorMsg;
     StreamVariable streamVariable = new StreamVariable() {
         @Override
         public void streamingStarted(StreamingStartEvent event) {
@@ -159,6 +160,13 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         target.addAttribute("maxFileSize", maxFileSize);
         target.addAttribute("sizeErrorMsg", sizeErrorMsg);
         target.addAttribute("acceptFilter", acceptFilter);
+        if (acceptedMimeTypes != null) {
+            target.addAttribute("acceptedMimeTypes", acceptedMimeTypes.toArray(new String[acceptedMimeTypes.size()]));
+        } else {
+            target.addAttribute("acceptedMimeTypes", new String[]{});
+        }
+
+        target.addAttribute("mimeTypeErrorMsg", mimeTypeErrorMsg);
         target.addAttribute("enabled", enabled);
         if (ready) {
             target.addAttribute("ready", true);
@@ -246,5 +254,15 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     @Override
     public void setAcceptFilter(String acceptFilter) {
         this.acceptFilter = acceptFilter;
+    }
+
+    @Override
+    public void setAcceptedMimeTypes(List<String> acceptedMimeTypes) {
+        this.acceptedMimeTypes = acceptedMimeTypes;
+    }
+
+    @Override
+    public void setMimeTypeErrorMsgPattern(String pattern) {
+        this.mimeTypeErrorMsg = pattern;
     }
 }

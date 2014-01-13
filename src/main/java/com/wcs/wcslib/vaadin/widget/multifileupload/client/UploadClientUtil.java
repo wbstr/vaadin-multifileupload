@@ -41,4 +41,9 @@ public class UploadClientUtil {
                 replace("{1}", getHumanReadableByteCount(fileSize, false)).
                 replace("{2}", fileName);
     }
+
+    public static String getMimeTypeErrorMessage(String pattern, String fileName) {
+        //java.text.MessageFormat is not available on client side
+        return pattern.replace("{0}", fileName);
+    }
 }

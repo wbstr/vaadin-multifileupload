@@ -20,6 +20,7 @@ import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Upload;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  *
@@ -36,8 +37,10 @@ public class SmartMultiUpload extends CustomComponent {
     private String multiUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
     private boolean multiple;
     private int maxFileSize = Integer.MAX_VALUE;
-    private String sizeErrorMsgPattern = "File is too big:";
+    private String sizeErrorMsgPattern = "File is too big: {0}";
+    private String mimeTypeErrorMsgPattern = "File type is not valid: {0}";
     private String acceptFilter = "";
+    private List<String> acceptedMimeTypes;
     private boolean enabled = true;
     private Resource icon;
 
@@ -56,6 +59,8 @@ public class SmartMultiUpload extends CustomComponent {
         initMaxFileSize();
         initSizeErrorMsg();
         initAcceptFilter();
+        initAcceptedMimeTypes();
+        initMimeTypeErrorMsg();
         initEnabled();
         initUploadButtonIcon();
     }
@@ -94,6 +99,15 @@ public class SmartMultiUpload extends CustomComponent {
         initSizeErrorMsg();
     }
 
+    public String getMimeTypeErrorMsgPattern() {
+        return mimeTypeErrorMsgPattern;
+    }
+
+    public void setMimeTypeErrorMsgPattern(String mimeTypeErrorMsgPattern) {
+        this.mimeTypeErrorMsgPattern = mimeTypeErrorMsgPattern;
+        initMimeTypeErrorMsg();
+    }
+
     public String getAcceptFilter() {
         return acceptFilter;
     }
@@ -101,6 +115,15 @@ public class SmartMultiUpload extends CustomComponent {
     public void setAcceptFilter(String acceptFilter) {
         this.acceptFilter = acceptFilter;
         initAcceptFilter();
+    }
+
+    public List<String> getAcceptedMimeTypes() {
+        return acceptedMimeTypes;
+    }
+
+    public void setAcceptedMimeTypes(List<String> mimeTypes) {
+        this.acceptedMimeTypes = mimeTypes;
+        initAcceptedMimeTypes();
     }
 
     public void setUploadButtonIcon(Resource icon) {
@@ -168,6 +191,12 @@ public class SmartMultiUpload extends CustomComponent {
         }
     }
 
+    private void initMimeTypeErrorMsg() {
+        if (upload != null) {
+            upload.setMimeTypeErrorMsgPattern(mimeTypeErrorMsgPattern);
+        }
+    }
+
     private void initMaxFileSize() {
         if (upload != null) {
             upload.setMaxFileSize(maxFileSize);
@@ -177,6 +206,12 @@ public class SmartMultiUpload extends CustomComponent {
     private void initAcceptFilter() {
         if (upload != null) {
             upload.setAcceptFilter(acceptFilter);
+        }
+    }
+
+    private void initAcceptedMimeTypes() {
+        if (upload != null) {
+            upload.setAcceptedMimeTypes(acceptedMimeTypes);
         }
     }
 

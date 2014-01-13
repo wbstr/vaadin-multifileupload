@@ -41,6 +41,7 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
+import java.util.Arrays;
 import java.util.ListIterator;
 
 /**
@@ -57,6 +58,8 @@ public class VMultiUpload extends SimplePanel implements Paintable {
 
     private int maxFileSize;
     private String sizeErrorMsg;
+    private String mimeTypeErrorMsg;
+    private List<String> acceptedMimeTypes;
     private InputElement input;
 
     private final class MyFileUpload extends FileUpload {
@@ -172,8 +175,14 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         if (uidl.hasAttribute("sizeErrorMsg")) {
             sizeErrorMsg = uidl.getStringAttribute("sizeErrorMsg");
         }
+        if (uidl.hasAttribute("mimeTypeErrorMsg")) {
+            mimeTypeErrorMsg = uidl.getStringAttribute("mimeTypeErrorMsg");
+        }
         if (uidl.hasAttribute("acceptFilter")) {
             getInput().setAccept(uidl.getStringAttribute("acceptFilter"));
+        }
+        if (uidl.hasAttribute("acceptedMimeTypes")) {
+            acceptedMimeTypes = Arrays.asList(uidl.getStringArrayAttribute("acceptedMimeTypes"));
         }
         if (uidl.hasAttribute("interruptedFileIds")) {
             removeFromFileQueue(uidl.getIntArrayAttribute("interruptedFileIds"));
@@ -250,6 +259,26 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         enabled = true;
     }
 
+    private boolean isValidFileSize(VHtml5File file, StringBuilder errorMsg) {
+        if (file.getSize() > maxFileSize || file.getSize() <= 0) {
+            String formattedErrorMsg = UploadClientUtil.getSizeErrorMessage(
+                    sizeErrorMsg, maxFileSize, file.getSize(), file.getName());
+
+            errorMsg.append(formattedErrorMsg).append("<br/>");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidMimeType(VHtml5File file, StringBuilder errorMsg) {
+        if (acceptedMimeTypes != null && !acceptedMimeTypes.isEmpty() && !acceptedMimeTypes.contains(file.getType())) {
+            String formattedErrorMsg = UploadClientUtil.getMimeTypeErrorMessage(mimeTypeErrorMsg, file.getName());
+            errorMsg.append(formattedErrorMsg).append("<br/>");
+            return false;
+        }
+        return true;
+    }
+
     private void submit() {
         if (!enabled) {
             VConsole.log("Submit cancelled (disabled)");
@@ -260,13 +289,10 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         StringBuilder errorMsg = new StringBuilder();
         for (int i = 0; i < files; i++) {
             VHtml5File file = getFile(fu.getElement(), i);
-            if (file.getSize() > maxFileSize || file.getSize() <= 0) {
-                String formattedErrorMsg = UploadClientUtil.getSizeErrorMessage(
-                        sizeErrorMsg, maxFileSize, file.getSize(), file.getName());
-
-                errorMsg.append(formattedErrorMsg).append("<br/>");
+            if (!isValidFileSize(file, errorMsg) || !isValidMimeType(file, errorMsg)) {
                 continue;
             }
+
             FileWrapper wrapper = queueFilePost(file);
             filedetails.add(wrapper.serialize());
         }

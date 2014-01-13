@@ -16,6 +16,7 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
 import com.vaadin.ui.Component;
+import java.util.List;
 
 /**
  *
@@ -28,6 +29,10 @@ public interface UploadComponent extends Component {
     public void setSizeErrorMsgPattern(String pattern);
 
     public void setAcceptFilter(String acceptFilter);
+
+    public void setAcceptedMimeTypes(List<String> acceptedMimeTypes);
+
+    public void setMimeTypeErrorMsgPattern(String pattern);
 
     public void setButtonCaption(String buttonCaption);
 

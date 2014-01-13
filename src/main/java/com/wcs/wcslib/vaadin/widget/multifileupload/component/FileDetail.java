@@ -24,7 +24,7 @@ public class FileDetail {
     private static final String DELIMITER = "---xXx---";
     private long id;
     private String fileName;
-    private String mimeType = "todo/todo";
+    private String mimeType;
     private int contentLength;
 
     public FileDetail(String data) {
@@ -32,6 +32,7 @@ public class FileDetail {
         id = Long.parseLong(split[0]);
         contentLength = Integer.parseInt(split[1]);
         fileName = split[2];
+        mimeType = split[3];
     }
 
     public FileDetail(String caption, String mimeType, int parseInt) {
