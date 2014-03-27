@@ -32,7 +32,9 @@ public class FileDetail {
         id = Long.parseLong(split[0]);
         contentLength = Integer.parseInt(split[1]);
         fileName = split[2];
-        mimeType = split[3];
+        if (split.length > 3) {
+            mimeType = split[3];
+        }
     }
 
     public FileDetail(String caption, String mimeType, int parseInt) {
