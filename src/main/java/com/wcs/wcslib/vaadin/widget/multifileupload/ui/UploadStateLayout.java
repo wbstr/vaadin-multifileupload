@@ -74,17 +74,17 @@ public class UploadStateLayout extends CssLayout {
     }
 
     private Button createCancelBtn() {
-        Button cancelButton = new Button();
-        cancelButton.addClickListener(new Button.ClickListener() {
+        Button button = new Button();
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(final Button.ClickEvent event) {
                 uploadStatePanel.interruptUpload(fileDetailBean);
             }
         });
-        cancelButton.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
-        cancelButton.setStyleName("small");
-        cancelButton.setCaption(uploadStatePanel.getWindow().getCancelButtonCaption());
-        return cancelButton;
+        button.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
+        button.setStyleName("small");
+        button.setCaption(uploadStatePanel.getWindow().getCancelButtonCaption());
+        return button;
     }
 
     public void setFileName(String fileName) {

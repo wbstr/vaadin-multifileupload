@@ -34,7 +34,7 @@ public class UploadStateWindow extends Window {
     private static final String CANCEL_ICON = "remove_small.png";
     private static final String WINDOW_STYLE_CLASS = "multiple-upload-state-window";
     private static final String WINDOW_LAYOUT_STYLE_CLASS = "multiple-upload-state-window-layout";
-    private List<UploadStatePanel> uploadStatePanels = new ArrayList<UploadStatePanel>();
+    private List<UploadStatePanel> uploadStatePanels = new ArrayList<>();
     private VerticalLayout windowLayout = new VerticalLayout();
     private String uploadStatusCaption = "Upload status";
     private String cancelButtonCaption = "Cancel";

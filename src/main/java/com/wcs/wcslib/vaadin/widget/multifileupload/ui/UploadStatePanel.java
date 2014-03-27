@@ -41,7 +41,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     private static final Logger logger = Logger.getLogger(UploadStatePanel.class.getName());
     private static final String PANEL_STLYE_CLASS = "multiple-upload-state-panel";
-    private List<FileDetailBean> uploadQueue = new ArrayList<FileDetailBean>();
+    private List<FileDetailBean> uploadQueue = new ArrayList<>();
     private UploadStateLayout currentUploadingLayout;
     private UploadStateWindow window;
     private SmartMultiUpload multiUpload;

@@ -45,8 +45,8 @@ import java.util.ListIterator;
 @SuppressWarnings("serial")
 public class MultiUpload extends AbstractComponent implements LegacyComponent, UploadComponent {
 
-    List<FileDetail> pendingFiles = new ArrayList<FileDetail>();
-    private List<Long> interruptedFileIds = new ArrayList<Long>();
+    List<FileDetail> pendingFiles = new ArrayList<>();
+    private List<Long> interruptedFileIds = new ArrayList<>();
     private MultiUploadHandler receiver;
     private String buttonCaption = "...";
     private boolean uploading;
@@ -175,7 +175,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         target.addAttribute("buttoncaption", getButtonCaption());
         if (!interruptedFileIds.isEmpty()) {
             target.addAttribute("interruptedFileIds", interruptedFileIds.toArray(new Long[interruptedFileIds.size()]));
-            interruptedFileIds = new ArrayList<Long>();
+            interruptedFileIds = new ArrayList<>();
         }
     }
 
@@ -183,7 +183,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("filequeue")) {
             String[] filequeue = (String[]) variables.get("filequeue");
-            List<FileDetail> newFiles = new ArrayList<FileDetail>(filequeue.length);
+            List<FileDetail> newFiles = new ArrayList<>(filequeue.length);
             for (String string : filequeue) {
                 newFiles.add(new FileDetail(string));
             }
