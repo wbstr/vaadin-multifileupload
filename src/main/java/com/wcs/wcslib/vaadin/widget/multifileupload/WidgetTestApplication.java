@@ -18,6 +18,7 @@ package com.wcs.wcslib.vaadin.widget.multifileupload;
 import com.vaadin.data.Property;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
@@ -56,6 +57,17 @@ public class WidgetTestApplication extends UI {
         root.addComponent(form);
 
         createForm();
+
+        root.addComponent(new Button("ReBuildUI", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                root.removeComponent(form);
+                form = new FormLayout();
+                root.addComponent(form);
+                createForm();
+            }
+        }));
     }
 
     private void createForm() {
