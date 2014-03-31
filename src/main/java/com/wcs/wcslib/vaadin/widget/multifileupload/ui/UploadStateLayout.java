@@ -20,7 +20,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.VerticalLayout;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 
@@ -32,10 +32,9 @@ public class UploadStateLayout extends CssLayout {
 
     private static final String CANCEL_BUTTON_STYLE_CLASS = "multiple-upload-state-cancelbutton";
     private static final String CANCEL_BUTTON_LAYOUT_STYLE_CLASS = "multiple-upload-state-cancelbuttonlayout";
-    private static final int POLLING_INTERVAL = 500;
     private final Label fileName = new Label();
     private final Label textualProgress = new Label();
-    private final ProgressIndicator pi = new ProgressIndicator();
+    private final ProgressBar pi = new ProgressBar();
     private Button cancelButton;
     private VerticalLayout layout;
     private HorizontalLayout cancelLayout;
@@ -103,7 +102,6 @@ public class UploadStateLayout extends CssLayout {
         this.fileDetailBean = fileDetailBean;
         pi.setValue(0f);
         pi.setVisible(true);
-        pi.setPollingInterval(POLLING_INTERVAL);
         textualProgress.setVisible(true);
         setFileName(fileDetailBean.getFileName());
 

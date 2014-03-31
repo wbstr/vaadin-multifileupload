@@ -18,12 +18,14 @@ package com.wcs.wcslib.vaadin.widget.multifileupload;
 import com.vaadin.data.Property;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -41,8 +43,12 @@ import java.util.logging.Logger;
  * The Application's "main" class
  */
 @SuppressWarnings("serial")
+//@Push
 public class WidgetTestApplication extends UI {
 
+    private static final String PUSH_OPTION_ID = "push";
+    private static final String POLL_OPTION_ID = "poll";
+    private static final int POLLING_INTERVAL = 1000;
     private List<MultiFileUpload> uploads = new ArrayList<>();
     private VerticalLayout root = new VerticalLayout();
     private FormLayout form = new FormLayout();
@@ -52,6 +58,12 @@ public class WidgetTestApplication extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+        /*
+         * ProgressIndicator is deprecated from 7.1, so use UI#setPushMode(PushMode) or UI#setPollInterval(int) 
+         * to refresh the ProgressBar.
+         */
+        setPollInterval(POLLING_INTERVAL);
+
         setContent(root);
         root.setMargin(true);
 
@@ -76,6 +88,7 @@ public class WidgetTestApplication extends UI {
         addWindowPositionSwitcher();
         addUploadSpeedSlider();
         addOverallProgressSwitcher();
+        addPollSwitcher();
     }
 
     private void addLabels() {
@@ -183,6 +196,31 @@ public class WidgetTestApplication extends UI {
             });
             form.addComponent(cb);
         }
+    }
+
+    private void addPollSwitcher() {
+        final OptionGroup optionGroup = new OptionGroup("ProgressBar refresh mode");
+        optionGroup.addItem(POLL_OPTION_ID);
+        optionGroup.setItemCaption(POLL_OPTION_ID, "Poll (1000 ms)");
+
+        optionGroup.select(POLL_OPTION_ID);
+
+        optionGroup.addItem(PUSH_OPTION_ID);
+        optionGroup.setItemCaption(PUSH_OPTION_ID, "Push (Automatic)");
+        optionGroup.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if (optionGroup.getValue().equals(PUSH_OPTION_ID)) {
+                    getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
+                    setPollInterval(-1);
+                } else {
+                    getPushConfiguration().setPushMode(PushMode.DISABLED);
+                    setPollInterval(POLLING_INTERVAL);
+                }
+            }
+        });
+
+        form.addComponent(optionGroup);
     }
 
     private class SlowUpload extends MultiFileUpload {

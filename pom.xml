@@ -65,6 +65,11 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
+         <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-push</artifactId>
+            <version>${version.vaadin}</version>
+        </dependency>
     </dependencies>
     
     <build>
