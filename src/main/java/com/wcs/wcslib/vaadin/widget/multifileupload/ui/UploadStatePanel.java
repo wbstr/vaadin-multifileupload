@@ -58,7 +58,6 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         this.receiver = uploadReceiver;
         setVisible(false);
         setStyleName(PANEL_STLYE_CLASS);
-        window.addPanel(this);
 
         createLayout();
     }

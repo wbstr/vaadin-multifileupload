@@ -32,6 +32,8 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStatePanel;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStateWindow;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +43,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("serial")
 public class WidgetTestApplication extends UI {
 
+    private List<MultiFileUpload> uploads = new ArrayList<>();
     private VerticalLayout root = new VerticalLayout();
     private FormLayout form = new FormLayout();
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
@@ -54,27 +57,21 @@ public class WidgetTestApplication extends UI {
 
         addLabels();
 
+        addRebuildUIBtn();
+
         root.addComponent(form);
 
         createForm();
-
-        root.addComponent(new Button("ReBuildUI", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                root.removeComponent(form);
-                form = new FormLayout();
-                root.addComponent(form);
-                createForm();
-            }
-        }));
     }
 
     private void createForm() {
         createUploadFinishedHandler();
+        uploads.clear();
 
         addSlowUploadExample("Single upload", false);
         addSlowUploadExample("Multiple upload", true);
+
+        addUploadAttachedCheckBoxes();
 
         addWindowPositionSwitcher();
         addUploadSpeedSlider();
@@ -109,7 +106,8 @@ public class WidgetTestApplication extends UI {
         slowUpload.setCaption(caption);
         slowUpload.setPanelCaption(caption);
         slowUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
-        form.addComponent(slowUpload);
+        form.addComponent(slowUpload, 0);
+        uploads.add(slowUpload);
     }
 
     private void addUploadSpeedSlider() {
@@ -155,6 +153,36 @@ public class WidgetTestApplication extends UI {
             }
         });
         form.addComponent(cb);
+    }
+
+    private void addRebuildUIBtn() {
+        root.addComponent(new Button("ReBuildUI", new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                root.removeComponent(form);
+                form = new FormLayout();
+                root.addComponent(form);
+                createForm();
+            }
+        }));
+    }
+
+    private void addUploadAttachedCheckBoxes() {
+        for (final MultiFileUpload multiFileUpload : uploads) {
+            final CheckBox cb = new CheckBox(multiFileUpload.getCaption() + " attached");
+            cb.setValue(true);
+            cb.addValueChangeListener(new Property.ValueChangeListener() {
+                @Override
+                public void valueChange(Property.ValueChangeEvent event) {
+                    if (cb.getValue()) {
+                        form.addComponent(multiFileUpload, 0);
+                    } else {
+                        form.removeComponent(multiFileUpload);
+                    }
+                }
+            });
+            form.addComponent(cb);
+        }
     }
 
     private class SlowUpload extends MultiFileUpload {

@@ -160,6 +160,12 @@ public class MultiFileUpload extends CustomComponent {
     }
 
     @Override
+    public void attach() {
+        super.attach();
+        uploadStatePanel.getWindow().addPanel(uploadStatePanel);
+    }
+
+    @Override
     public void detach() {
         if (uploadStatePanel.hasUploadInProgress()) {
             interruptAll();
@@ -167,5 +173,6 @@ public class MultiFileUpload extends CustomComponent {
         }
 
         super.detach();
+        uploadStatePanel.getWindow().removePanel(uploadStatePanel);
     }
 }
