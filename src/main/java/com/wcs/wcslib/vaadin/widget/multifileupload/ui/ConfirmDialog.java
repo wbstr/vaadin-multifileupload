@@ -56,10 +56,14 @@ public class ConfirmDialog extends Window {
         question = new Label(confirmQuestion);
         windowLayout.addComponent(question);
 
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setSpacing(true);
+        HorizontalLayout buttonLayout = createButtonLayout();
         windowLayout.addComponent(buttonLayout);
         windowLayout.setComponentAlignment(buttonLayout, Alignment.BOTTOM_CENTER);
+    }
+
+    private HorizontalLayout createButtonLayout() {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(true);
 
         yes = new Button(confirmYes);
         yes.addClickListener(new Button.ClickListener() {
@@ -81,6 +85,8 @@ public class ConfirmDialog extends Window {
             }
         });
         buttonLayout.addComponent(no);
+
+        return buttonLayout;
     }
 
     public void hide() {
@@ -101,6 +107,7 @@ public class ConfirmDialog extends Window {
 
     public void setConfirmHeader(String confirmHeader) {
         this.confirmHeader = confirmHeader;
+        setCaption(confirmHeader);
     }
 
     public String getConfirmQuestion() {
@@ -109,6 +116,7 @@ public class ConfirmDialog extends Window {
 
     public void setConfirmQuestion(String confirmQuestion) {
         this.confirmQuestion = confirmQuestion;
+        question.setValue(confirmQuestion);
     }
 
     public String getConfirmYes() {
@@ -117,6 +125,7 @@ public class ConfirmDialog extends Window {
 
     public void setConfirmYes(String confirmYes) {
         this.confirmYes = confirmYes;
+        yes.setCaption(confirmYes);
     }
 
     public String getConfirmNo() {
@@ -125,6 +134,7 @@ public class ConfirmDialog extends Window {
 
     public void setConfirmNo(String confirmNo) {
         this.confirmNo = confirmNo;
+        no.setCaption(confirmNo);
     }
 
     public ConfirmAction getAction() {
