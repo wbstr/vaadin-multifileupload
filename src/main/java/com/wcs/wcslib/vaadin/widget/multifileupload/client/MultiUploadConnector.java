@@ -24,6 +24,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.shared.ui.Connect;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUpload;
 
@@ -52,12 +53,12 @@ public class MultiUploadConnector extends AbstractComponentConnector implements 
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 if (getIcon() != null) {
                     if (getWidget().icon == null) {
-                        getWidget().icon = new Icon(getConnection());
+                        getWidget().icon = new ImageIcon();
                         Element iconElement = getWidget().icon.getElement();
                         getWidget().submitButton.wrapper.insertBefore(iconElement,
                                 getWidget().submitButton.captionElement);
                     }
-                    getWidget().icon.setUri(getIcon());
+                    getWidget().icon.setUri(getIconUri());
                 } else {
                     if (getWidget().icon != null) {
                         getWidget().submitButton.wrapper.removeChild(getWidget().icon

@@ -35,10 +35,10 @@ public class UploadClientUtil {
         return NumberFormat.getFormat("#.0").format(bytes / Math.pow(unit, exp)) + " " + pre + "B";
     }
 
-    public static String getSizeErrorMessage(String pattern, Integer maxFileSize, Integer fileSize, String fileName) {
+    public static String getSizeErrorMessage(String pattern, Number maxFileSize, Number fileSize, String fileName) {
         //java.text.MessageFormat is not available on client side
-        return pattern.replace("{0}", getHumanReadableByteCount(maxFileSize, false)).
-                replace("{1}", getHumanReadableByteCount(fileSize, false)).
+        return pattern.replace("{0}", getHumanReadableByteCount(maxFileSize.longValue(), false)).
+                replace("{1}", getHumanReadableByteCount(fileSize.longValue(), false)).
                 replace("{2}", fileName);
     }
 

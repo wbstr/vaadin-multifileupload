@@ -22,6 +22,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.shared.ui.Connect;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.CustomUpload;
@@ -72,12 +73,12 @@ public class CustomUploadConnector extends UploadConnector {
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 if (getIcon() != null) {
                     if (getWidget().icon == null) {
-                        getWidget().icon = new Icon(getConnection());
+                        getWidget().icon = new ImageIcon();
                         Element iconElement = getWidget().icon.getElement();
                         getWidget().submitButton.wrapper.insertBefore(iconElement,
                                 getWidget().submitButton.captionElement);
                     }
-                    getWidget().icon.setUri(getIcon());
+                    getWidget().icon.setUri(getIconUri());
                 } else {
                     if (getWidget().icon != null) {
                         getWidget().submitButton.wrapper.removeChild(getWidget().icon

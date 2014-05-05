@@ -64,7 +64,7 @@ public class UploadStateLayout extends CssLayout {
         cancelLayout.addComponent(textualProgress);
         cancelButton = new Button();
         cancelLayout.addComponent(cancelButton);
-        cancelLayout.setComponentAlignment(cancelButton, Alignment.MIDDLE_RIGHT);
+        cancelLayout.setComponentAlignment(cancelButton, Alignment.TOP_RIGHT);
         layout.addComponent(cancelLayout);
     }
 

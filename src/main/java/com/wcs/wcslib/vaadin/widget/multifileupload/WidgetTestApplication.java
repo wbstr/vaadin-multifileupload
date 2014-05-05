@@ -54,7 +54,7 @@ public class WidgetTestApplication extends UI {
     private FormLayout form = new FormLayout();
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private UploadFinishedHandler uploadFinishedHandler;
-    private double uploadSpeed = 50;
+    private double uploadSpeed = 500;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -105,7 +105,7 @@ public class WidgetTestApplication extends UI {
         uploadFinishedHandler = new UploadFinishedHandler() {
             @Override
             public void handleFile(InputStream stream, String fileName, String mimeType, long length) {
-                Notification.show(fileName + " uploaded.");
+                Notification.show(fileName + " upsloaded.");
             }
         };
     }
@@ -128,7 +128,7 @@ public class WidgetTestApplication extends UI {
         slider.setWidth("200px");
         slider.setImmediate(true);
         slider.setMin(0);
-        slider.setMax(100);
+        slider.setMax(1000);
         slider.setValue(uploadSpeed);
         slider.addValueChangeListener(new Property.ValueChangeListener() {
             @Override

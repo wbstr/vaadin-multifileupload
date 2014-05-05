@@ -332,7 +332,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         }
 
         public String serialize() {
-            int size = file.getSize();
+            Number size = file.getSize();
             String name = file.getName();
             String type = file.getType();
             return id + DELIM + size + DELIM + name + DELIM + type + DELIM;
