@@ -26,7 +26,7 @@
         <project.build.java.version>1.7</project.build.java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version.vaadin>7.2.0.beta1</version.vaadin>
+        <version.vaadin>7.2.0</version.vaadin>
         <widgetset>com.wcs.wcslib.vaadin.widget.multifileupload.MultiFileUploadWidgetSet</widgetset>
     </properties>
 
