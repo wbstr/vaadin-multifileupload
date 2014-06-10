@@ -208,4 +208,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     public boolean hasUploadInProgress() {
         return !uploadQueue.isEmpty();
     }
+
+    public UploadStateLayout  getCurrentUploadingLayout() {
+        return this.currentUploadingLayout;
+    }
 }

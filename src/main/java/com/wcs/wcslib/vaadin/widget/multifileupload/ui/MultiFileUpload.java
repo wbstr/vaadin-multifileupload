@@ -19,10 +19,11 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
+
 import java.util.List;
 
 /**
- *
+ * 
  * @author gergo
  */
 public class MultiFileUpload extends CustomComponent {
@@ -98,17 +99,19 @@ public class MultiFileUpload extends CustomComponent {
     }
 
     /**
-     *
-     * @param pattern Pattern of the error message, which occurs when a user uploaded too big file. ({0} maxFileSize,
-     * {1} fileSize, {2} fileName)
+     * 
+     * @param pattern
+     *            Pattern of the error message, which occurs when a user uploaded too big file. ({0} maxFileSize, {1}
+     *            fileSize, {2} fileName)
      */
     public void setSizeErrorMsgPattern(String pattern) {
         smartUpload.setSizeErrorMsgPattern(pattern);
     }
 
     /**
-     *
-     * @param maxVisibleRows The number of rows which after the upload queue table renders a scrollbar.
+     * 
+     * @param maxVisibleRows
+     *            The number of rows which after the upload queue table renders a scrollbar.
      */
     public void setMaxVisibleRows(int maxVisibleRows) {
         uploadStatePanel.getTable().setMaxVisibleRows(maxVisibleRows);
@@ -118,9 +121,9 @@ public class MultiFileUpload extends CustomComponent {
      * Sets mime types that browser should let users upload. This check is done by the client side and not supported by
      * all browsers. Some browser us the accept filter just as a initial filter for their file chooser dialog. Note that
      * using this method does not invalidate need for server side checks.
-     *
+     * 
      * See https://developer.mozilla.org/en-US/docs/HTML/Element/Input
-     *
+     * 
      * @param accept
      */
     public void setAcceptFilter(String accept) {
@@ -129,19 +132,21 @@ public class MultiFileUpload extends CustomComponent {
 
     /**
      * Sets valid mime types.
-     *
+     * 
      * See http://reference.sitepoint.com/html/mime-types-full
-     *
-     * @param mimeTypes Mime types should be accepted.
+     * 
+     * @param mimeTypes
+     *            Mime types should be accepted.
      */
     public void setAcceptedMimeTypes(List<String> mimeTypes) {
         smartUpload.setAcceptedMimeTypes(mimeTypes);
     }
 
     /**
-     *
-     * @param pattern Pattern of the error message, which occurs when a user uploaded a file that is not match to the
-     * given mime types. ({0} fileName)
+     * 
+     * @param pattern
+     *            Pattern of the error message, which occurs when a user uploaded a file that is not match to the given
+     *            mime types. ({0} fileName)
      */
     public void setMimeTypeErrorMsgPattern(String pattern) {
         smartUpload.setMimeTypeErrorMsgPattern(pattern);
@@ -174,5 +179,14 @@ public class MultiFileUpload extends CustomComponent {
 
         super.detach();
         uploadStatePanel.getWindow().removePanel(uploadStatePanel);
+    }
+
+    public void setIndeterminate(final boolean indeterminate) {
+        this.getUploadStatePanel().getCurrentUploadingLayout().setIndeterminate(indeterminate);
+        this.setOverallProgressVisible(!indeterminate);
+    }
+
+    public void setOverallProgressVisible(final boolean overallProgressVisible) {
+        this.getUploadStatePanel().getWindow().setOverallProgressVisible(overallProgressVisible);
     }
 }
