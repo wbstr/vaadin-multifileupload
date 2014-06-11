@@ -105,6 +105,7 @@ public class UploadStateLayout extends CssLayout {
         cancelLayout.replaceComponent(cancelButton, newCancelBtn);
         cancelButton = newCancelBtn;
         cancelButton.addStyleName(CANCEL_BUTTON_STYLE_CLASS);
+        textualProgress.setValue(UploadUtil.getHumanReadableByteCount(fileDetailBean.getContentLength(), false));
     }
 
     public FileDetailBean getFileDetailBean() {

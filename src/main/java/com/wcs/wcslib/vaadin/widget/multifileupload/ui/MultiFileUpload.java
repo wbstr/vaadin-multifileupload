@@ -37,8 +37,12 @@ public class MultiFileUpload extends CustomComponent {
         initSmartUpload(handler, multiple);
     }
 
-    public MultiFileUpload(UploadFinishedHandler handler, UploadStateWindow uploadStateWindow) {
-        this(handler, uploadStateWindow, true);
+    public MultiFileUpload() {
+        this(null, new UploadStateWindow(), true);
+    }
+
+    public MultiFileUpload(final boolean multiple) {
+        this(null, new UploadStateWindow(), multiple);
     }
 
     public SmartMultiUpload getSmartUpload() {
@@ -57,6 +61,10 @@ public class MultiFileUpload extends CustomComponent {
         return new UploadStatePanel(uploadStateWindow);
     }
 
+    public void setAllFilesUploadedHandler(final AllFilesUploadedHandler allFilesUploadedHandler) {
+        this.getUploadStatePanel().setAllFilesUploadedHandler(allFilesUploadedHandler);
+    }
+
     private void initSmartUpload(UploadFinishedHandler handler, boolean multiple) {
         smartUpload = new SmartMultiUpload(uploadStatePanel, multiple);
 
@@ -64,6 +72,10 @@ public class MultiFileUpload extends CustomComponent {
         uploadStatePanel.setFinishedHandler(handler);
 
         setCompositionRoot(smartUpload);
+    }
+
+    public void setUploadFinishHandler(final UploadFinishedHandler uploadFinishHandler) {
+        this.uploadStatePanel.setFinishedHandler(uploadFinishHandler);
     }
 
     public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
