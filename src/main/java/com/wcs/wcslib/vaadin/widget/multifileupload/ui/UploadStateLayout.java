@@ -15,17 +15,11 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.ProgressBar;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 
 /**
- *
+ * 
  * @author gergo
  */
 public class UploadStateLayout extends CssLayout {
@@ -92,10 +86,12 @@ public class UploadStateLayout extends CssLayout {
 
     public void setProgress(long bytesReceived, long contentLength) {
         pi.setValue(new Float(bytesReceived / (float) contentLength));
-        textualProgress.setValue(
-                UploadUtil.getHumanReadableByteCount(bytesReceived, false)
-                + " / "
-                + UploadUtil.getHumanReadableByteCount(contentLength, false));
+        if (pi.isIndeterminate()) {
+            textualProgress.setValue(UploadUtil.getHumanReadableByteCount(contentLength, false));
+        } else {
+            textualProgress.setValue(UploadUtil.getHumanReadableByteCount(bytesReceived, false) + " / "
+                    + UploadUtil.getHumanReadableByteCount(contentLength, false));
+        }
     }
 
     public void startStreaming(FileDetailBean fileDetailBean) {
@@ -109,9 +105,14 @@ public class UploadStateLayout extends CssLayout {
         cancelLayout.replaceComponent(cancelButton, newCancelBtn);
         cancelButton = newCancelBtn;
         cancelButton.addStyleName(CANCEL_BUTTON_STYLE_CLASS);
+        textualProgress.setValue(UploadUtil.getHumanReadableByteCount(fileDetailBean.getContentLength(), false));
     }
 
     public FileDetailBean getFileDetailBean() {
         return fileDetailBean;
+    }
+
+    public void setIndeterminate(boolean indeterminate) {
+        this.pi.setIndeterminate(indeterminate);
     }
 }

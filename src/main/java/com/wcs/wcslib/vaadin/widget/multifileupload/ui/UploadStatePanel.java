@@ -19,12 +19,14 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.FileDetail;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUploadHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.DefaultUploadReceiver;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.UploadReceiver;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 
  * @author gergo
  */
 public class UploadStatePanel extends Panel implements MultiUploadHandler {
@@ -43,21 +45,32 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     private static final String PANEL_STLYE_CLASS = "multiple-upload-state-panel";
     private List<FileDetailBean> uploadQueue = new ArrayList<>();
     private UploadStateLayout currentUploadingLayout;
-    private UploadStateWindow window;
+    private final UploadStateWindow window;
     private SmartMultiUpload multiUpload;
     private UploadReceiver receiver;
     private UploadFinishedHandler finishedHandler;
+    private AllFilesUploadedHandler allFilesUploadedHandler;
     private UploadQueueTable table = new UploadQueueTable();
+    private boolean firstStreamed = false;
 
     public UploadStatePanel(UploadStateWindow window) {
         this(window, new DefaultUploadReceiver());
     }
 
-    public UploadStatePanel(UploadStateWindow window, UploadReceiver uploadReceiver) {
+    public UploadStatePanel(final UploadStateWindow window, final UploadReceiver uploadReceiver) {
         this.window = window;
         this.receiver = uploadReceiver;
         setVisible(false);
         setStyleName(PANEL_STLYE_CLASS);
+
+        this.window.addCloseListener(new Window.CloseListener() {
+            @Override
+            public void windowClose(final Window.CloseEvent closeEvent) {
+                if (!uploadQueue.isEmpty()) {
+                    UploadStatePanel.this.window.getConfirmDialog().show();
+                }
+            }
+        });
 
         createLayout();
     }
@@ -75,11 +88,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         if (event.getContentLength() > multiUpload.getMaxFileSize() || event.getContentLength() <= 0) {
             //the client side file size check may not work in old browsers
             interruptUpload(uploadQueue.get(0));
-            String formattedErrorMsg = UploadUtil.getSizeErrorMessage(
-                    multiUpload.getSizeErrorMsg(),
-                    multiUpload.getMaxFileSize(),
-                    (int) event.getContentLength(),
-                    event.getFileName());
+            String formattedErrorMsg = UploadUtil.getSizeErrorMessage(multiUpload.getSizeErrorMsg(),
+                    multiUpload.getMaxFileSize(), (int) event.getContentLength(), event.getFileName());
             Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
             return false;
         }
@@ -90,11 +100,10 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         if (multiUpload.getAcceptedMimeTypes() != null && !multiUpload.getAcceptedMimeTypes().isEmpty()
                 && !multiUpload.getAcceptedMimeTypes().contains(event.getMimeType())) {
             logger.log(Level.FINE, "Mime type is not valid! File name: {0}, Mime type: {1}",
-                    new Object[]{event.getFileName(), event.getMimeType()});
+                    new Object[] { event.getFileName(), event.getMimeType() });
 
             interruptUpload(uploadQueue.get(0));
-            String formattedErrorMsg = UploadUtil.getMimeTypeErrorMessage(
-                    multiUpload.getMimeTypeErrorMsgPattern(),
+            String formattedErrorMsg = UploadUtil.getMimeTypeErrorMessage(multiUpload.getMimeTypeErrorMsgPattern(),
                     event.getFileName());
             Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
             return false;
@@ -110,18 +119,35 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
                 return;
             }
 
-            currentUploadingLayout.startStreaming(uploadQueue.get(0));
-            show();
+            if (firstStreamed) {
+                currentUploadingLayout.startStreaming(uploadQueue.get(0));
+            } else {
+                firstStreamed = true;
+            }
         }
     }
 
     @Override
     public void streamingFinished(StreamVariable.StreamingEndEvent event) {
-        removeFromQueue(currentUploadingLayout.getFileDetailBean());
-        InputStream stream = receiver.getStream();
-        //"simple" Upload fires Upload.FinishedEvent on interruptUpload()
-        if (stream != null) {
-            finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived());
+        try {
+            removeFromQueue(currentUploadingLayout.getFileDetailBean());
+            InputStream stream = receiver.getStream();
+            //"simple" Upload fires Upload.FinishedEvent on interruptUpload()
+            if (stream != null) {
+                if (finishedHandler != null) {
+                    finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(),
+                            event.getBytesReceived());
+                }
+
+            }
+            if (uploadQueue.isEmpty()) {
+                if (allFilesUploadedHandler != null) {
+                    allFilesUploadedHandler.uploaded();
+                }
+                window.hide();
+                window.cleanTotals();
+            }
+        } finally {
             receiver.deleteTempFile();
         }
     }
@@ -133,8 +159,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     @Override
     public void streamingFailed(StreamVariable.StreamingErrorEvent event) {
-//        Logger.getLogger(getClass().getName()).log(Level.FINE,
-//                "Streaming failed", event.getException());
+        //        Logger.getLogger(getClass().getName()).log(Level.FINE,
+        //                "Streaming failed", event.getException());
         receiver.deleteTempFile();
     }
 
@@ -155,19 +181,25 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         }
         table.refreshContainerDatasource(uploadQueue);
         window.setTotalContentLength(window.getTotalContentLength() + totalContentLength);
+        currentUploadingLayout.startStreaming(uploadQueue.get(0));
+        this.show();
     }
 
     private void show() {
         setVisible(true);
-        window.refreshVisibility();
+        window.show();
+    }
+
+    private void hide() {
+        setVisible(false);
+        window.hide();
     }
 
     public void removeFromQueue(FileDetailBean fileDetail) {
         uploadQueue.remove(fileDetail);
         table.refreshContainerDatasource(uploadQueue);
         if (uploadQueue.isEmpty()) {
-            setVisible(false);
-            window.refreshVisibility();
+            this.hide();
         }
     }
 
@@ -181,6 +213,10 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public void setFinishedHandler(UploadFinishedHandler finishedHandler) {
         this.finishedHandler = finishedHandler;
+    }
+
+    public void setAllFilesUploadedHandler(final AllFilesUploadedHandler allFilesUploadedHandler) {
+        this.allFilesUploadedHandler = allFilesUploadedHandler;
     }
 
     public UploadStateWindow getWindow() {
@@ -198,7 +234,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         for (int i = uploadQueue.size() - 1; i >= 0; i--) {
             interruptUpload(uploadQueue.get(i));
         }
-        window.refreshVisibility();
+        window.hide();
+        window.cleanTotals();
     }
 
     public UploadQueueTable getTable() {
@@ -207,5 +244,9 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public boolean hasUploadInProgress() {
         return !uploadQueue.isEmpty();
+    }
+
+    public UploadStateLayout getCurrentUploadingLayout() {
+        return this.currentUploadingLayout;
     }
 }

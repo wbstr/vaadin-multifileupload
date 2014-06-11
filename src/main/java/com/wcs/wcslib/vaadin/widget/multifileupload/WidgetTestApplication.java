@@ -19,20 +19,12 @@ import com.vaadin.data.Property;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Slider;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStatePanel;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStateWindow;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +72,9 @@ public class WidgetTestApplication extends UI {
         createUploadFinishedHandler();
         uploads.clear();
 
-        addSlowUploadExample("Single upload", false);
-        addSlowUploadExample("Multiple upload", true);
+        addSlowUploadExample("Multiple with indeterminate progress", true, true);
+        addSlowUploadExample("Single upload", false, false);
+        addSlowUploadExample("Multiple upload", true, false);
 
         addUploadAttachedCheckBoxes();
 
@@ -94,10 +87,12 @@ public class WidgetTestApplication extends UI {
     private void addLabels() {
         root.addComponent(new Label("These upload fields use the same window for displaying an upload queue and a "
                 + "progress indicator for each field."));
-        root.addComponent(new Label("You can select multiple files to upload if your browser support it (Firefox, Chrome)."));
+        root.addComponent(new Label(
+                "You can select multiple files to upload if your browser support it (Firefox, Chrome)."));
         root.addComponent(new Label("You can cancel the current upload or remove files from the upload queue."));
         root.addComponent(new Label("You can force the MultiFileUpload to behave like the stock Upload component."));
-        root.addComponent(new Label("In browsers which not support HTML5, this field behaves like the stock Upload component with the shared window functionality."));
+        root.addComponent(new Label(
+                "In browsers which not support HTML5, this field behaves like the stock Upload component with the shared window functionality."));
         root.addComponent(new Label("You can slow down and speed up the upload speed. This is for the demo only."));
     }
 
@@ -105,12 +100,12 @@ public class WidgetTestApplication extends UI {
         uploadFinishedHandler = new UploadFinishedHandler() {
             @Override
             public void handleFile(InputStream stream, String fileName, String mimeType, long length) {
-                Notification.show(fileName + " upsloaded.");
+                Notification.show(fileName + " uploaded.");
             }
         };
     }
 
-    private void addSlowUploadExample(String caption, boolean multiple) {
+    private void addSlowUploadExample(String caption, boolean multiple, boolean indeterminate) {
         SlowUpload slowUpload = new SlowUpload(uploadFinishedHandler, uploadStateWindow, multiple);
         int maxFileSize = 5242880; //5 MB
         slowUpload.setMaxFileSize(maxFileSize);
@@ -119,6 +114,7 @@ public class WidgetTestApplication extends UI {
         slowUpload.setCaption(caption);
         slowUpload.setPanelCaption(caption);
         slowUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
+        slowUpload.setIndeterminate(indeterminate);
         form.addComponent(slowUpload, 0);
         uploads.add(slowUpload);
     }

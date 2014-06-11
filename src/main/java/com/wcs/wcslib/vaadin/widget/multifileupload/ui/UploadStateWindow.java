@@ -21,11 +21,12 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 
  * @author gergo
  */
 @StyleSheet("uploadstatewindow.css")
@@ -47,15 +48,9 @@ public class UploadStateWindow extends Window {
 
     public enum WindowPosition {
 
-        BOTTOM("position-bottom"),
-        BOTTOM_LEFT("position-bottom-left"),
-        BOTTOM_RIGHT("position-bottom-right"),
-        TOP("position-top"),
-        TOP_LEFT("position-top-left"),
-        TOP_RIGHT("position-top-right"),
-        LEFT("position-left"),
-        RIGHT("position-right"),
-        CENTER("");
+        BOTTOM("position-bottom"), BOTTOM_LEFT("position-bottom-left"), BOTTOM_RIGHT("position-bottom-right"), TOP(
+                "position-top"), TOP_LEFT("position-top-left"), TOP_RIGHT("position-top-right"), LEFT("position-left"), RIGHT(
+                "position-right"), CENTER("");
         private String style;
 
         private WindowPosition(String style) {
@@ -84,13 +79,8 @@ public class UploadStateWindow extends Window {
         setWindowPosition(WindowPosition.BOTTOM_RIGHT);
         setOverallProgressVisible(true);
         setClosable(true);
-        addCloseListener(new CloseListener() {
-            @Override
-            public void windowClose(CloseEvent e) {
-                show();
-                confirmDialog.show();
-            }
-        });
+
+        confirmDialog.setPositionY(100);
 
         confirmDialog.setAction(new ConfirmAction() {
             @Override
@@ -104,34 +94,24 @@ public class UploadStateWindow extends Window {
         windowLayout.setMargin(false);
     }
 
-    public void refreshVisibility() {
-        if (hasVisibleContent()) {
-            show();
-        } else {
-            confirmDialog.hide();
-            hide();
-            setTotalContentLength(0);
-            setTotalBytesReceived(0);
-        }
+    public void cleanTotals() {
+        setTotalContentLength(0);
+        setTotalBytesReceived(0);
     }
 
-    private boolean hasVisibleContent() {
-        for (UploadStatePanel uploadStatePanel : uploadStatePanels) {
-            if (uploadStatePanel.isVisible()) {
-                return true;
+    public void show() {
+        if (this.getConfirmDialog().getParent() == null) {
+            if (this.getParent() == null) {
+                UI.getCurrent().addWindow(this);
             }
+            setVisible(true);
         }
-        return false;
     }
 
-    private void show() {
-        if (this.getParent() == null) {
-            UI.getCurrent().addWindow(this);
+    public void hide() {
+        if (this.getParent() != null) {
+            UI.getCurrent().removeWindow(this);
         }
-        setVisible(true);
-    }
-
-    private void hide() {
         setVisible(false);
     }
 
@@ -146,7 +126,7 @@ public class UploadStateWindow extends Window {
         if (overallProgressVisible) {
             int overallProgress = (int) ((totalBytesReceived * 100.0f) / totalContentLength);
             setCaption(uploadStatusCaption + " (" + overallProgress + "%)");
-        }else{
+        } else {
             setCaption(uploadStatusCaption);
         }
     }
