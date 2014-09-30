@@ -21,6 +21,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class UploadStateWindow extends Window {
     private boolean overallProgressVisible;
     private WindowPosition windowPosition;
 
-    public enum WindowPosition {
+    public enum WindowPosition implements Serializable {
 
         BOTTOM("position-bottom"),
         BOTTOM_LEFT("position-bottom-left"),
