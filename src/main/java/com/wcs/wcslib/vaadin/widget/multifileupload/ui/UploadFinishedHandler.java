@@ -16,12 +16,13 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  *
  * @author gergo
  */
-public interface UploadFinishedHandler {
+public interface UploadFinishedHandler extends Serializable {
 
     public void handleFile(InputStream stream, String fileName, String mimeType, long length);
 }

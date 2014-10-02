@@ -15,11 +15,13 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
+import java.io.Serializable;
+
 /**
  *
  * @author gergo
  */
-public interface ConfirmAction {
+public interface ConfirmAction extends Serializable {
 
     public void execute();
 }
