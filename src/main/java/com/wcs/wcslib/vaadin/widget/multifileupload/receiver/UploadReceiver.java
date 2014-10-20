@@ -17,12 +17,13 @@ package com.wcs.wcslib.vaadin.widget.multifileupload.receiver;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  *
  * @author gergo
  */
-public interface UploadReceiver {
+public interface UploadReceiver extends Serializable {
 
     public OutputStream receiveUpload();
 
