@@ -47,7 +47,7 @@ public class CustomUpload extends Upload implements UploadComponent {
     }
 
     @Override
-    public void setMaxFileSize(int maxFileSize) {
+    public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
 

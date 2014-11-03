@@ -78,7 +78,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             String formattedErrorMsg = UploadUtil.getSizeErrorMessage(
                     multiUpload.getSizeErrorMsg(),
                     multiUpload.getMaxFileSize(),
-                    (int) event.getContentLength(),
+                    event.getContentLength(),
                     event.getFileName());
             Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
             return false;
