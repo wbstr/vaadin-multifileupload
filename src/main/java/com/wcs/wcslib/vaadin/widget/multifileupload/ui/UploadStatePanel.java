@@ -25,6 +25,7 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.DefaultUploadReceiver;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.UploadReceiver;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -118,10 +119,14 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     @Override
     public void streamingFinished(StreamVariable.StreamingEndEvent event) {
         removeFromQueue(currentUploadingLayout.getFileDetailBean());
-        InputStream stream = receiver.getStream();
-        //"simple" Upload fires Upload.FinishedEvent on interruptUpload()
-        if (stream != null) {
-            finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived());
+        try (InputStream stream = receiver.getStream()) {
+            //"simple" Upload fires Upload.FinishedEvent on interruptUpload()
+            if (stream != null) {
+                finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived());
+            }
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Could not close stream!", ex);
+        } finally {
             receiver.deleteTempFile();
         }
     }
