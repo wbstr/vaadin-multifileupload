@@ -56,7 +56,7 @@ import java.util.ListIterator;
  */
 public class VMultiUpload extends SimplePanel implements Paintable {
 
-    private int maxFileSize;
+    private long maxFileSize;
     private String sizeErrorMsg;
     private String mimeTypeErrorMsg;
     private List<String> acceptedMimeTypes;
@@ -170,7 +170,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         }
 
         if (uidl.hasAttribute("maxFileSize")) {
-            maxFileSize = uidl.getIntAttribute("maxFileSize");
+            maxFileSize = uidl.getLongAttribute("maxFileSize");
         }
         if (uidl.hasAttribute("sizeErrorMsg")) {
             sizeErrorMsg = uidl.getStringAttribute("sizeErrorMsg");

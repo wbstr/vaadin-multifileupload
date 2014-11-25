@@ -24,7 +24,7 @@ import java.util.List;
  */
 public interface UploadComponent extends Component {
 
-    public void setMaxFileSize(int maxFileSize);
+    public void setMaxFileSize(long maxFileSize);
 
     public void setSizeErrorMsgPattern(String pattern);
 

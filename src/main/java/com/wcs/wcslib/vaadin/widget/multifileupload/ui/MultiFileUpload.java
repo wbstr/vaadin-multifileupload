@@ -77,11 +77,11 @@ public class MultiFileUpload extends CustomComponent {
         uploadStatePanel.interruptAll();
     }
 
-    public void setMaxFileSize(int maxFileSizeInBytes) {
+    public void setMaxFileSize(long maxFileSizeInBytes) {
         smartUpload.setMaxFileSize(maxFileSizeInBytes);
     }
 
-    public int getMaxFileSize() {
+    public long getMaxFileSize() {
         return smartUpload.getMaxFileSize();
     }
 

@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class VCustomUpload extends VUpload {
 
-    private int maxFileSize;
+    private long maxFileSize;
     private String sizeErrorMsg;
     private String mimeTypeErrorMsg;
     private List<String> acceptedMimeTypes;
@@ -95,7 +95,7 @@ public class VCustomUpload extends VUpload {
         return input;
     }
 
-    public void setMaxFileSize(int maxFileSize) {
+    public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
 

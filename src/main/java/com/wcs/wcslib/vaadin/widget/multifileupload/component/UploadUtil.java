@@ -34,7 +34,7 @@ public class UploadUtil {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static String getSizeErrorMessage(String pattern, Integer maxFileSize, Integer fileSize, String fileName) {
+    public static String getSizeErrorMessage(String pattern, Long maxFileSize, Long fileSize, String fileName) {
         return MessageFormat.format(pattern,
                 getHumanReadableByteCount(maxFileSize, false),
                 getHumanReadableByteCount(fileSize, false),

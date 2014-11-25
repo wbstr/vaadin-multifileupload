@@ -39,7 +39,7 @@ public class CustomUploadConnector extends UploadConnector {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         if (uidl.hasAttribute("maxFileSize")) {
-            getWidget().setMaxFileSize(uidl.getIntAttribute("maxFileSize"));
+            getWidget().setMaxFileSize(uidl.getLongAttribute("maxFileSize"));
         }
         if (uidl.hasAttribute("sizeErrorMsg")) {
             getWidget().setSizeErrorMsg(uidl.getStringAttribute("sizeErrorMsg"));

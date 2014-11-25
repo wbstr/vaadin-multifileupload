@@ -25,10 +25,6 @@ import java.util.Map;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable;
-import com.vaadin.server.StreamVariable.StreamingEndEvent;
-import com.vaadin.server.StreamVariable.StreamingErrorEvent;
-import com.vaadin.server.StreamVariable.StreamingProgressEvent;
-import com.vaadin.server.StreamVariable.StreamingStartEvent;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.LegacyComponent;
 import java.util.ListIterator;
@@ -236,7 +232,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     }
 
     @Override
-    public void setMaxFileSize(int maxFileSize) {
+    public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
 

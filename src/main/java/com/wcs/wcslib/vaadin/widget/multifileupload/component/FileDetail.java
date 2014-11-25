@@ -25,22 +25,22 @@ public class FileDetail {
     private long id;
     private String fileName;
     private String mimeType;
-    private int contentLength;
+    private long contentLength;
 
     public FileDetail(String data) {
         String[] split = data.split(DELIMITER);
         id = Long.parseLong(split[0]);
-        contentLength = Integer.parseInt(split[1]);
+        contentLength = Long.parseLong(split[1]);
         fileName = split[2];
         if (split.length > 3) {
             mimeType = split[3];
         }
     }
 
-    public FileDetail(String caption, String mimeType, int parseInt) {
+    public FileDetail(String caption, String mimeType, long parseLong) {
         this.fileName = caption;
         this.mimeType = mimeType;
-        this.contentLength = parseInt;
+        this.contentLength = parseLong;
     }
 
     public long getId() {

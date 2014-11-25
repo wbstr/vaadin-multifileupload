@@ -29,14 +29,13 @@ import java.util.List;
 public class SmartMultiUpload extends CustomComponent {
 
     private static final String DEFAULT_UPLOAD_BUTTON_CAPTION = "...";
-    private static final int MAXIMUM_FILE_SIZE = 1073741824; //1GB
     private MultiUploadHandler handler;
     private UploadComponent upload;
     private WebBrowser webBrowser;
     private String singleUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
     private String multiUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
     private boolean multiple;
-    private int maxFileSize = Integer.MAX_VALUE;
+    private long maxFileSize = Integer.MAX_VALUE;
     private String sizeErrorMsgPattern = "File is too big: {0}";
     private String mimeTypeErrorMsgPattern = "File type is not valid: {0}";
     private String acceptFilter = "";
@@ -81,12 +80,12 @@ public class SmartMultiUpload extends CustomComponent {
         initUploadButtonCaptions();
     }
 
-    public void setMaxFileSize(int maxFileSize) {
-        this.maxFileSize = Math.min(maxFileSize, MAXIMUM_FILE_SIZE);
+    public void setMaxFileSize(long maxFileSize) {
+        this.maxFileSize = maxFileSize;
         initMaxFileSize();
     }
 
-    public int getMaxFileSize() {
+    public long getMaxFileSize() {
         return maxFileSize;
     }
 
