@@ -15,12 +15,14 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
+import com.lbs.multifileupload.ui.UploadStatePanel;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,8 +89,13 @@ public class UploadStateWindow extends Window {
         addCloseListener(new CloseListener() {
             @Override
             public void windowClose(CloseEvent e) {
-                show();
-                confirmDialog.show();
+            	for (UploadStatePanel panel : uploadStatePanels) {
+					if(panel.hasUploadInProgress()){
+						show();
+		                confirmDialog.show();
+		                break;
+					}
+				}
             }
         });
 

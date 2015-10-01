@@ -145,10 +145,12 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     @Override
     public void onProgress(StreamVariable.StreamingProgressEvent event) {
-        long difference = event.getBytesReceived() - currentUploadingLayout.getFileDetailBean().getBytesReceived();
-        currentUploadingLayout.setProgress(event.getBytesReceived(), event.getContentLength());
-        currentUploadingLayout.getFileDetailBean().setBytesReceived(event.getBytesReceived());
-        window.setTotalBytesReceived(window.getTotalBytesReceived() + difference);
+    	if(hasUploadInProgress()){
+	        long difference = event.getBytesReceived() - currentUploadingLayout.getFileDetailBean().getBytesReceived();
+	        currentUploadingLayout.setProgress(event.getBytesReceived(), event.getContentLength());
+	        currentUploadingLayout.getFileDetailBean().setBytesReceived(event.getBytesReceived());
+	        window.setTotalBytesReceived(window.getTotalBytesReceived() + difference);
+    	}
     }
 
     @Override
