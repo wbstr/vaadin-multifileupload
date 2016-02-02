@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class CustomUpload extends Upload implements UploadComponent {
 
+    private boolean focus = false;
     private long maxFileSize;
     private String sizeErrorMsg;
     private String acceptFilter;
@@ -44,6 +45,10 @@ public class CustomUpload extends Upload implements UploadComponent {
             target.addAttribute("acceptedMimeTypes", new String[]{});
         }
         target.addAttribute("mimeTypeErrorMsg", mimeTypeErrorMsg);
+        if (focus) {
+            target.addAttribute("focus", true);
+            focus = false;
+        }
     }
 
     @Override
@@ -74,5 +79,10 @@ public class CustomUpload extends Upload implements UploadComponent {
     @Override
     public void setMimeTypeErrorMsgPattern(String pattern) {
         this.mimeTypeErrorMsg = pattern;
+    }
+
+    @Override
+    public void focus() {
+        focus = true;
     }
 }

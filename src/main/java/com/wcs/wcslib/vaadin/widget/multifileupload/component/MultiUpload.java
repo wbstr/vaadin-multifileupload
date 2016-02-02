@@ -15,19 +15,18 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.LegacyComponent;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * Server side component for the VMultiUpload widget. Pretty much hacked up together to test new Receiver support in the
@@ -41,6 +40,8 @@ import java.util.ListIterator;
 @SuppressWarnings("serial")
 public class MultiUpload extends AbstractComponent implements LegacyComponent, UploadComponent {
 
+    private boolean focus = false;
+    private int tabIndex = 0;
     List<FileDetail> pendingFiles = new ArrayList<>();
     private List<Long> interruptedFileIds = new ArrayList<>();
     private MultiUploadHandler receiver;
@@ -173,6 +174,13 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             target.addAttribute("interruptedFileIds", interruptedFileIds.toArray(new Long[interruptedFileIds.size()]));
             interruptedFileIds = new ArrayList<>();
         }
+        if (focus) {
+            target.addAttribute("focus", true);
+            focus = false;
+        }
+        if (tabIndex >= 0) {
+            target.addAttribute("tabindex", tabIndex);
+        }
     }
 
     @Override
@@ -260,5 +268,20 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     @Override
     public void setMimeTypeErrorMsgPattern(String pattern) {
         this.mimeTypeErrorMsg = pattern;
+    }
+
+    @Override
+    public void focus() {
+        focus = true;
+    }
+
+    @Override
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 }

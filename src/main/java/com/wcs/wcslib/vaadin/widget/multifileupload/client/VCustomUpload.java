@@ -15,14 +15,14 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.client;
 
-import com.vaadin.client.ui.VNotification;
-import com.vaadin.client.ui.VUpload;
-import com.vaadin.client.ui.dd.VHtml5File;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Node;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.VUpload;
+import com.vaadin.client.ui.dd.VHtml5File;
 import java.util.List;
 
 /**
@@ -37,6 +37,7 @@ public class VCustomUpload extends VUpload {
     private List<String> acceptedMimeTypes;
     private InputElement input;
     public Icon icon;
+    private boolean immediate;
 
     @Override
     public void submit() {
@@ -91,8 +92,17 @@ public class VCustomUpload extends VUpload {
     private InputElement getInput() {
         if (input == null || !getElement().isOrHasChild((Node) input)) {
             input = fu.getElement().cast();
+            if (immediate) {
+                input.setTabIndex(-1);
+            }
         }
         return input;
+    }
+
+    @Override
+    public void setImmediate(boolean immediate) {
+        super.setImmediate(immediate);
+        this.immediate = immediate;
     }
 
     public void setMaxFileSize(long maxFileSize) {

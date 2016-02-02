@@ -131,6 +131,20 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     @Override
+    public void focus() {
+        upload.focus();
+        upload.markAsDirty();
+    }
+
+    public int getTabIndex() {
+        return upload.getTabIndex();
+    }
+
+    public void setTabIndex(int tabIndex) {
+        upload.setTabIndex(tabIndex);
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.enabled = enabled;

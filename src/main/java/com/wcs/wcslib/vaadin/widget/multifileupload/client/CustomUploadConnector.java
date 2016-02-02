@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.shared.ui.Connect;
@@ -52,6 +51,12 @@ public class CustomUploadConnector extends UploadConnector {
         }
         if (uidl.hasAttribute("acceptedMimeTypes")) {
             getWidget().setAcceptedMimeTypes(Arrays.asList(uidl.getStringArrayAttribute("acceptedMimeTypes")));
+        }
+        if (uidl.hasAttribute("tabindex")) {
+            getWidget().submitButton.setTabIndex(uidl.getIntAttribute("tabindex"));
+        }
+        if (uidl.hasAttribute("focus")) {
+            getWidget().submitButton.setFocus(true);
         }
     }
 

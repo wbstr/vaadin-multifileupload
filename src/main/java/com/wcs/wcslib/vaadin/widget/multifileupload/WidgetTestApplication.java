@@ -41,7 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The Application's "main" class
+ * Demo application. Run with mvn jetty:run.
  */
 @SuppressWarnings("serial")
 //@Push
@@ -114,7 +114,7 @@ public class WidgetTestApplication extends UI {
     }
 
     private void addSlowUploadExample(String caption, boolean multiple) {
-        SlowUpload slowUpload = new SlowUpload(uploadFinishedHandler, uploadStateWindow, multiple);
+        final SlowUpload slowUpload = new SlowUpload(uploadFinishedHandler, uploadStateWindow, multiple);
         int maxFileSize = 5242880; //5 MB
         slowUpload.setMaxFileSize(maxFileSize);
         String errorMsgPattern = "File is too big (max = {0}): {2} ({1})";
@@ -124,6 +124,20 @@ public class WidgetTestApplication extends UI {
         slowUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
         form.addComponent(slowUpload, 0);
         uploads.add(slowUpload);
+
+        addFocusBtn(slowUpload);
+
+    }
+
+    private void addFocusBtn(final SlowUpload slowUpload) {
+        Button focusBtn = new Button("Focus to " + slowUpload.getCaption(), new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                slowUpload.focus();
+            }
+        });
+        form.addComponent(focusBtn, 1);
     }
 
     private void addUploadSpeedSlider() {

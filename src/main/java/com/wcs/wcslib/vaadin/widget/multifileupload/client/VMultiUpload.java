@@ -15,9 +15,6 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.InputElement;
@@ -41,7 +38,9 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -154,7 +153,6 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         }
         addStyleName(CLASSNAME + "-immediate");
 
-
         this.client = client;
         paintableId = uidl.getId();
         receiverUri = client.translateVaadinUri(uidl.getStringVariable("target"));
@@ -190,11 +188,18 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         if (uidl.hasAttribute("ready")) {
             postNextFileFromQueue();
         }
+        if (uidl.hasAttribute("tabindex")) {
+            submitButton.setTabIndex(uidl.getIntAttribute("tabindex"));
+        }
+        if (uidl.hasAttribute("focus")) {
+            submitButton.setFocus(true);
+        }
     }
 
     private InputElement getInput() {
         if (input == null || !getElement().isOrHasChild((Node) input)) {
             input = fu.getElement().cast();
+            input.setTabIndex(-1);
         }
         return input;
     }

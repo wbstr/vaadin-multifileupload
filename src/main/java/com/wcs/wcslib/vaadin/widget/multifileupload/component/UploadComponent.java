@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author gergo
  */
-public interface UploadComponent extends Component {
+public interface UploadComponent extends Component, Component.Focusable {
 
     public void setMaxFileSize(long maxFileSize);
 

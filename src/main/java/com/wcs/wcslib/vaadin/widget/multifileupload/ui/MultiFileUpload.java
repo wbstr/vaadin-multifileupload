@@ -180,6 +180,19 @@ public class MultiFileUpload extends CustomComponent {
     }
 
     @Override
+    public void focus() {
+        smartUpload.focus();
+    }
+
+    public int getTabIndex() {
+        return smartUpload.getTabIndex();
+    }
+
+    public void setTabIndex(int tabIndex) {
+        smartUpload.setTabIndex(tabIndex);
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         smartUpload.setEnabled(enabled);
