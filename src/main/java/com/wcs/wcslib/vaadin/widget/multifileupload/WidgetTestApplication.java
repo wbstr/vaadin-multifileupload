@@ -105,7 +105,7 @@ public class WidgetTestApplication extends UI {
         uploadFinishedHandler = new UploadFinishedHandler() {
             @Override
             public void handleFile(InputStream stream, String fileName, String mimeType, long length) {
-                Notification.show(fileName + " upsloaded.");
+                Notification.show(fileName + " uploaded.");
             }
         };
     }
