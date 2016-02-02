@@ -151,7 +151,7 @@ public class SimpleFileUploadListener implements
 
             @Override
             public long getBytesReceived() {
-                return event.getUpload().getBytesRead();
+                return event.getUpload().getUploadSize();
             }
         });
     }
