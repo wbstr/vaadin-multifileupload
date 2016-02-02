@@ -38,7 +38,7 @@ public class UploadStateLayout extends CssLayout {
     private Button cancelButton;
     private VerticalLayout layout;
     private HorizontalLayout cancelLayout;
-    private UploadStatePanel uploadStatePanel;
+    private final UploadStatePanel uploadStatePanel;
     private FileDetailBean fileDetailBean;
 
     public UploadStateLayout(final UploadStatePanel uploadStatePanel) {
@@ -91,11 +91,13 @@ public class UploadStateLayout extends CssLayout {
     }
 
     public void setProgress(long bytesReceived, long contentLength) {
-        pi.setValue(new Float(bytesReceived / (float) contentLength));
-        textualProgress.setValue(
-                UploadUtil.getHumanReadableByteCount(bytesReceived, false)
-                + " / "
-                + UploadUtil.getHumanReadableByteCount(contentLength, false));
+        pi.setValue(bytesReceived / (float) contentLength);
+        if (pi.isIndeterminate()) {
+            textualProgress.setValue(UploadUtil.getHumanReadableByteCount(contentLength, false));
+        } else {
+            textualProgress.setValue(UploadUtil.getHumanReadableByteCount(bytesReceived, false) + " / "
+                    + UploadUtil.getHumanReadableByteCount(contentLength, false));
+        }
     }
 
     public void startStreaming(FileDetailBean fileDetailBean) {
@@ -113,5 +115,9 @@ public class UploadStateLayout extends CssLayout {
 
     public FileDetailBean getFileDetailBean() {
         return fileDetailBean;
+    }
+
+    public void setIndeterminate(boolean indeterminate) {
+        this.pi.setIndeterminate(indeterminate);
     }
 }

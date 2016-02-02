@@ -90,6 +90,7 @@ public class WidgetTestApplication extends UI {
         addUploadSpeedSlider();
         addOverallProgressSwitcher();
         addAllUploadFinishedHandlerSwitcher();
+        addIndeterminateSwitcher();
         addPollSwitcher();
     }
 
@@ -247,6 +248,19 @@ public class WidgetTestApplication extends UI {
             }
         });
         cb.setValue(true);
+        form.addComponent(cb);
+    }
+
+    private void addIndeterminateSwitcher() {
+        final CheckBox cb = new CheckBox("Indeterminate ProgressBar");
+        cb.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                for (final MultiFileUpload multiFileUpload : uploads) {
+                    multiFileUpload.setIndeterminate(cb.getValue());
+                }
+            }
+        });
         form.addComponent(cb);
     }
 

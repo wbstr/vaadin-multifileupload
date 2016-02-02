@@ -227,4 +227,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     public void setAllUploadFinishedHandler(AllUploadFinishedHandler allUploadFinishedHandler) {
         this.allUploadFinishedHandler = allUploadFinishedHandler;
     }
+
+    public UploadStateLayout getCurrentUploadingLayout() {
+        return currentUploadingLayout;
+    }
 }

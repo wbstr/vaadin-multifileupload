@@ -160,6 +160,25 @@ public class MultiFileUpload extends CustomComponent {
         uploadStatePanel.setAllUploadFinishedHandler(allUploadFinishedHandler);
     }
 
+    /**
+     * Make ProgressBar indeterminate.
+     *
+     * @param indeterminate
+     */
+    public void setIndeterminate(boolean indeterminate) {
+        getUploadStatePanel().getCurrentUploadingLayout().setIndeterminate(indeterminate);
+        setOverallProgressVisible(!indeterminate);
+    }
+
+    /**
+     * Display an overall percentage progress of currently uploading files.
+     *
+     * @param overallProgressVisible
+     */
+    public void setOverallProgressVisible(boolean overallProgressVisible) {
+        getUploadStatePanel().getWindow().setOverallProgressVisible(overallProgressVisible);
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
