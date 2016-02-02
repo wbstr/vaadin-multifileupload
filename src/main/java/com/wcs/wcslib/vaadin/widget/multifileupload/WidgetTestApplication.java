@@ -16,6 +16,7 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload;
 
 import com.vaadin.data.Property;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
@@ -122,6 +123,8 @@ public class WidgetTestApplication extends UI {
         slowUpload.setCaption(caption);
         slowUpload.setPanelCaption(caption);
         slowUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
+        slowUpload.getSmartUpload().setUploadButtonIcon(FontAwesome.UPLOAD);
+
         form.addComponent(slowUpload, 0);
         uploads.add(slowUpload);
 

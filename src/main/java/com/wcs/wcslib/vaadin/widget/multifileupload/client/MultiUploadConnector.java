@@ -16,15 +16,13 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.shared.ui.Connect;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUpload;
 
@@ -45,29 +43,18 @@ public class MultiUploadConnector extends AbstractComponentConnector implements 
         ((Paintable) getWidget()).updateFromUIDL(uidl, client);
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        addStateChangeHandler("resources", new StateChangeEvent.StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                if (getIcon() != null) {
-                    if (getWidget().icon == null) {
-                        getWidget().icon = new ImageIcon();
-                        Element iconElement = getWidget().icon.getElement();
-                        getWidget().submitButton.wrapper.insertBefore(iconElement,
-                                getWidget().submitButton.captionElement);
-                    }
-                    getWidget().icon.setUri(getIconUri());
-                } else {
-                    if (getWidget().icon != null) {
-                        getWidget().submitButton.wrapper.removeChild(getWidget().icon
-                                .getElement());
-                        getWidget().icon = null;
-                    }
-                }
-            }
-        });
+    @OnStateChange("resources")
+    void onResourceChange() {
+        if (getWidget().icon != null) {
+            getWidget().submitButton.wrapper.removeChild(getWidget().icon.getElement());
+            getWidget().icon = null;
+        }
+        Icon icon = getIcon();
+        if (icon != null) {
+            getWidget().icon = icon;
+            getWidget().submitButton.wrapper.insertBefore(icon.getElement(),
+                    getWidget().submitButton.captionElement);
+        }
     }
 
     @Override
