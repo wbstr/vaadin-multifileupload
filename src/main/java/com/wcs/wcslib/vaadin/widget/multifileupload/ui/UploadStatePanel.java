@@ -48,6 +48,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     private SmartMultiUpload multiUpload;
     private UploadReceiver receiver;
     private UploadFinishedHandler finishedHandler;
+    private AllUploadFinishedHandler allUploadFinishedHandler;
     private UploadQueueTable table = new UploadQueueTable();
 
     public UploadStatePanel(UploadStateWindow window) {
@@ -124,6 +125,9 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             if (stream != null) {
                 finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived());
             }
+            if (!hasUploadInProgress() && allUploadFinishedHandler != null) {
+                allUploadFinishedHandler.finished();
+            }
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Could not close stream!", ex);
         } finally {
@@ -145,12 +149,12 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     @Override
     public void onProgress(StreamVariable.StreamingProgressEvent event) {
-    	if(hasUploadInProgress()){
-	        long difference = event.getBytesReceived() - currentUploadingLayout.getFileDetailBean().getBytesReceived();
-	        currentUploadingLayout.setProgress(event.getBytesReceived(), event.getContentLength());
-	        currentUploadingLayout.getFileDetailBean().setBytesReceived(event.getBytesReceived());
-	        window.setTotalBytesReceived(window.getTotalBytesReceived() + difference);
-    	}
+        if (hasUploadInProgress()) {
+            long difference = event.getBytesReceived() - currentUploadingLayout.getFileDetailBean().getBytesReceived();
+            currentUploadingLayout.setProgress(event.getBytesReceived(), event.getContentLength());
+            currentUploadingLayout.getFileDetailBean().setBytesReceived(event.getBytesReceived());
+            window.setTotalBytesReceived(window.getTotalBytesReceived() + difference);
+        }
     }
 
     @Override
@@ -214,5 +218,13 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public boolean hasUploadInProgress() {
         return !uploadQueue.isEmpty();
+    }
+
+    public AllUploadFinishedHandler getAllUploadFinishedHandler() {
+        return allUploadFinishedHandler;
+    }
+
+    public void setAllUploadFinishedHandler(AllUploadFinishedHandler allUploadFinishedHandler) {
+        this.allUploadFinishedHandler = allUploadFinishedHandler;
     }
 }

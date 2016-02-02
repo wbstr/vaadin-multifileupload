@@ -147,6 +147,19 @@ public class MultiFileUpload extends CustomComponent {
         smartUpload.setMimeTypeErrorMsgPattern(pattern);
     }
 
+    public AllUploadFinishedHandler getAllUploadFinishedHandler() {
+        return uploadStatePanel.getAllUploadFinishedHandler();
+    }
+
+    /**
+     * Invokes when all files have been uploaded.
+     *
+     * @param allUploadFinishedHandler
+     */
+    public void setAllUploadFinishedHandler(AllUploadFinishedHandler allUploadFinishedHandler) {
+        uploadStatePanel.setAllUploadFinishedHandler(allUploadFinishedHandler);
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);

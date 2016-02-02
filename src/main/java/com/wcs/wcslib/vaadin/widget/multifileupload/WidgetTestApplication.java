@@ -29,6 +29,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.wcs.wcslib.vaadin.widget.multifileupload.ui.AllUploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStatePanel;
@@ -88,6 +89,7 @@ public class WidgetTestApplication extends UI {
         addWindowPositionSwitcher();
         addUploadSpeedSlider();
         addOverallProgressSwitcher();
+        addAllUploadFinishedHandlerSwitcher();
         addPollSwitcher();
     }
 
@@ -221,6 +223,31 @@ public class WidgetTestApplication extends UI {
         });
 
         form.addComponent(optionGroup);
+    }
+
+    private void addAllUploadFinishedHandlerSwitcher() {
+        final CheckBox cb = new CheckBox("Notification when all files have been uploaded.");
+        final AllUploadFinishedHandler allUploadFinishedHandler = new AllUploadFinishedHandler() {
+
+            @Override
+            public void finished() {
+                Notification.show("All files have been uploaded.", Notification.Type.TRAY_NOTIFICATION);
+            }
+        };
+        cb.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                for (final MultiFileUpload multiFileUpload : uploads) {
+                    if (cb.getValue()) {
+                        multiFileUpload.setAllUploadFinishedHandler(allUploadFinishedHandler);
+                    } else {
+                        multiFileUpload.setAllUploadFinishedHandler(null);
+                    }
+                }
+            }
+        });
+        cb.setValue(true);
+        form.addComponent(cb);
     }
 
     private class SlowUpload extends MultiFileUpload {
