@@ -47,6 +47,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     private UploadStateWindow window;
     private SmartMultiUpload multiUpload;
     private UploadReceiver receiver;
+    private UploadStartedHandler startedHandler;
     private UploadFinishedHandler finishedHandler;
     private AllUploadFinishedHandler allUploadFinishedHandler;
     private UploadQueueTable table = new UploadQueueTable();
@@ -114,6 +115,9 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
             currentUploadingLayout.startStreaming(uploadQueue.get(0));
             show();
+            if (startedHandler != null) {
+                startedHandler.handleUploadStarted();
+            }
         }
     }
 
@@ -192,6 +196,10 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public void setFinishedHandler(UploadFinishedHandler finishedHandler) {
         this.finishedHandler = finishedHandler;
+    }
+
+    public void setStartedHandler(UploadStartedHandler startedHandler) {
+        this.startedHandler = startedHandler;
     }
 
     public UploadStateWindow getWindow() {
