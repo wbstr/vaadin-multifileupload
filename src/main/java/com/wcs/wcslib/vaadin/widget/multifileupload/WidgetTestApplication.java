@@ -51,7 +51,7 @@ public class WidgetTestApplication extends UI {
     private static final String PUSH_OPTION_ID = "push";
     private static final String POLL_OPTION_ID = "poll";
     private static final int POLLING_INTERVAL = 1000;
-    private List<MultiFileUpload> uploads = new ArrayList<>();
+    private List<MultiFileUpload> uploads = new ArrayList<MultiFileUpload>();
     private VerticalLayout root = new VerticalLayout();
     private FormLayout form = new FormLayout();
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();

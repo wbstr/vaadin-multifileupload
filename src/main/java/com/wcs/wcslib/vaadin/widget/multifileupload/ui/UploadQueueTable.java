@@ -35,7 +35,7 @@ public class UploadQueueTable extends Table {
     private BeanItemContainer<FileDetailBean> container;
 
     public UploadQueueTable() {
-        container = new BeanItemContainer<>(FileDetailBean.class);
+        container = new BeanItemContainer<FileDetailBean>(FileDetailBean.class);
         setContainerDataSource(container);
 
         setVisibleColumns(new Object[]{

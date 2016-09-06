@@ -42,7 +42,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     private static final Logger logger = Logger.getLogger(UploadStatePanel.class.getName());
     private static final String PANEL_STLYE_CLASS = "multiple-upload-state-panel";
-    private List<FileDetailBean> uploadQueue = new ArrayList<>();
+    private List<FileDetailBean> uploadQueue = new ArrayList<FileDetailBean>();
     private UploadStateLayout currentUploadingLayout;
     private UploadStateWindow window;
     private SmartMultiUpload multiUpload;
@@ -124,7 +124,9 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     @Override
     public void streamingFinished(StreamVariable.StreamingEndEvent event) {
         removeFromQueue(currentUploadingLayout.getFileDetailBean());
-        try (InputStream stream = receiver.getStream()) {
+        InputStream stream = null;
+        try {
+	        stream = receiver.getStream();
             //"simple" Upload fires Upload.FinishedEvent on interruptUpload()
             if (stream != null) {
                 finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived());
@@ -132,10 +134,15 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             if (!hasUploadInProgress() && allUploadFinishedHandler != null) {
                 allUploadFinishedHandler.finished();
             }
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Could not close stream!", ex);
         } finally {
             receiver.deleteTempFile();
+            if (stream != null) {
+                try { 
+                    stream.close();
+                } catch (IOException ex) {
+                    logger.log(Level.SEVERE, "Could not close stream!", ex);
+                }
+            }
         }
     }
 

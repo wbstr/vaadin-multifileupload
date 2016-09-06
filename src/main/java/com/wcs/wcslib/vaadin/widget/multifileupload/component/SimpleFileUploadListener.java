@@ -36,7 +36,7 @@ public class SimpleFileUploadListener implements
     }
 
     private Collection<FileDetail> getFileDetails(Upload.StartedEvent event) {
-        List<FileDetail> files = new ArrayList<>();
+        List<FileDetail> files = new ArrayList<FileDetail>();
         FileDetail fileDetail = new FileDetail(
                 event.getFilename(),
                 event.getMIMEType(),

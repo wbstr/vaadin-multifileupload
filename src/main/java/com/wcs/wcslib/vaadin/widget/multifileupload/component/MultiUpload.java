@@ -42,8 +42,8 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
     private boolean focus = false;
     private int tabIndex = 0;
-    List<FileDetail> pendingFiles = new ArrayList<>();
-    private List<Long> interruptedFileIds = new ArrayList<>();
+    List<FileDetail> pendingFiles = new ArrayList<FileDetail>();
+    private List<Long> interruptedFileIds = new ArrayList<Long>();
     private MultiUploadHandler receiver;
     private String buttonCaption = "...";
     private boolean uploading;
@@ -172,7 +172,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         target.addAttribute("buttoncaption", getButtonCaption());
         if (!interruptedFileIds.isEmpty()) {
             target.addAttribute("interruptedFileIds", interruptedFileIds.toArray(new Long[interruptedFileIds.size()]));
-            interruptedFileIds = new ArrayList<>();
+            interruptedFileIds = new ArrayList<Long>();
         }
         if (focus) {
             target.addAttribute("focus", true);
@@ -187,7 +187,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("filequeue")) {
             String[] filequeue = (String[]) variables.get("filequeue");
-            List<FileDetail> newFiles = new ArrayList<>(filequeue.length);
+            List<FileDetail> newFiles = new ArrayList<FileDetail>(filequeue.length);
             for (String string : filequeue) {
                 newFiles.add(new FileDetail(string));
             }
