@@ -307,6 +307,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
             VNotification.createNotification(1000, client.getUIConnector().getWidget()).show(
                     errorMsg.toString(), VNotification.CENTERED, "warning");
         }
+        input.setValue(null);
         disableUpload();
     }
     private List<FileWrapper> fileQueue = new ArrayList<FileWrapper>();

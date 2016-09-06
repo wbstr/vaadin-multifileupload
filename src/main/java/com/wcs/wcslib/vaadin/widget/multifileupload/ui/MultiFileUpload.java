@@ -31,13 +31,17 @@ public class MultiFileUpload extends CustomComponent {
     private UploadStatePanel uploadStatePanel;
     private String interruptedMsg = "All uploads have been interrupted.";
 
-    public MultiFileUpload(UploadFinishedHandler handler, UploadStateWindow uploadStateWindow, boolean multiple) {
+    public MultiFileUpload(UploadStartedHandler uploadStartedHandler, UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow, boolean multiple) {
         uploadStatePanel = createStatePanel(uploadStateWindow);
-        initSmartUpload(handler, multiple);
+        initSmartUpload(uploadStartedHandler, uploadFinishedHandler, multiple);
     }
 
-    public MultiFileUpload(UploadFinishedHandler handler, UploadStateWindow uploadStateWindow) {
-        this(handler, uploadStateWindow, true);
+    public MultiFileUpload(UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow, boolean multiple) {
+        this(null, uploadFinishedHandler, uploadStateWindow, multiple);
+    }
+
+    public MultiFileUpload(UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow) {
+        this(uploadFinishedHandler, uploadStateWindow, true);
     }
 
     public SmartMultiUpload getSmartUpload() {
@@ -56,11 +60,12 @@ public class MultiFileUpload extends CustomComponent {
         return new UploadStatePanel(uploadStateWindow);
     }
 
-    private void initSmartUpload(UploadFinishedHandler handler, boolean multiple) {
+    private void initSmartUpload(UploadStartedHandler uploadStartedHandler, UploadFinishedHandler uploadFinishedHandler, boolean multiple) {
         smartUpload = new SmartMultiUpload(uploadStatePanel, multiple);
 
         uploadStatePanel.setMultiUpload(smartUpload);
-        uploadStatePanel.setFinishedHandler(handler);
+        uploadStatePanel.setStartedHandler(uploadStartedHandler);
+        uploadStatePanel.setFinishedHandler(uploadFinishedHandler);
 
         setCompositionRoot(smartUpload);
     }

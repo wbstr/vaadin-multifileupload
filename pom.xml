@@ -5,7 +5,7 @@
     <groupId>com.wcs.wcslib</groupId>
     <artifactId>wcslib-vaadin-widget-multifileupload</artifactId>
     <packaging>jar</packaging>
-    <version>1.11-SNAPSHOT</version>
+    <version>1.12-SNAPSHOT</version>
     <name>MultiFileUpload</name>
     
     <scm>
@@ -65,7 +65,7 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-push</artifactId>
             <version>${version.vaadin}</version>
@@ -150,6 +150,18 @@
                 <configuration>
                     <warSourceExcludes>VAADIN/gwt-unitCache/**</warSourceExcludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
