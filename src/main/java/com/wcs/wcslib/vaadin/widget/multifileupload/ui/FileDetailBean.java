@@ -105,7 +105,7 @@ public class FileDetailBean implements Serializable {
             }
         });
         cancelButton.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
-        cancelButton.setStyleName(BaseTheme.BUTTON_LINK);
+        cancelButton.addStyleName(BaseTheme.BUTTON_LINK);
         return cancelButton;
     }
 }

@@ -16,6 +16,8 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DragAndDropWrapper;
+
 import java.util.List;
 
 /**
@@ -24,17 +26,22 @@ import java.util.List;
  */
 public interface UploadComponent extends Component, Component.Focusable {
 
-    public void setMaxFileSize(long maxFileSize);
+    void setMaxFileSize(long maxFileSize);
 
-    public void setSizeErrorMsgPattern(String pattern);
+    void setSizeErrorMsgPattern(String pattern);
 
-    public void setAcceptFilter(String acceptFilter);
+    void setAcceptFilter(String acceptFilter);
 
-    public void setAcceptedMimeTypes(List<String> acceptedMimeTypes);
+    void setAcceptedMimeTypes(List<String> acceptedMimeTypes);
 
-    public void setMimeTypeErrorMsgPattern(String pattern);
+    void setMimeTypeErrorMsgPattern(String pattern);
 
-    public void setButtonCaption(String buttonCaption);
+    void setButtonCaption(String buttonCaption);
 
-    public void interruptUpload(long fileId);
+    void interruptUpload(long fileId);
+
+    void registerDropComponent(MultiUploadDropHandler dropHandler);
+
+    void setFileCountErrorMsgPattern(String pattern);
+
 }

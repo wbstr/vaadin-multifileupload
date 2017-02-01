@@ -16,13 +16,15 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
 import com.vaadin.server.Resource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Notification;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
+
 import java.util.List;
 
 /**
- *
  * @author gergo
  */
 public class MultiFileUpload extends CustomComponent {
@@ -31,34 +33,47 @@ public class MultiFileUpload extends CustomComponent {
     private UploadStatePanel uploadStatePanel;
     private String interruptedMsg = "All uploads have been interrupted.";
 
+
     public MultiFileUpload(UploadStartedHandler uploadStartedHandler, UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow, boolean multiple) {
         uploadStatePanel = createStatePanel(uploadStateWindow);
         initSmartUpload(uploadStartedHandler, uploadFinishedHandler, multiple);
     }
 
+
     public MultiFileUpload(UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow, boolean multiple) {
         this(null, uploadFinishedHandler, uploadStateWindow, multiple);
     }
+
 
     public MultiFileUpload(UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow) {
         this(uploadFinishedHandler, uploadStateWindow, true);
     }
 
+
     public SmartMultiUpload getSmartUpload() {
         return smartUpload;
     }
+
 
     public UploadStatePanel getUploadStatePanel() {
         return uploadStatePanel;
     }
 
+
     public void setPanelCaption(String caption) {
         uploadStatePanel.setCaption(caption);
     }
 
+
+    public DragAndDropWrapper createDropComponent(Component component) {
+        return smartUpload.createDropComponent(component);
+    }
+
+
     protected UploadStatePanel createStatePanel(UploadStateWindow uploadStateWindow) {
         return new UploadStatePanel(uploadStateWindow);
     }
+
 
     private void initSmartUpload(UploadStartedHandler uploadStartedHandler, UploadFinishedHandler uploadFinishedHandler, boolean multiple) {
         smartUpload = new SmartMultiUpload(uploadStatePanel, multiple);
@@ -70,60 +85,79 @@ public class MultiFileUpload extends CustomComponent {
         setCompositionRoot(smartUpload);
     }
 
+
     public void setUploadButtonCaptions(String singleUploadCaption, String multiUploadCaption) {
         smartUpload.setUploadButtonCaptions(singleUploadCaption, multiUploadCaption);
     }
+
 
     public void setUploadButtonIcon(Resource icon) {
         smartUpload.setUploadButtonIcon(icon);
     }
 
+
     public void interruptAll() {
         uploadStatePanel.interruptAll();
     }
+
 
     public void setMaxFileSize(long maxFileSizeInBytes) {
         smartUpload.setMaxFileSize(maxFileSizeInBytes);
     }
 
-    public long getMaxFileSize() {
-        return smartUpload.getMaxFileSize();
+
+    public short getMaxFileSize() {
+        return smartUpload.getMaxFileCount();
     }
+
+
+    public void setMaxFileCount(short maxFileCount) {
+        smartUpload.setMaxFileCount(maxFileCount);
+    }
+
+
+    public long getMaxFileCount() {
+        return smartUpload.getMaxFileCount();
+    }
+
 
     public String getInterruptedMsg() {
         return interruptedMsg;
     }
 
+
     public void setInterruptedMsg(String interruptedMsg) {
         this.interruptedMsg = interruptedMsg;
     }
+
 
     public String getSizeErrorMsg() {
         return smartUpload.getSizeErrorMsg();
     }
 
+
     /**
-     *
      * @param pattern Pattern of the error message, which occurs when a user uploaded too big file. ({0} maxFileSize,
-     * {1} fileSize, {2} fileName)
+     *                {1} fileSize, {2} fileName)
      */
     public void setSizeErrorMsgPattern(String pattern) {
         smartUpload.setSizeErrorMsgPattern(pattern);
     }
 
+
     /**
-     *
      * @param maxVisibleRows The number of rows which after the upload queue table renders a scrollbar.
      */
     public void setMaxVisibleRows(int maxVisibleRows) {
         uploadStatePanel.getTable().setMaxVisibleRows(maxVisibleRows);
     }
 
+
     /**
      * Sets mime types that browser should let users upload. This check is done by the client side and not supported by
      * all browsers. Some browser us the accept filter just as a initial filter for their file chooser dialog. Note that
      * using this method does not invalidate need for server side checks.
-     *
+     * <p>
      * See https://developer.mozilla.org/en-US/docs/HTML/Element/Input
      *
      * @param accept
@@ -132,9 +166,10 @@ public class MultiFileUpload extends CustomComponent {
         smartUpload.setAcceptFilter(accept);
     }
 
+
     /**
      * Sets valid mime types.
-     *
+     * <p>
      * See http://reference.sitepoint.com/html/mime-types-full
      *
      * @param mimeTypes Mime types should be accepted.
@@ -143,18 +178,20 @@ public class MultiFileUpload extends CustomComponent {
         smartUpload.setAcceptedMimeTypes(mimeTypes);
     }
 
+
     /**
-     *
      * @param pattern Pattern of the error message, which occurs when a user uploaded a file that is not match to the
-     * given mime types. ({0} fileName)
+     *                given mime types. ({0} fileName)
      */
     public void setMimeTypeErrorMsgPattern(String pattern) {
         smartUpload.setMimeTypeErrorMsgPattern(pattern);
     }
 
+
     public AllUploadFinishedHandler getAllUploadFinishedHandler() {
         return uploadStatePanel.getAllUploadFinishedHandler();
     }
+
 
     /**
      * Invokes when all files have been uploaded.
@@ -164,6 +201,7 @@ public class MultiFileUpload extends CustomComponent {
     public void setAllUploadFinishedHandler(AllUploadFinishedHandler allUploadFinishedHandler) {
         uploadStatePanel.setAllUploadFinishedHandler(allUploadFinishedHandler);
     }
+
 
     /**
      * Make ProgressBar indeterminate.
@@ -175,6 +213,7 @@ public class MultiFileUpload extends CustomComponent {
         setOverallProgressVisible(!indeterminate);
     }
 
+
     /**
      * Display an overall percentage progress of currently uploading files.
      *
@@ -184,18 +223,22 @@ public class MultiFileUpload extends CustomComponent {
         getUploadStatePanel().getWindow().setOverallProgressVisible(overallProgressVisible);
     }
 
+
     @Override
     public void focus() {
         smartUpload.focus();
     }
 
+
     public int getTabIndex() {
         return smartUpload.getTabIndex();
     }
 
+
     public void setTabIndex(int tabIndex) {
         smartUpload.setTabIndex(tabIndex);
     }
+
 
     @Override
     public void setEnabled(boolean enabled) {
@@ -203,17 +246,20 @@ public class MultiFileUpload extends CustomComponent {
         smartUpload.setEnabled(enabled);
     }
 
+
     @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         smartUpload.setEnabled(!readOnly);
     }
 
+
     @Override
     public void attach() {
         super.attach();
         uploadStatePanel.getWindow().addPanel(uploadStatePanel);
     }
+
 
     @Override
     public void detach() {

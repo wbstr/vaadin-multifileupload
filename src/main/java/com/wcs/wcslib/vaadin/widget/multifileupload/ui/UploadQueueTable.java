@@ -29,9 +29,9 @@ public class UploadQueueTable extends Table {
 
     private static final String TABLE_STLYE_CLASS = "multiple-upload-state-table";
     private static final String TABLE_NO_OVERFLOWY_STLYE_CLASS = "multiple-upload-state-table-nooverflowy";
-    protected int cancelColumnWidth = 30;
-    protected int nameColumnWidth = 180;
-    private int maxVisibleRows = 3;
+    protected int cancelColumnWidth = 54;
+    protected int sizeColumnWidth = 90;
+    private int maxVisibleRows = 4;
     private BeanItemContainer<FileDetailBean> container;
 
     public UploadQueueTable() {
@@ -42,7 +42,8 @@ public class UploadQueueTable extends Table {
             FileDetailBean.FILE_NAME, FileDetailBean.READABLE_CONTENT_LENGTH, FileDetailBean.CANCEL_BUTTON});
         setColumnAlignment(FileDetailBean.CANCEL_BUTTON, Table.Align.CENTER);
         setColumnWidth(FileDetailBean.CANCEL_BUTTON, cancelColumnWidth);
-        setColumnWidth(FileDetailBean.FILE_NAME, nameColumnWidth);
+        setColumnWidth(FileDetailBean.READABLE_CONTENT_LENGTH, sizeColumnWidth);
+        setColumnExpandRatio(FileDetailBean.FILE_NAME, 1.0f);
 
         setItemDescriptionGenerator(new UploadQueueTableDescriptionGenerator());
 

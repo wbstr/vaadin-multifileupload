@@ -24,5 +24,5 @@ import java.io.Serializable;
  */
 public interface UploadFinishedHandler extends Serializable {
 
-    public void handleFile(InputStream stream, String fileName, String mimeType, long length);
+    void handleFile(InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue);
 }
