@@ -47,7 +47,9 @@ public class UploadStateLayout extends CssLayout {
     }
 
     private void initForm() {
+        setWidth(100, Unit.PERCENTAGE);
         layout = new VerticalLayout();
+        layout.setWidth(100, Unit.PERCENTAGE);
         addComponent(layout);
 
         layout.addComponent(fileName);
@@ -57,14 +59,17 @@ public class UploadStateLayout extends CssLayout {
         layout.addComponent(pi);
 
         textualProgress.setVisible(false);
+        textualProgress.setSizeUndefined();
 
         cancelLayout = new HorizontalLayout();
+        cancelLayout.setSpacing(true);
         cancelLayout.addStyleName(CANCEL_BUTTON_LAYOUT_STYLE_CLASS);
         cancelLayout.setWidth(100, Unit.PERCENTAGE);
         cancelLayout.addComponent(textualProgress);
         cancelButton = new Button();
         cancelLayout.addComponent(cancelButton);
-        cancelLayout.setComponentAlignment(cancelButton, Alignment.TOP_RIGHT);
+        cancelLayout.setComponentAlignment(cancelButton, Alignment.TOP_LEFT);
+        cancelLayout.setExpandRatio(cancelButton, 1f);
         layout.addComponent(cancelLayout);
     }
 
@@ -111,6 +116,8 @@ public class UploadStateLayout extends CssLayout {
         cancelLayout.replaceComponent(cancelButton, newCancelBtn);
         cancelButton = newCancelBtn;
         cancelButton.addStyleName(CANCEL_BUTTON_STYLE_CLASS);
+        cancelLayout.setComponentAlignment(cancelButton, Alignment.TOP_LEFT);
+        cancelLayout.setExpandRatio(cancelButton, 1f);
     }
 
     public FileDetailBean getFileDetailBean() {

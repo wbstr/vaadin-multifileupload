@@ -34,14 +34,14 @@ public class UploadUtil {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static String getSizeErrorMessage(String pattern, Long maxFileSize, Long fileSize, String fileName) {
+    public static String formatSizeErrorMessage(String pattern, Long maxFileSize, Long fileSize, String fileName) {
         return MessageFormat.format(pattern,
                 getHumanReadableByteCount(maxFileSize, false),
                 getHumanReadableByteCount(fileSize, false),
                 fileName);
     }
 
-    public static String getMimeTypeErrorMessage(String pattern, String fileName) {
-        return MessageFormat.format(pattern, fileName);
+    public static String formatErrorMessage(String pattern, Object... parms) {
+        return MessageFormat.format(pattern, parms);
     }
 }

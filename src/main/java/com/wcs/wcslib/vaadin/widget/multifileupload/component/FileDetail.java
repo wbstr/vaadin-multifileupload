@@ -15,17 +15,21 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
- *
  * @author gergo
  */
 public class FileDetail {
+
+    private static final AtomicLong idCounter = new AtomicLong();
 
     private static final String DELIMITER = "---xXx---";
     private long id;
     private String fileName;
     private String mimeType;
     private long contentLength;
+
 
     public FileDetail(String data) {
         String[] split = data.split(DELIMITER);
@@ -37,23 +41,29 @@ public class FileDetail {
         }
     }
 
-    public FileDetail(String caption, String mimeType, long parseLong) {
+
+    public FileDetail(String caption, String mimeType, long contentLength) {
+        this.id = idCounter.getAndIncrement();
         this.fileName = caption;
         this.mimeType = mimeType;
-        this.contentLength = parseLong;
+        this.contentLength = contentLength;
     }
+
 
     public long getId() {
         return id;
     }
 
+
     public long getContentLength() {
         return contentLength;
     }
 
+
     public String getFileName() {
         return fileName;
     }
+
 
     public String getMimeType() {
         return mimeType;

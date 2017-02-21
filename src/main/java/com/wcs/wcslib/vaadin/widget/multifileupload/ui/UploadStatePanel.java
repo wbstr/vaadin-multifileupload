@@ -78,7 +78,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         if (event.getContentLength() > multiUpload.getMaxFileSize() || event.getContentLength() <= 0) {
             //the client side file size check may not work in old browsers
             interruptUpload(uploadQueue.get(0));
-            String formattedErrorMsg = UploadUtil.getSizeErrorMessage(
+            String formattedErrorMsg = UploadUtil.formatSizeErrorMessage(
                     multiUpload.getSizeErrorMsg(),
                     multiUpload.getMaxFileSize(),
                     event.getContentLength(),
@@ -96,7 +96,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
                     new Object[]{event.getFileName(), event.getMimeType()});
 
             interruptUpload(uploadQueue.get(0));
-            String formattedErrorMsg = UploadUtil.getMimeTypeErrorMessage(
+            String formattedErrorMsg = UploadUtil.formatErrorMessage(
                     multiUpload.getMimeTypeErrorMsgPattern(),
                     event.getFileName());
             Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
@@ -127,7 +127,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         try (InputStream stream = receiver.getStream()) {
             //"simple" Upload fires Upload.FinishedEvent on interruptUpload()
             if (stream != null) {
-                finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived());
+                finishedHandler.handleFile(stream, event.getFileName(), event.getMimeType(), event.getBytesReceived(), uploadQueue.size());
             }
             if (!hasUploadInProgress() && allUploadFinishedHandler != null) {
                 allUploadFinishedHandler.finished();
