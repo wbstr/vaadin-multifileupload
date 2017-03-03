@@ -41,6 +41,7 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
             <version>${version.vaadin}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -65,11 +66,11 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-push</artifactId>
             <version>${version.vaadin}</version>
-        </dependency>
+        </dependency-->
     </dependencies>
     
     <build>
