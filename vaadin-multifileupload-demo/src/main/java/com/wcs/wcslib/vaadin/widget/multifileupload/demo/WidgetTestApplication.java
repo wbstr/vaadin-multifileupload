@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wcs.wcslib.vaadin.widget.multifileupload;
+package com.wcs.wcslib.vaadin.widget.multifileupload.demo;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
+import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -43,11 +47,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.annotation.WebServlet;
 
 /**
- * Demo application. Run with mvn jetty:run.
+ * Demo application.
  */
 @SuppressWarnings("serial")
+@Title("Multifileupload Add-on Demo")
 //@Push
 @Theme("valo")
 public class WidgetTestApplication extends UI {
@@ -62,6 +68,11 @@ public class WidgetTestApplication extends UI {
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private UploadFinishedHandler uploadFinishedHandler;
     private double uploadSpeed = 500;
+
+    @WebServlet(value = "/*", asyncSupported = true)
+    @VaadinServletConfiguration(productionMode = false, ui = WidgetTestApplication.class, widgetset = "com.wcs.wcslib.vaadin.widget.multifileupload.demo.DemoWidgetSet")
+    public static class Servlet extends VaadinServlet {
+    }
 
     @Override
     protected void init(VaadinRequest request) {
@@ -296,7 +307,10 @@ public class WidgetTestApplication extends UI {
         Panel dropArea = new Panel(dropLabel);
         dropArea.setWidth(300, Unit.PIXELS);
         dropArea.setHeight(150, Unit.PIXELS);
-        form.addComponent(slowUpload.createDropComponent(dropArea), 2);
+        
+        DragAndDropWrapper dragAndDropWrapper = slowUpload.createDropComponent(dropArea);
+        dragAndDropWrapper.setSizeUndefined();
+        form.addComponent(dragAndDropWrapper, 2);
     }
 
     private void addMaxFileCountSlider() {

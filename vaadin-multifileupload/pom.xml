@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.wcs.wcslib</groupId>
+    <artifactId>wcslib-vaadin-widget-multifileupload</artifactId>
+    <packaging>jar</packaging>
+    <version>1.12-SNAPSHOT</version>
+    <name>MultiFileUpload Add-on</name>
+    
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.java.version>1.7</project.build.java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <version.vaadin>7.7.3</version.vaadin>
+        <widgetset>com.wcs.wcslib.vaadin.widget.multifileupload.WidgetSet</widgetset>
+		
+		<!-- ZIP Manifest fields -->
+		<Implementation-Version>${project.version}</Implementation-Version>
+		<!-- Must not change this because of the Directory -->
+		<Implementation-Title>${project.name}</Implementation-Title>
+		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
+    </properties>
+
+	<repositories>
+        <repository>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+	
+	<pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>${version.vaadin}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+            <version>${version.vaadin}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiler</artifactId>
+            <version>${version.vaadin}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client</artifactId>
+            <version>${version.vaadin}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-maven-plugin</artifactId>
+                    <version>${version.vaadin}</version>
+                    <configuration>
+                        <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
+                        <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+                        <runTarget>clean</runTarget>
+                        <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>
+                        <noServer>true</noServer>
+                        <port>9997</port>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>${project.build.java.version}</source>
+                    <target>${project.build.java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+						<index>true</index>
+                        <manifest>
+							<addClasspath>true</addClasspath>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Vaadin-Package-Version>1</Vaadin-Package-Version>
+                            <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
+							<Vaadin-Widgetsets>${widgetset}</Vaadin-Widgetsets>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+		
+		<!-- This is needed for the sources required by the client-side compiler to be 
+        included in the produced JARs -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <excludes>
+                    <exclude>rebel.xml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
+    
+    <distributionManagement>
+        <repository>
+            <id>nexus.wcs.local</id>
+            <url>http://nexus.wcs.local:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus.wcs.local</id>
+            <url>http://nexus.wcs.local:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+</project>
