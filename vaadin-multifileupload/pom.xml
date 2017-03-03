@@ -23,16 +23,16 @@
         <version.vaadin>7.7.3</version.vaadin>
         <widgetset>com.wcs.wcslib.vaadin.widget.multifileupload.WidgetSet</widgetset>
 		
-		<!-- ZIP Manifest fields -->
-		<Implementation-Version>${project.version}</Implementation-Version>
-		<!-- Must not change this because of the Directory -->
-		<Implementation-Title>${project.name}</Implementation-Title>
-		<Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-		<Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
-		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
+        <!-- ZIP Manifest fields -->
+        <Implementation-Version>${project.version}</Implementation-Version>
+        <!-- Must not change this because of the Directory -->
+        <Implementation-Title>${project.name}</Implementation-Title>
+        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+        <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
+        <Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
     </properties>
 
-	<repositories>
+    <repositories>
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
@@ -49,7 +49,7 @@
         </repository>
     </repositories>
 	
-	<pluginRepositories>
+    <pluginRepositories>
         <pluginRepository>
             <id>vaadin-snapshots</id>
             <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
@@ -70,26 +70,8 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiled</artifactId>
-            <version>${version.vaadin}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiler</artifactId>
-            <version>${version.vaadin}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client</artifactId>
             <version>${version.vaadin}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -128,20 +110,20 @@
                 <version>2.3.1</version>
                 <configuration>
                     <archive>
-						<index>true</index>
+                        <index>true</index>
                         <manifest>
-							<addClasspath>true</addClasspath>
+                            <addClasspath>true</addClasspath>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
                             <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
-							<Vaadin-Widgetsets>${widgetset}</Vaadin-Widgetsets>
+                            <Vaadin-Widgetsets>${widgetset}</Vaadin-Widgetsets>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
-			<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9</version>
@@ -154,7 +136,7 @@
                     </execution>
                 </executions>
             </plugin>
-			<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -169,7 +151,7 @@
             </plugin>
         </plugins>
 		
-		<!-- This is needed for the sources required by the client-side compiler to be 
+        <!-- This is needed for the sources required by the client-side compiler to be 
         included in the produced JARs -->
         <resources>
             <resource>

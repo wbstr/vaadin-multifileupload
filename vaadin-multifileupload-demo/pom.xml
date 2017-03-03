@@ -24,7 +24,7 @@
         <widgetset>com.wcs.wcslib.vaadin.widget.multifileupload.DemoWidgetSet</widgetset>
     </properties>
 
-	<repositories>
+    <repositories>
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
@@ -55,7 +55,7 @@
     </pluginRepositories>
 
     <dependencies>
-		<dependency>
+        <dependency>
             <groupId>com.wcs.wcslib</groupId>
             <artifactId>wcslib-vaadin-widget-multifileupload</artifactId>
             <version>${project.version}</version>
@@ -95,7 +95,7 @@
                     <target>${project.build.java.version}</target>
                 </configuration>
             </plugin>
-			<plugin>
+            <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.4.1</version>
                 <configuration>
@@ -108,7 +108,7 @@
                 </configuration>
             </plugin>
            
-			 <plugin>
+            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
@@ -127,7 +127,7 @@
                     </execution>
                 </executions>
             </plugin>
-			<plugin>
+            <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${version.vaadin}</version>
@@ -153,7 +153,7 @@
                     </execution>
                 </executions>
             </plugin>
-			 <plugin>
+            <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.10.v20130312</version>

@@ -8,18 +8,18 @@
     <version>1.12-SNAPSHOT</version>
     <name>MultiFileUpload Add-on Root Project</name>
     
-	<modules>
+    <modules>
         <module>vaadin-multifileupload</module>
         <module>vaadin-multifileupload-demo</module>
     </modules>
 	
-	<organization>
+    <organization>
         <name>Webstar Csoport</name>
         <url>https://github.com/wbstr/</url>
     </organization>
 	
     <scm>
-		<url>https://github.com/wbstr/vaadin-multifileupload.git</url>
+        <url>https://github.com/wbstr/vaadin-multifileupload.git</url>
         <connection>scm:git:git@github.com:wbstr/vaadin-multifileupload.git</connection>
         <developerConnection>scm:git:git@github.com:wbstr/vaadin-multifileupload.git</developerConnection>
     </scm>
@@ -33,7 +33,7 @@
         </license>
     </licenses>
 
-	<build>
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>

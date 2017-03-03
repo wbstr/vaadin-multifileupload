@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
 
 /**
- * Demo application.
+ * Demo application. Run with mvn jetty:run.
  */
 @SuppressWarnings("serial")
 @Title("Multifileupload Add-on Demo")
