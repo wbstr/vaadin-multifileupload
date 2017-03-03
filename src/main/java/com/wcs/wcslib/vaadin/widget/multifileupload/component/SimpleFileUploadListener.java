@@ -29,7 +29,7 @@ import java.util.List;
 public class SimpleFileUploadListener implements
         Upload.StartedListener, Upload.ProgressListener, Upload.FailedListener, Upload.FinishedListener {
 
-    private MultiUploadHandler handler;
+    private final MultiUploadHandler handler;
 
     public SimpleFileUploadListener(MultiUploadHandler handler) {
         this.handler = handler;

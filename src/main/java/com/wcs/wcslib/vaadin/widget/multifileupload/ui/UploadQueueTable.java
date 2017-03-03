@@ -32,7 +32,7 @@ public class UploadQueueTable extends Table {
     protected int cancelColumnWidth = 54;
     protected int sizeColumnWidth = 90;
     private int maxVisibleRows = 4;
-    private BeanItemContainer<FileDetailBean> container;
+    private final BeanItemContainer<FileDetailBean> container;
 
     public UploadQueueTable() {
         container = new BeanItemContainer<>(FileDetailBean.class);

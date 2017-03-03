@@ -16,8 +16,6 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DragAndDropWrapper;
-
 import java.util.List;
 
 /**
@@ -39,9 +37,5 @@ public interface UploadComponent extends Component, Component.Focusable {
     void setButtonCaption(String buttonCaption);
 
     void interruptUpload(long fileId);
-
-    void registerDropComponent(MultiUploadDropHandler dropHandler);
-
-    void setFileCountErrorMsgPattern(String pattern);
 
 }

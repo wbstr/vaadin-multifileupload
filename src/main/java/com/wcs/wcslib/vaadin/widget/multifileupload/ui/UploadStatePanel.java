@@ -42,7 +42,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     private static final Logger logger = Logger.getLogger(UploadStatePanel.class.getName());
     private static final String PANEL_STLYE_CLASS = "multiple-upload-state-panel";
-    private List<FileDetailBean> uploadQueue = new ArrayList<>();
+    private final List<FileDetailBean> uploadQueue = new ArrayList<>();
     private UploadStateLayout currentUploadingLayout;
     private UploadStateWindow window;
     private SmartMultiUpload multiUpload;
@@ -50,7 +50,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     private UploadStartedHandler startedHandler;
     private UploadFinishedHandler finishedHandler;
     private AllUploadFinishedHandler allUploadFinishedHandler;
-    private UploadQueueTable table = new UploadQueueTable();
+    private final UploadQueueTable table = new UploadQueueTable();
 
     public UploadStatePanel(UploadStateWindow window) {
         this(window, new DefaultUploadReceiver());
@@ -112,7 +112,6 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             if (!isValidFileSize(event) || !isValidMimeType(event)) {
                 return;
             }
-
             currentUploadingLayout.startStreaming(uploadQueue.get(0));
             show();
             if (startedHandler != null) {

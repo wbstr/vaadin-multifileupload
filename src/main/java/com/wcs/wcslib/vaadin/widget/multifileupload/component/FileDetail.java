@@ -25,11 +25,10 @@ public class FileDetail {
     private static final AtomicLong idCounter = new AtomicLong();
 
     private static final String DELIMITER = "---xXx---";
-    private long id;
-    private String fileName;
+    private final long id;
+    private final String fileName;
     private String mimeType;
-    private long contentLength;
-
+    private final long contentLength;
 
     public FileDetail(String data) {
         String[] split = data.split(DELIMITER);
@@ -41,7 +40,6 @@ public class FileDetail {
         }
     }
 
-
     public FileDetail(String caption, String mimeType, long contentLength) {
         this.id = idCounter.getAndIncrement();
         this.fileName = caption;
@@ -49,21 +47,17 @@ public class FileDetail {
         this.contentLength = contentLength;
     }
 
-
     public long getId() {
         return id;
     }
-
 
     public long getContentLength() {
         return contentLength;
     }
 
-
     public String getFileName() {
         return fileName;
     }
-
 
     public String getMimeType() {
         return mimeType;

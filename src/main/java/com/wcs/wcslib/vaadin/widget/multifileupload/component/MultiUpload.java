@@ -22,7 +22,6 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.Notification;
-
 import java.io.OutputStream;
 import java.util.*;
 
@@ -52,7 +51,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     private List<String> acceptedMimeTypes;
     private boolean enabled = true;
     private String mimeTypeErrorMsg;
-    private short maxFileCount;
+    private int maxFileCount;
     private String fileCountErrorMsg;
 
     StreamVariable streamVariable = new StreamVariable() {
@@ -60,31 +59,32 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         public void streamingStarted(StreamingStartEvent event) {
             uploading = true;
             interrupted = false;
-            final FileDetail next = getPendingFileNames().iterator().next();
+            Iterator<FileDetail> iterator = getPendingFileNames().iterator();
+            if (!iterator.hasNext()) {
+                return;
+            }
+
+            final FileDetail next = iterator.next();
             receiver.streamingStarted(new StreamingStartEvent() {
                 @Override
                 public String getMimeType() {
                     return next.getMimeType();
                 }
 
-
                 @Override
                 public String getFileName() {
                     return next.getFileName();
                 }
-
 
                 @Override
                 public long getContentLength() {
                     return next.getContentLength();
                 }
 
-
                 @Override
                 public long getBytesReceived() {
                     return 0;
                 }
-
 
                 @Override
                 public void disposeStreamVariable() {
@@ -92,12 +92,15 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             });
         }
 
-
         @Override
         public void streamingFinished(final StreamingEndEvent event) {
             uploading = false;
             interrupted = false;
-            final FileDetail next = getPendingFileNames().iterator().next();
+            Iterator<FileDetail> iterator = getPendingFileNames().iterator();
+            if (!iterator.hasNext()) {
+                return;
+            }
+            final FileDetail next = iterator.next();
 
             receiver.streamingFinished(new StreamingEndEvent() {
                 @Override
@@ -105,18 +108,15 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
                     return next.getMimeType();
                 }
 
-
                 @Override
                 public String getFileName() {
                     return next.getFileName();
                 }
 
-
                 @Override
                 public long getContentLength() {
                     return next.getContentLength();
                 }
-
 
                 @Override
                 public long getBytesReceived() {
@@ -126,33 +126,30 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             pendingFiles.remove(0);
         }
 
-
         @Override
         public void streamingFailed(StreamingErrorEvent event) {
             uploading = false;
             interrupted = false;
             receiver.streamingFailed(event);
-            pendingFiles.remove(0);
+            if (!pendingFiles.isEmpty()) {
+                pendingFiles.remove(0);
+            }
         }
-
 
         @Override
         public void onProgress(StreamingProgressEvent event) {
             receiver.onProgress(event);
         }
 
-
         @Override
         public boolean listenProgress() {
             return true;
         }
 
-
         @Override
         public boolean isInterrupted() {
             return interrupted;
         }
-
 
         @Override
         public OutputStream getOutputStream() {
@@ -160,11 +157,9 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         }
     };
 
-
     public void setHandler(MultiUploadHandler receiver) {
         this.receiver = receiver;
     }
-
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -198,19 +193,20 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         }
     }
 
-
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("filequeue")) {
             String[] fileQueue = (String[]) variables.get("filequeue");
             List<FileDetail> newFiles = new ArrayList<>(fileQueue.length);
+
             for (String string : fileQueue) {
+                if (pendingFiles.size() + newFiles.size() >= maxFileCount) {
+                    Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.WARNING_MESSAGE);
+                    break;
+                }
                 newFiles.add(new FileDetail(string));
             }
 
-            if (pendingFiles.size() + newFiles.size() > maxFileCount) {
-                Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.ERROR_MESSAGE);
-            }
             pendingFiles.addAll(newFiles);
             receiver.filesQueued(newFiles);
 
@@ -221,11 +217,10 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         }
     }
 
-
     @Override
     public void interruptUpload(long fileId) {
         int ndx = 0;
-        for (ListIterator<FileDetail> it = pendingFiles.listIterator(); it.hasNext(); ) {
+        for (ListIterator<FileDetail> it = pendingFiles.listIterator(); it.hasNext();) {
             FileDetail fileDetail = it.next();
             if (fileDetail.getId() == fileId) {
                 if (ndx == 0) {
@@ -242,18 +237,16 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         }
     }
 
-
-    @Override
     public void registerDropComponent(MultiUploadDropHandler dropHandler) {
         dropHandler.addFilesReceivedListener(new MultiUploadDropHandler.FilesReceivedListener() {
             @Override
             public void filesReceived(List<Html5File> html5Files) {
-                if (pendingFiles.size() + html5Files.size() > maxFileCount) {
-                    Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.ERROR_MESSAGE);
-                }
-
                 final List<FileDetail> newFiles = new ArrayList<>();
                 for (Html5File html5File : html5Files) {
+                    if (pendingFiles.size() + newFiles.size() >= maxFileCount) {
+                        Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.WARNING_MESSAGE);
+                        break;
+                    }
                     html5File.setStreamVariable(streamVariable);
                     newFiles.add(new FileDetail(html5File.getFileName(), html5File.getType(), html5File.getFileSize()));
                 }
@@ -269,33 +262,27 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         });
     }
 
-
     public Collection<FileDetail> getPendingFileNames() {
         return Collections.unmodifiableCollection(pendingFiles);
     }
-
 
     @Override
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
     }
 
-
     public String getButtonCaption() {
         return buttonCaption;
     }
-
 
     public boolean isUploading() {
         return uploading;
     }
 
-
     @Override
     public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
-
 
     @Override
     public void setEnabled(boolean enabled) {
@@ -303,52 +290,43 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
         this.enabled = enabled;
     }
 
-
     @Override
     public void setSizeErrorMsgPattern(String sizeErrorMsg) {
         this.sizeErrorMsg = sizeErrorMsg;
     }
-
 
     @Override
     public void setAcceptFilter(String acceptFilter) {
         this.acceptFilter = acceptFilter;
     }
 
-
     @Override
     public void setAcceptedMimeTypes(List<String> acceptedMimeTypes) {
         this.acceptedMimeTypes = acceptedMimeTypes;
     }
-
 
     @Override
     public void setMimeTypeErrorMsgPattern(String pattern) {
         this.mimeTypeErrorMsg = pattern;
     }
 
-
-    public void setMaxFileCount(short maxFileCount) {
+    public void setMaxFileCount(int maxFileCount) {
         this.maxFileCount = maxFileCount;
     }
-
 
     public void setFileCountErrorMsgPattern(String pattern) {
         this.fileCountErrorMsg = pattern;
     }
-
 
     @Override
     public void focus() {
         focus = true;
     }
 
-
     @Override
     public int getTabIndex() {
         return tabIndex;
     }
-
 
     @Override
     public void setTabIndex(int tabIndex) {

@@ -31,11 +31,11 @@ public class FileDetailBean implements Serializable {
     public final static String FILE_NAME = "fileName";
     public final static String ID = "id";
     public final static String CANCEL_BUTTON = "cancelButton";
-    private long id;
-    private String fileName;
-    private long contentLength;
+    private final long id;
+    private final String fileName;
+    private final long contentLength;
     private long bytesReceived;
-    private String readableContentLength;
+    private final String readableContentLength;
     private Button cancelButton;
 
     public FileDetailBean(FileDetail fileDetail, UploadStatePanel uploadStatePanel) {

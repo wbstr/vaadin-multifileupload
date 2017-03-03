@@ -15,6 +15,7 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamVariable;
@@ -27,9 +28,11 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.AllUploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
@@ -46,11 +49,13 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("serial")
 //@Push
+@Theme("valo")
 public class WidgetTestApplication extends UI {
 
     private static final String PUSH_OPTION_ID = "push";
     private static final String POLL_OPTION_ID = "poll";
     private static final int POLLING_INTERVAL = 1000;
+    private static final int FILE_COUNT = 5;
     private List<MultiFileUpload> uploads = new ArrayList<>();
     private VerticalLayout root = new VerticalLayout();
     private FormLayout form = new FormLayout();
@@ -93,6 +98,7 @@ public class WidgetTestApplication extends UI {
         addAllUploadFinishedHandlerSwitcher();
         addIndeterminateSwitcher();
         addPollSwitcher();
+        addMaxFileCountSlider();
     }
 
     private void addLabels() {
@@ -108,8 +114,8 @@ public class WidgetTestApplication extends UI {
     private void createUploadFinishedHandler() {
         uploadFinishedHandler = new UploadFinishedHandler() {
             @Override
-            public void handleFile(InputStream stream, String fileName, String mimeType, long length, int size) {
-                Notification.show(fileName + " uploaded (" + length + " bytes).");
+            public void handleFile(InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue) {
+                Notification.show(fileName + " uploaded (" + length + " bytes). " + filesLeftInQueue + " files left.");
             }
         };
     }
@@ -122,6 +128,7 @@ public class WidgetTestApplication extends UI {
         slowUpload.setSizeErrorMsgPattern(errorMsgPattern);
         slowUpload.setCaption(caption);
         slowUpload.setPanelCaption(caption);
+        slowUpload.setMaxFileCount(FILE_COUNT);
         slowUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
         slowUpload.getSmartUpload().setUploadButtonIcon(FontAwesome.UPLOAD);
 
@@ -129,7 +136,9 @@ public class WidgetTestApplication extends UI {
         uploads.add(slowUpload);
 
         addFocusBtn(slowUpload);
-
+        if (multiple) {
+            addDropArea(slowUpload);
+        }
     }
 
     private void addFocusBtn(final SlowUpload slowUpload) {
@@ -279,6 +288,33 @@ public class WidgetTestApplication extends UI {
             }
         });
         form.addComponent(cb);
+    }
+
+    private void addDropArea(SlowUpload slowUpload) {
+        Label dropLabel = new Label("Drop files here...");
+        dropLabel.addStyleName(ValoTheme.LABEL_HUGE);
+        Panel dropArea = new Panel(dropLabel);
+        dropArea.setWidth(300, Unit.PIXELS);
+        dropArea.setHeight(150, Unit.PIXELS);
+        form.addComponent(slowUpload.createDropComponent(dropArea), 2);
+    }
+
+    private void addMaxFileCountSlider() {
+        final Slider slider = new Slider("Max file count");
+        slider.setWidth("200px");
+        slider.setImmediate(true);
+        slider.setMin(1);
+        slider.setMax(10);
+        slider.setValue(Double.valueOf(FILE_COUNT));
+        slider.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                for (final MultiFileUpload multiFileUpload : uploads) {
+                    multiFileUpload.setMaxFileCount(slider.getValue().intValue());
+                }
+            }
+        });
+        form.addComponent(slider);
     }
 
     private class SlowUpload extends MultiFileUpload {

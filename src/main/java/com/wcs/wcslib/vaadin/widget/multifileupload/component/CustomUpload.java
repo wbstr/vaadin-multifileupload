@@ -18,9 +18,6 @@ package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.*;
-
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +31,6 @@ public class CustomUpload extends Upload implements UploadComponent {
     private String acceptFilter;
     private List<String> acceptedMimeTypes;
     private String mimeTypeErrorMsg;
-    private String fileCountErrorMsg;
-
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -55,82 +50,39 @@ public class CustomUpload extends Upload implements UploadComponent {
         }
     }
 
-
     @Override
     public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
-
 
     @Override
     public void setSizeErrorMsgPattern(String sizeErrorMsg) {
         this.sizeErrorMsg = sizeErrorMsg;
     }
 
-
     @Override
     public void interruptUpload(long fileId) {
         interruptUpload();
     }
-
-
-    @Override
-    public DragAndDropWrapper createDropComponent(Component component) {
-
-        throw new RuntimeException("createDropComponent not yet supported for single upload");
-/*
-
-        MultiUploadDropHandler dropHandler = new MultiUploadDropHandler(component);
-        dropHandler.addFilesReceivedListener(new MultiUploadDropHandler.FilesReceivedListener() {
-            @Override
-            public void filesReceived(List<Html5File> html5Files) {
-                if (html5Files.size() > 1) {
-                    Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, 1), Notification.Type.ERROR_MESSAGE);
-                }
-
-                final List<FileDetail> newFiles = new ArrayList<>();
-                for (Html5File html5File : html5Files) {
-                    if(getReceiver() != null) {
-                        OutputStream outputStream = getReceiver().receiveUpload(html5File.getFileName(), html5File.getType());
-
-
-                    }
-                    break;
-                }
-
-                markAsDirty();
-            }
-        });
-        return dropHandler;
-*/
-    }
-
-
-    public void setFileCountErrorMsgPattern(String pattern) {
-        this.fileCountErrorMsg = pattern;
-    }
-
 
     @Override
     public void setAcceptFilter(String acceptFilter) {
         this.acceptFilter = acceptFilter;
     }
 
-
     @Override
     public void setAcceptedMimeTypes(List<String> acceptedMimeTypes) {
         this.acceptedMimeTypes = acceptedMimeTypes;
     }
-
 
     @Override
     public void setMimeTypeErrorMsgPattern(String pattern) {
         this.mimeTypeErrorMsg = pattern;
     }
 
-
     @Override
     public void focus() {
         focus = true;
     }
+
 }
