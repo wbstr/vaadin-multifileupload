@@ -16,8 +16,8 @@
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -31,14 +31,14 @@ import java.util.List;
 @StyleSheet("uploadstatewindow.css")
 public class UploadStateWindow extends Window {
 
-    private static final String CANCEL_ICON = "remove_small.png";
+    private static final String CANCEL_ICON = "../multifileupload/remove_small.png";
     private static final String WINDOW_STYLE_CLASS = "multiple-upload-state-window";
     private static final String WINDOW_LAYOUT_STYLE_CLASS = "multiple-upload-state-window-layout";
     private final List<UploadStatePanel> uploadStatePanels = new ArrayList<>();
     private final VerticalLayout windowLayout = new VerticalLayout();
     private String uploadStatusCaption = "Upload status";
     private String cancelButtonCaption = "Cancel";
-    private Resource cancelIconResource = new ClassResource(UploadStateWindow.class, CANCEL_ICON);
+    private Resource cancelIconResource = new ThemeResource(CANCEL_ICON);
     private ConfirmDialog confirmDialog = new ConfirmDialog();
     private long totalContentLength = 0;
     private long totalBytesReceived = 0;
@@ -84,25 +84,17 @@ public class UploadStateWindow extends Window {
         setWindowPosition(WindowPosition.BOTTOM_RIGHT);
         setOverallProgressVisible(true);
         setClosable(true);
-        addCloseListener(new CloseListener() {
-            @Override
-            public void windowClose(CloseEvent e) {
-                for (UploadStatePanel panel : uploadStatePanels) {
-                    if (panel.hasUploadInProgress()) {
-                        show();
-                        confirmDialog.show();
-                        break;
-                    }
+        addCloseListener((CloseEvent e) -> {
+            for (UploadStatePanel panel : uploadStatePanels) {
+                if (panel.hasUploadInProgress()) {
+                    show();
+                    confirmDialog.show();
+                    break;
                 }
             }
         });
 
-        confirmDialog.setAction(new ConfirmAction() {
-            @Override
-            public void execute() {
-                interruptAll();
-            }
-        });
+        confirmDialog.setAction(this::interruptAll);
 
         windowLayout.setStyleName(WINDOW_LAYOUT_STYLE_CLASS);
         setContent(windowLayout);

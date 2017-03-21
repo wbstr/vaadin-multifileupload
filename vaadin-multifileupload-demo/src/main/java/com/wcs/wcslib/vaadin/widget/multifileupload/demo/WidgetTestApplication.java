@@ -15,10 +15,9 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.demo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.Property;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
@@ -31,8 +30,8 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -55,11 +54,18 @@ import javax.servlet.annotation.WebServlet;
 @SuppressWarnings("serial")
 @Title("Multifileupload Add-on Demo")
 //@Push
-@Theme("valo")
 public class WidgetTestApplication extends UI {
 
-    private static final String PUSH_OPTION_ID = "push";
-    private static final String POLL_OPTION_ID = "poll";
+    private enum RefreshMode {
+        PUSH("Push (Automatic)"),
+        POLL("Poll (1000 ms)");
+        String caption;
+
+        private RefreshMode(String caption) {
+            this.caption = caption;
+        }
+
+    }
     private static final int POLLING_INTERVAL = 1000;
     private static final int FILE_COUNT = 5;
     private List<MultiFileUpload> uploads = new ArrayList<>();
@@ -123,11 +129,8 @@ public class WidgetTestApplication extends UI {
     }
 
     private void createUploadFinishedHandler() {
-        uploadFinishedHandler = new UploadFinishedHandler() {
-            @Override
-            public void handleFile(InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue) {
-                Notification.show(fileName + " uploaded (" + length + " bytes). " + filesLeftInQueue + " files left.");
-            }
+        uploadFinishedHandler = (InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue) -> {
+            Notification.show(fileName + " uploaded (" + length + " bytes). " + filesLeftInQueue + " files left.");
         };
     }
 
@@ -153,12 +156,8 @@ public class WidgetTestApplication extends UI {
     }
 
     private void addFocusBtn(final SlowUpload slowUpload) {
-        Button focusBtn = new Button("Focus to " + slowUpload.getCaption(), new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                slowUpload.focus();
-            }
+        Button focusBtn = new Button("Focus to " + slowUpload.getCaption(), (Button.ClickEvent event) -> {
+            slowUpload.focus();
         });
         form.addComponent(focusBtn, 1);
     }
@@ -166,32 +165,23 @@ public class WidgetTestApplication extends UI {
     private void addUploadSpeedSlider() {
         final Slider slider = new Slider("Delay (ms)");
         slider.setWidth("200px");
-        slider.setImmediate(true);
         slider.setMin(0);
         slider.setMax(1000);
         slider.setValue(uploadSpeed);
-        slider.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                uploadSpeed = slider.getValue();
-            }
+        slider.addValueChangeListener((HasValue.ValueChangeEvent<Double> event) -> {
+            uploadSpeed = slider.getValue();
         });
         form.addComponent(slider);
     }
 
     private void addWindowPositionSwitcher() {
-        final ComboBox cb = new ComboBox("Window position");
-        cb.setNullSelectionAllowed(false);
-        for (UploadStateWindow.WindowPosition windowPosition : UploadStateWindow.WindowPosition.values()) {
-            cb.addItem(windowPosition);
-            cb.setItemCaption(windowPosition, windowPosition.name());
-        }
+        final ComboBox<UploadStateWindow.WindowPosition> cb = new ComboBox("Window position");
+        cb.setEmptySelectionAllowed(false);
+        cb.setItems(UploadStateWindow.WindowPosition.values());
+        cb.setItemCaptionGenerator((UploadStateWindow.WindowPosition item) -> item.name());
         cb.setValue(UploadStateWindow.WindowPosition.BOTTOM_RIGHT);
-        cb.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                uploadStateWindow.setWindowPosition((UploadStateWindow.WindowPosition) cb.getValue());
-            }
+        cb.addValueChangeListener((HasValue.ValueChangeEvent<UploadStateWindow.WindowPosition> event) -> {
+            uploadStateWindow.setWindowPosition((UploadStateWindow.WindowPosition) cb.getValue());
         });
         form.addComponent(cb);
     }
@@ -199,24 +189,18 @@ public class WidgetTestApplication extends UI {
     private void addOverallProgressSwitcher() {
         final CheckBox cb = new CheckBox("Overall progress");
         cb.setValue(true);
-        cb.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                uploadStateWindow.setOverallProgressVisible(cb.getValue());
-            }
+        cb.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
+            uploadStateWindow.setOverallProgressVisible(cb.getValue());
         });
         form.addComponent(cb);
     }
 
     private void addRebuildUIBtn() {
-        root.addComponent(new Button("ReBuildUI", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                root.removeComponent(form);
-                form = new FormLayout();
-                root.addComponent(form);
-                createForm();
-            }
+        root.addComponent(new Button("ReBuildUI", (Button.ClickEvent event) -> {
+            root.removeComponent(form);
+            form = new FormLayout();
+            root.addComponent(form);
+            createForm();
         }));
     }
 
@@ -224,14 +208,11 @@ public class WidgetTestApplication extends UI {
         for (final MultiFileUpload multiFileUpload : uploads) {
             final CheckBox cb = new CheckBox(multiFileUpload.getCaption() + " attached");
             cb.setValue(true);
-            cb.addValueChangeListener(new Property.ValueChangeListener() {
-                @Override
-                public void valueChange(Property.ValueChangeEvent event) {
-                    if (cb.getValue()) {
-                        form.addComponent(multiFileUpload, 0);
-                    } else {
-                        form.removeComponent(multiFileUpload);
-                    }
+            cb.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
+                if (cb.getValue()) {
+                    form.addComponent(multiFileUpload, 0);
+                } else {
+                    form.removeComponent(multiFileUpload);
                 }
             });
             form.addComponent(cb);
@@ -239,50 +220,38 @@ public class WidgetTestApplication extends UI {
     }
 
     private void addPollSwitcher() {
-        final OptionGroup optionGroup = new OptionGroup("ProgressBar refresh mode");
-        optionGroup.addItem(POLL_OPTION_ID);
-        optionGroup.setItemCaption(POLL_OPTION_ID, "Poll (1000 ms)");
+        final RadioButtonGroup<RefreshMode> radioButtonGroup = new RadioButtonGroup("ProgressBar refresh mode");
+        radioButtonGroup.setItems(RefreshMode.values());
+        radioButtonGroup.setItemCaptionGenerator((RefreshMode item) -> item.caption);
 
-        optionGroup.select(POLL_OPTION_ID);
+        radioButtonGroup.setSelectedItem(RefreshMode.POLL);
 
-        optionGroup.addItem(PUSH_OPTION_ID);
-        optionGroup.setItemCaption(PUSH_OPTION_ID, "Push (Automatic)");
-        optionGroup.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                if (optionGroup.getValue().equals(PUSH_OPTION_ID)) {
-                    getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
-                    setPollInterval(-1);
-                } else {
-                    getPushConfiguration().setPushMode(PushMode.DISABLED);
-                    setPollInterval(POLLING_INTERVAL);
-                }
+        radioButtonGroup.addValueChangeListener((HasValue.ValueChangeEvent<RefreshMode> event) -> {
+            if (radioButtonGroup.getValue().equals(RefreshMode.PUSH)) {
+                getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
+                setPollInterval(-1);
+            } else {
+                getPushConfiguration().setPushMode(PushMode.DISABLED);
+                setPollInterval(POLLING_INTERVAL);
             }
         });
 
-        form.addComponent(optionGroup);
+        form.addComponent(radioButtonGroup);
     }
 
     private void addAllUploadFinishedHandlerSwitcher() {
         final CheckBox cb = new CheckBox("Notification when all files have been uploaded.");
-        final AllUploadFinishedHandler allUploadFinishedHandler = new AllUploadFinishedHandler() {
-
-            @Override
-            public void finished() {
-                Notification.show("All files have been uploaded.", Notification.Type.TRAY_NOTIFICATION);
-            }
+        final AllUploadFinishedHandler allUploadFinishedHandler = () -> {
+            Notification.show("All files have been uploaded.", Notification.Type.TRAY_NOTIFICATION);
         };
-        cb.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                for (final MultiFileUpload multiFileUpload : uploads) {
-                    if (cb.getValue()) {
-                        multiFileUpload.setAllUploadFinishedHandler(allUploadFinishedHandler);
-                    } else {
-                        multiFileUpload.setAllUploadFinishedHandler(null);
-                    }
+        cb.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
+            uploads.stream().forEach((multiFileUpload) -> {
+                if (cb.getValue()) {
+                    multiFileUpload.setAllUploadFinishedHandler(allUploadFinishedHandler);
+                } else {
+                    multiFileUpload.setAllUploadFinishedHandler(null);
                 }
-            }
+            });
         });
         cb.setValue(true);
         form.addComponent(cb);
@@ -290,13 +259,10 @@ public class WidgetTestApplication extends UI {
 
     private void addIndeterminateSwitcher() {
         final CheckBox cb = new CheckBox("Indeterminate ProgressBar");
-        cb.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                for (final MultiFileUpload multiFileUpload : uploads) {
-                    multiFileUpload.setIndeterminate(cb.getValue());
-                }
-            }
+        cb.addValueChangeListener((HasValue.ValueChangeEvent<Boolean> event) -> {
+            uploads.stream().forEach((multiFileUpload) -> {
+                multiFileUpload.setIndeterminate(cb.getValue());
+            });
         });
         form.addComponent(cb);
     }
@@ -307,7 +273,7 @@ public class WidgetTestApplication extends UI {
         Panel dropArea = new Panel(dropLabel);
         dropArea.setWidth(300, Unit.PIXELS);
         dropArea.setHeight(150, Unit.PIXELS);
-        
+
         DragAndDropWrapper dragAndDropWrapper = slowUpload.createDropComponent(dropArea);
         dragAndDropWrapper.setSizeUndefined();
         form.addComponent(dragAndDropWrapper, 2);
@@ -316,17 +282,13 @@ public class WidgetTestApplication extends UI {
     private void addMaxFileCountSlider() {
         final Slider slider = new Slider("Max file count");
         slider.setWidth("200px");
-        slider.setImmediate(true);
         slider.setMin(1);
         slider.setMax(10);
         slider.setValue(Double.valueOf(FILE_COUNT));
-        slider.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                for (final MultiFileUpload multiFileUpload : uploads) {
-                    multiFileUpload.setMaxFileCount(slider.getValue().intValue());
-                }
-            }
+        slider.addValueChangeListener((HasValue.ValueChangeEvent<Double> event) -> {
+            uploads.stream().forEach((multiFileUpload) -> {
+                multiFileUpload.setMaxFileCount(slider.getValue().intValue());
+            });
         });
         form.addComponent(slider);
     }

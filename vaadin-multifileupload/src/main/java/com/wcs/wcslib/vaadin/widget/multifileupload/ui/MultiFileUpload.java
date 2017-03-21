@@ -130,10 +130,10 @@ public class MultiFileUpload extends CustomComponent {
     }
 
     /**
-     * @param maxVisibleRows The number of rows which after the upload queue table renders a scrollbar.
+     * @param maxVisibleRows The number of rows which after the upload queue grid renders a scrollbar.
      */
     public void setMaxVisibleRows(int maxVisibleRows) {
-        uploadStatePanel.getTable().setMaxVisibleRows(maxVisibleRows);
+        uploadStatePanel.getUploadQueueGrid().setMaxVisibleRows(maxVisibleRows);
     }
 
     /**

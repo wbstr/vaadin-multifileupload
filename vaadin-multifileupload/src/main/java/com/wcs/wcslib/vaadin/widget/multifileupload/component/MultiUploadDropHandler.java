@@ -41,9 +41,9 @@ public class MultiUploadDropHandler extends DragAndDropWrapper implements DropHa
         WrapperTransferable tr = (WrapperTransferable) dropEvent.getTransferable();
         Html5File[] files = tr.getFiles();
         if (files != null && files.length > 0) {
-            for (FilesReceivedListener filesReceivedListener : listeners) {
+            listeners.stream().forEach((filesReceivedListener) -> {
                 filesReceivedListener.filesReceived(Arrays.asList(files));
-            }
+            });
         }
 
     }

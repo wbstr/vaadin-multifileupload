@@ -238,26 +238,22 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     }
 
     public void registerDropComponent(MultiUploadDropHandler dropHandler) {
-        dropHandler.addFilesReceivedListener(new MultiUploadDropHandler.FilesReceivedListener() {
-            @Override
-            public void filesReceived(List<Html5File> html5Files) {
-                final List<FileDetail> newFiles = new ArrayList<>();
-                for (Html5File html5File : html5Files) {
-                    if (pendingFiles.size() + newFiles.size() >= maxFileCount) {
-                        Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.WARNING_MESSAGE);
-                        break;
-                    }
-                    html5File.setStreamVariable(streamVariable);
-                    newFiles.add(new FileDetail(html5File.getFileName(), html5File.getType(), html5File.getFileSize()));
+        dropHandler.addFilesReceivedListener((List<Html5File> html5Files) -> {
+            final List<FileDetail> newFiles = new ArrayList<>();
+            for (Html5File html5File : html5Files) {
+                if (pendingFiles.size() + newFiles.size() >= maxFileCount) {
+                    Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.WARNING_MESSAGE);
+                    break;
                 }
-                pendingFiles.addAll(newFiles);
-                receiver.filesQueued(newFiles);
+                html5File.setStreamVariable(streamVariable);
+                newFiles.add(new FileDetail(html5File.getFileName(), html5File.getType(), html5File.getFileSize()));
+            }
+            pendingFiles.addAll(newFiles);
+            receiver.filesQueued(newFiles);
 
-                markAsDirty();
-                if (!isUploading()) {
-                    ready = true;
-                }
-
+            markAsDirty();
+            if (!isUploading()) {
+                ready = true;
             }
         });
     }

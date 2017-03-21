@@ -15,8 +15,7 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.ui;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.server.Resource;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.FileDetail;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 import java.io.Serializable;
@@ -27,23 +26,19 @@ import java.io.Serializable;
  */
 public class FileDetailBean implements Serializable {
 
-    public final static String READABLE_CONTENT_LENGTH = "readableContentLength";
-    public final static String FILE_NAME = "fileName";
-    public final static String ID = "id";
-    public final static String CANCEL_BUTTON = "cancelButton";
     private final long id;
     private final String fileName;
     private final long contentLength;
     private long bytesReceived;
     private final String readableContentLength;
-    private Button cancelButton;
+    private final Resource cancelIcon;
 
     public FileDetailBean(FileDetail fileDetail, UploadStatePanel uploadStatePanel) {
         this.id = fileDetail.getId();
         this.fileName = fileDetail.getFileName();
         this.contentLength = fileDetail.getContentLength();
         this.readableContentLength = UploadUtil.getHumanReadableByteCount(contentLength, false);
-        createCancelBtn(uploadStatePanel);
+        this.cancelIcon = uploadStatePanel.getWindow().getCancelIconResource();
     }
 
     public long getId() {
@@ -60,10 +55,6 @@ public class FileDetailBean implements Serializable {
 
     public String getReadableContentLength() {
         return readableContentLength;
-    }
-
-    public Button getCancelButton() {
-        return cancelButton;
     }
 
     public long getBytesReceived() {
@@ -96,16 +87,8 @@ public class FileDetailBean implements Serializable {
         return true;
     }
 
-    private Button createCancelBtn(final UploadStatePanel uploadStatePanel) {
-        cancelButton = new Button();
-        cancelButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(final Button.ClickEvent event) {
-                uploadStatePanel.interruptUpload(FileDetailBean.this);
-            }
-        });
-        cancelButton.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
-        cancelButton.addStyleName(BaseTheme.BUTTON_LINK);
-        return cancelButton;
+    public Resource getCancelIcon() {
+        return cancelIcon;
     }
+
 }

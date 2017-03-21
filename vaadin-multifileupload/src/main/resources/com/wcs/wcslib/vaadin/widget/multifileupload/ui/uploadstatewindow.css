@@ -13,13 +13,6 @@
     padding: 5px;
 }
 
-.multiple-upload-state-table .v-table-body{
-    overflow-x: hidden !important;
-}
-
-.multiple-upload-state-table-nooverflowy .v-table-body{
-    overflow-y: hidden !important;
-}
 .multiple-upload-state-cancelbutton{
     float:right;
 }

@@ -37,7 +37,6 @@ public class VCustomUpload extends VUpload {
     private List<String> acceptedMimeTypes;
     private InputElement input;
     public Icon icon;
-    private boolean immediate;
 
     @Override
     public void submit() {
@@ -92,17 +91,9 @@ public class VCustomUpload extends VUpload {
     private InputElement getInput() {
         if (input == null || !getElement().isOrHasChild((Node) input)) {
             input = fu.getElement().cast();
-            if (immediate) {
-                input.setTabIndex(-1);
-            }
+            input.setTabIndex(-1);
         }
         return input;
-    }
-
-    @Override
-    public void setImmediate(boolean immediate) {
-        super.setImmediate(immediate);
-        this.immediate = immediate;
     }
 
     public void setMaxFileSize(long maxFileSize) {

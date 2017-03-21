@@ -50,7 +50,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     private UploadStartedHandler startedHandler;
     private UploadFinishedHandler finishedHandler;
     private AllUploadFinishedHandler allUploadFinishedHandler;
-    private final UploadQueueTable table = new UploadQueueTable();
+    private final UploadQueueGrid uploadQueueGrid = new UploadQueueGrid(this);
 
     public UploadStatePanel(UploadStateWindow window) {
         this(window, new DefaultUploadReceiver());
@@ -71,7 +71,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         panelLayout.setMargin(false);
         currentUploadingLayout = new UploadStateLayout(this);
         panelLayout.addComponent(currentUploadingLayout);
-        panelLayout.addComponent(table);
+        panelLayout.addComponent(uploadQueueGrid);
     }
 
     private boolean isValidFileSize(StreamVariable.StreamingStartEvent event) {
@@ -167,7 +167,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             uploadQueue.add(new FileDetailBean(fileDetail, this));
             totalContentLength += fileDetail.getContentLength();
         }
-        table.refreshContainerDatasource(uploadQueue);
+        uploadQueueGrid.refreshItems(uploadQueue);
         window.setTotalContentLength(window.getTotalContentLength() + totalContentLength);
     }
 
@@ -178,7 +178,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     public void removeFromQueue(FileDetailBean fileDetail) {
         uploadQueue.remove(fileDetail);
-        table.refreshContainerDatasource(uploadQueue);
+        uploadQueueGrid.refreshItems(uploadQueue);
         if (uploadQueue.isEmpty()) {
             setVisible(false);
             window.refreshVisibility();
@@ -219,8 +219,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
         window.refreshVisibility();
     }
 
-    public UploadQueueTable getTable() {
-        return table;
+    public UploadQueueGrid getUploadQueueGrid() {
+        return uploadQueueGrid;
     }
 
     public boolean hasUploadInProgress() {
@@ -238,4 +238,5 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     public UploadStateLayout getCurrentUploadingLayout() {
         return currentUploadingLayout;
     }
+
 }

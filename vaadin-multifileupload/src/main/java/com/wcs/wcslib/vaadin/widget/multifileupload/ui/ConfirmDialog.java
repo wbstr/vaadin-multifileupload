@@ -66,23 +66,17 @@ public class ConfirmDialog extends Window {
         buttonLayout.setSpacing(true);
 
         yes = new Button(confirmYes);
-        yes.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                hide();
-                if (action != null) {
-                    action.execute();
-                }
+        yes.addClickListener((Button.ClickEvent event) -> {
+            hide();
+            if (action != null) {
+                action.execute();
             }
         });
         buttonLayout.addComponent(yes);
 
         no = new Button(confirmNo);
-        no.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                hide();
-            }
+        no.addClickListener((Button.ClickEvent event) -> {
+            hide();
         });
         buttonLayout.addComponent(no);
 

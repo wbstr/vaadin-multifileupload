@@ -49,6 +49,7 @@ public class UploadStateLayout extends CssLayout {
     private void initForm() {
         setWidth(100, Unit.PERCENTAGE);
         layout = new VerticalLayout();
+        layout.setMargin(false);
         layout.setWidth(100, Unit.PERCENTAGE);
         addComponent(layout);
 
@@ -79,11 +80,8 @@ public class UploadStateLayout extends CssLayout {
 
     private Button createCancelBtn() {
         Button button = new Button();
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(final Button.ClickEvent event) {
-                uploadStatePanel.interruptUpload(fileDetailBean);
-            }
+        button.addClickListener((final Button.ClickEvent event) -> {
+            uploadStatePanel.interruptUpload(fileDetailBean);
         });
         button.setIcon(uploadStatePanel.getWindow().getCancelIconResource());
         button.setStyleName("small");

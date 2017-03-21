@@ -21,7 +21,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Upload;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -187,7 +186,6 @@ public class SmartMultiUpload extends CustomComponent {
         upload = new MultiUpload();
         MultiUpload multiUpload = (MultiUpload) upload;
         multiUpload.setHandler(handler);
-        multiUpload.setImmediate(true);
         multiUpload.setMaxFileCount(Math.max(0, maxFileCount));
         multiUpload.setFileCountErrorMsgPattern(fileCountErrorMsgPattern);
         if (dropHandler != null) {
@@ -198,13 +196,7 @@ public class SmartMultiUpload extends CustomComponent {
     private void initSingleUpload() {
         upload = new CustomUpload();
         Upload singleUpload = (Upload) upload;
-        singleUpload.setReceiver(new Upload.Receiver() {
-            @Override
-            public OutputStream receiveUpload(String filename, String mimeType) {
-                return handler.getOutputStream();
-            }
-        });
-        singleUpload.setImmediate(true);
+        singleUpload.setReceiver((String filename, String mimeType) -> handler.getOutputStream());
 
         SimpleFileUploadListener uploadEventListener = new SimpleFileUploadListener(handler);
         singleUpload.addStartedListener(uploadEventListener);
