@@ -5,7 +5,7 @@
     <groupId>com.wcs.wcslib</groupId>
     <artifactId>wcslib-vaadin-widget-multifileupload-root</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.1</version>
+    <version>3.0.2-SNAPSHOT</version>
     <name>MultiFileUpload Root Project</name>
     
     <modules>
@@ -22,7 +22,7 @@
         <url>https://github.com/wbstr/vaadin-multifileupload.git</url>
         <connection>scm:git:git@github.com:wbstr/vaadin-multifileupload.git</connection>
         <developerConnection>scm:git:git@github.com:wbstr/vaadin-multifileupload.git</developerConnection>
-      <tag>3.0.1</tag>
+      <tag>HEAD</tag>
   </scm>
     
     <licenses>
