@@ -30,14 +30,12 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.*;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.dd.VHtml5File;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -252,6 +250,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
 
     protected void disableUpload() {
         submitButton.setEnabled(false);
+        submitButton.addStyleName(StyleConstants.DISABLED);
         // Cannot disable the fileupload while submitting or the file won't
         // be submitted at all
         fu.getElement().setPropertyBoolean("disabled", true);
@@ -260,6 +259,7 @@ public class VMultiUpload extends SimplePanel implements Paintable {
 
     protected void enableUpload() {
         submitButton.setEnabled(true);
+        submitButton.removeStyleName(StyleConstants.DISABLED);
         fu.getElement().setPropertyBoolean("disabled", false);
         enabled = true;
     }

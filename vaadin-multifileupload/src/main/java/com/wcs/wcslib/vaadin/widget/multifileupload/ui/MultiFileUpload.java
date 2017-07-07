@@ -221,7 +221,6 @@ public class MultiFileUpload extends CustomComponent {
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        super.setReadOnly(readOnly);
         smartUpload.setEnabled(!readOnly);
     }
 
