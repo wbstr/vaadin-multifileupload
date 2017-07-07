@@ -24,30 +24,17 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.*;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.Slider;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import com.wcs.wcslib.vaadin.widget.multifileupload.ui.AllUploadFinishedHandler;
-import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
-import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
-import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStatePanel;
-import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStateWindow;
+import com.wcs.wcslib.vaadin.widget.multifileupload.ui.*;
+
+import javax.servlet.annotation.WebServlet;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.annotation.WebServlet;
 
 /**
  * Demo application. Run with mvn jetty:run.
@@ -60,6 +47,9 @@ public class WidgetTestApplication extends UI {
 
     private static final String PUSH_OPTION_ID = "push";
     private static final String POLL_OPTION_ID = "poll";
+    private static final String DISABLE_UPLOADS_CAPTION = "Disable uploads";
+    private static final String ENABLE_UPLOADS_CAPTION = "Enable uploads";
+
     private static final int POLLING_INTERVAL = 1000;
     private static final int FILE_COUNT = 5;
     private List<MultiFileUpload> uploads = new ArrayList<>();
@@ -68,6 +58,7 @@ public class WidgetTestApplication extends UI {
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private UploadFinishedHandler uploadFinishedHandler;
     private double uploadSpeed = 500;
+    private boolean uploadFieldsEnabled = true;
 
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false, ui = WidgetTestApplication.class, widgetset = "com.wcs.wcslib.vaadin.widget.multifileupload.demo.DemoWidgetSet")
@@ -110,6 +101,7 @@ public class WidgetTestApplication extends UI {
         addIndeterminateSwitcher();
         addPollSwitcher();
         addMaxFileCountSlider();
+        addDisableUploadsButton();
     }
 
     private void addLabels() {
@@ -319,7 +311,7 @@ public class WidgetTestApplication extends UI {
         slider.setImmediate(true);
         slider.setMin(1);
         slider.setMax(10);
-        slider.setValue(Double.valueOf(FILE_COUNT));
+        slider.setValue((double) FILE_COUNT);
         slider.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
@@ -329,6 +321,31 @@ public class WidgetTestApplication extends UI {
             }
         });
         form.addComponent(slider);
+    }
+
+    private void addDisableUploadsButton() {
+        final WidgetTestApplication app = this;
+        Button disableButton = new Button(DISABLE_UPLOADS_CAPTION, new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                app.updateUploadsEnabled(clickEvent);
+            }
+        });
+        form.addComponent(disableButton);
+    }
+
+    private void updateUploadsEnabled(Button.ClickEvent e) {
+        uploadFieldsEnabled = !uploadFieldsEnabled;
+
+        if (uploadFieldsEnabled) {
+            e.getButton().setCaption(DISABLE_UPLOADS_CAPTION);
+        } else {
+            e.getButton().setCaption(ENABLE_UPLOADS_CAPTION);
+        }
+
+        for (MultiFileUpload upload : uploads) {
+            upload.setEnabled(uploadFieldsEnabled);
+        }
     }
 
     private class SlowUpload extends MultiFileUpload {
