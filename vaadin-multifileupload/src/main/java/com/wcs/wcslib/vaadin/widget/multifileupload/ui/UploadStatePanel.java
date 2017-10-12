@@ -112,8 +112,8 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             if (!isValidFileSize(event) || !isValidMimeType(event)) {
                 return;
             }
-            currentUploadingLayout.startStreaming(uploadQueue.get(0));
             show();
+            currentUploadingLayout.startStreaming(uploadQueue.get(0));
             if (startedHandler != null) {
                 startedHandler.handleUploadStarted();
             }
