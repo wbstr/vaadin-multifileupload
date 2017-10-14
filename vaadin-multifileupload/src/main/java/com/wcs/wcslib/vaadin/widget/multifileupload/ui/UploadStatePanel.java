@@ -25,6 +25,8 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.DefaultUploadReceiver;
 import com.wcs.wcslib.vaadin.widget.multifileupload.receiver.UploadReceiver;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,9 +37,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author gergo
  */
+@Slf4j
 public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     private static final Logger logger = Logger.getLogger(UploadStatePanel.class.getName());
@@ -79,10 +81,10 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
             //the client side file size check may not work in old browsers
             interruptUpload(uploadQueue.get(0));
             String formattedErrorMsg = UploadUtil.formatSizeErrorMessage(
-                    multiUpload.getSizeErrorMsg(),
-                    multiUpload.getMaxFileSize(),
-                    event.getContentLength(),
-                    event.getFileName());
+                multiUpload.getSizeErrorMsg(),
+                multiUpload.getMaxFileSize(),
+                event.getContentLength(),
+                event.getFileName());
             Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
             return false;
         }
@@ -91,14 +93,14 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     private boolean isValidMimeType(StreamVariable.StreamingStartEvent event) {
         if (multiUpload.getAcceptedMimeTypes() != null && !multiUpload.getAcceptedMimeTypes().isEmpty()
-                && !multiUpload.getAcceptedMimeTypes().contains(event.getMimeType())) {
+            && !multiUpload.getAcceptedMimeTypes().contains(event.getMimeType())) {
             logger.log(Level.FINE, "Mime type is not valid! File name: {0}, Mime type: {1}",
-                    new Object[]{event.getFileName(), event.getMimeType()});
+                new Object[]{event.getFileName(), event.getMimeType()});
 
             interruptUpload(uploadQueue.get(0));
             String formattedErrorMsg = UploadUtil.formatErrorMessage(
-                    multiUpload.getMimeTypeErrorMsgPattern(),
-                    event.getFileName());
+                multiUpload.getMimeTypeErrorMsgPattern(),
+                event.getFileName());
             Notification.show(formattedErrorMsg, Notification.Type.WARNING_MESSAGE);
             return false;
         }
@@ -108,13 +110,17 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     @Override
     public void streamingStarted(StreamVariable.StreamingStartEvent event) {
+        log.debug("streamingStarted - uploadQueue.isEmpty(): {}", uploadQueue.isEmpty());
         if (!uploadQueue.isEmpty()) {
             if (!isValidFileSize(event) || !isValidMimeType(event)) {
                 return;
             }
-            currentUploadingLayout.startStreaming(uploadQueue.get(0));
             show();
+            log.debug("currentUploadingLayout.startStreaming");
+            currentUploadingLayout.startStreaming(uploadQueue.get(0));
+            currentUploadingLayout.startStreaming(uploadQueue.get(0));
             if (startedHandler != null) {
+                log.debug("startedHandler.handleUploadStarted()");
                 startedHandler.handleUploadStarted();
             }
         }
@@ -152,7 +158,9 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
 
     @Override
     public void onProgress(StreamVariable.StreamingProgressEvent event) {
+        log.debug("onProgress");
         if (hasUploadInProgress()) {
+            log.debug("upload is in progress");
             long difference = event.getBytesReceived() - currentUploadingLayout.getFileDetailBean().getBytesReceived();
             currentUploadingLayout.setProgress(event.getBytesReceived(), event.getContentLength());
             currentUploadingLayout.getFileDetailBean().setBytesReceived(event.getBytesReceived());
@@ -172,6 +180,7 @@ public class UploadStatePanel extends Panel implements MultiUploadHandler {
     }
 
     private void show() {
+        log.debug("show");
         setVisible(true);
         window.refreshVisibility();
     }

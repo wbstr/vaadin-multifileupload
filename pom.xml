@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.wcs.wcslib</groupId>
     <artifactId>wcslib-vaadin-widget-multifileupload-root</artifactId>
     <packaging>pom</packaging>
     <version>3.0.2-SNAPSHOT</version>
     <name>MultiFileUpload Root Project</name>
-    
+
     <modules>
         <module>vaadin-multifileupload</module>
-        <module>vaadin-multifileupload-demo</module>
+        <!--<module>vaadin-multifileupload-demo</module>-->
     </modules>
-	
+
     <organization>
         <name>Webstar Csoport</name>
         <url>https://github.com/wbstr/</url>
     </organization>
-	
+
     <scm>
         <url>https://github.com/wbstr/vaadin-multifileupload.git</url>
         <connection>scm:git:git@github.com:wbstr/vaadin-multifileupload.git</connection>
         <developerConnection>scm:git:git@github.com:wbstr/vaadin-multifileupload.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
-    
+        <tag>HEAD</tag>
+    </scm>
+
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -59,5 +60,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

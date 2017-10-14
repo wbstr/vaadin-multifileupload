@@ -15,12 +15,14 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.text.MessageFormat;
 
 /**
- *
  * @author gergo
  */
+@Slf4j
 public class UploadUtil {
 
     public static String getHumanReadableByteCount(long bytes, boolean si) {
@@ -35,10 +37,11 @@ public class UploadUtil {
     }
 
     public static String formatSizeErrorMessage(String pattern, Long maxFileSize, Long fileSize, String fileName) {
+        log.debug("formatSizeErrorMessage");
         return MessageFormat.format(pattern,
-                getHumanReadableByteCount(maxFileSize, false),
-                getHumanReadableByteCount(fileSize, false),
-                fileName);
+            getHumanReadableByteCount(maxFileSize, false),
+            getHumanReadableByteCount(fileSize, false),
+            fileName);
     }
 
     public static String formatErrorMessage(String pattern, Object... parms) {

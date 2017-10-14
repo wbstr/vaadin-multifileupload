@@ -121,7 +121,7 @@ public class UploadStateWindow extends Window {
         return false;
     }
 
-    private void show() {
+    public void show() {
         if (this.getParent() == null) {
             UI.getCurrent().addWindow(this);
         }

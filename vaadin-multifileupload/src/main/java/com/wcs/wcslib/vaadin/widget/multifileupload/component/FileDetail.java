@@ -15,11 +15,14 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author gergo
  */
+@Slf4j
 public class FileDetail {
 
     private static final AtomicLong idCounter = new AtomicLong();
@@ -31,6 +34,7 @@ public class FileDetail {
     private final long contentLength;
 
     public FileDetail(String data) {
+        log.debug("FileDetail : {}", data);
         String[] split = data.split(DELIMITER);
         id = Long.parseLong(split[0]);
         contentLength = Long.parseLong(split[1]);
@@ -41,6 +45,7 @@ public class FileDetail {
     }
 
     public FileDetail(String caption, String mimeType, long contentLength) {
+        log.debug("FileDetail : {}", caption);
         this.id = idCounter.getAndIncrement();
         this.fileName = caption;
         this.mimeType = mimeType;

@@ -19,12 +19,14 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.renderers.ImageRenderer;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 /**
- *
  * @author gergo
  */
+@Slf4j
 public class UploadQueueGrid extends Grid<FileDetailBean> {
 
     private static final String GRID_STYLE_CLASS = "multiple-upload-queue-grid";
@@ -34,24 +36,25 @@ public class UploadQueueGrid extends Grid<FileDetailBean> {
     private int maxVisibleRows = 4;
 
     public UploadQueueGrid(UploadStatePanel uploadStatePanel) {
+        log.debug("UploadQueueGrid");
         addColumn(FileDetailBean::getFileName)
-                .setWidth(nameColumnWidth).
-                setDescriptionGenerator((FileDetailBean fileDetailBean) -> {
-                    return fileDetailBean.getFileName();
-                });
+            .setWidth(nameColumnWidth).
+            setDescriptionGenerator((FileDetailBean fileDetailBean) -> {
+                return fileDetailBean.getFileName();
+            });
         addColumn(FileDetailBean::getReadableContentLength)
-                .setWidth(sizeColumnWidth).
-                setDescriptionGenerator((FileDetailBean fileDetailBean) -> {
-                    return fileDetailBean.getReadableContentLength();
-                });
+            .setWidth(sizeColumnWidth).
+            setDescriptionGenerator((FileDetailBean fileDetailBean) -> {
+                return fileDetailBean.getReadableContentLength();
+            });
         addColumn(FileDetailBean::getCancelIcon)
-                .setWidth(cancelColumnWidth)
-                .setRenderer(new ImageRenderer(new ClickableRenderer.RendererClickListener<FileDetailBean>() {
-                    @Override
-                    public void click(ClickableRenderer.RendererClickEvent<FileDetailBean> event) {
-                        uploadStatePanel.interruptUpload(event.getItem());
-                    }
-                }));
+            .setWidth(cancelColumnWidth)
+            .setRenderer(new ImageRenderer(new ClickableRenderer.RendererClickListener<FileDetailBean>() {
+                @Override
+                public void click(ClickableRenderer.RendererClickEvent<FileDetailBean> event) {
+                    uploadStatePanel.interruptUpload(event.getItem());
+                }
+            }));
 
         setColumnReorderingAllowed(false);
         setHeightMode(HeightMode.ROW);
@@ -62,6 +65,7 @@ public class UploadQueueGrid extends Grid<FileDetailBean> {
     }
 
     public void refreshItems(List<FileDetailBean> uploadQueue) {
+        log.debug("refreshItems : {} ", uploadQueue.size());
         if (uploadQueue.size() > 1) {
             setItems(uploadQueue.subList(1, uploadQueue.size()));
             setHeightByRows(Math.min(maxVisibleRows, uploadQueue.size() - 1));

@@ -53,7 +53,7 @@ public class MultiUploadConnector extends AbstractComponentConnector implements 
         if (icon != null) {
             getWidget().icon = icon;
             getWidget().submitButton.wrapper.insertBefore(icon.getElement(),
-                    getWidget().submitButton.captionElement);
+                getWidget().submitButton.captionElement);
         }
     }
 

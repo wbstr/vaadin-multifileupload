@@ -22,8 +22,16 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.Notification;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.OutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * Server side component for the VMultiUpload widget. Pretty much hacked up together to test new Receiver support in the
@@ -33,6 +41,7 @@ import java.util.*;
  * This is a modified version of org.vaadin.easyuploads.MultiUpload.java which is part of the EasyUploads 7.0.0 Vaadin
  * addon.
  */
+@Slf4j
 @SuppressWarnings("serial")
 public class MultiUpload extends AbstractComponent implements LegacyComponent, UploadComponent {
 
@@ -57,6 +66,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     StreamVariable streamVariable = new StreamVariable() {
         @Override
         public void streamingStarted(StreamingStartEvent event) {
+            log.debug("streamingStarted : {}", event);
             uploading = true;
             interrupted = false;
             Iterator<FileDetail> iterator = getPendingFileNames().iterator();
@@ -68,32 +78,38 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             receiver.streamingStarted(new StreamingStartEvent() {
                 @Override
                 public String getMimeType() {
+                    log.debug("streamingStarted.getMimeType : {}", next.getMimeType());
                     return next.getMimeType();
                 }
 
                 @Override
                 public String getFileName() {
+                    log.debug("streamingStarted.getFileName : {}", next.getFileName());
                     return next.getFileName();
                 }
 
                 @Override
                 public long getContentLength() {
+                    log.debug("streamingStarted.getContentLength : {}", next.getContentLength());
                     return next.getContentLength();
                 }
 
                 @Override
                 public long getBytesReceived() {
+                    log.debug("streamingStarted.getBytesReceived : {}", 0);
                     return 0;
                 }
 
                 @Override
                 public void disposeStreamVariable() {
+                    log.debug("streamingStarted.disposeStreamVariable");
                 }
             });
         }
 
         @Override
         public void streamingFinished(final StreamingEndEvent event) {
+            log.debug("streamingFinished");
             uploading = false;
             interrupted = false;
             Iterator<FileDetail> iterator = getPendingFileNames().iterator();
@@ -105,21 +121,25 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             receiver.streamingFinished(new StreamingEndEvent() {
                 @Override
                 public String getMimeType() {
+                    log.debug("streamingFinished.getMimeType : {}", next.getMimeType());
                     return next.getMimeType();
                 }
 
                 @Override
                 public String getFileName() {
+                    log.debug("streamingFinished.getFileName : {}", next.getFileName());
                     return next.getFileName();
                 }
 
                 @Override
                 public long getContentLength() {
+                    log.debug("streamingFinished.getContentLength : {}", next.getContentLength());
                     return next.getContentLength();
                 }
 
                 @Override
                 public long getBytesReceived() {
+                    log.debug("streamingFinished.getBytesReceived : {}", event.getBytesReceived());
                     return event.getBytesReceived();
                 }
             });
@@ -128,6 +148,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
         @Override
         public void streamingFailed(StreamingErrorEvent event) {
+            log.debug("streamingFailed");
             uploading = false;
             interrupted = false;
             receiver.streamingFailed(event);
@@ -138,11 +159,13 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
         @Override
         public void onProgress(StreamingProgressEvent event) {
+            log.debug("onProgress");
             receiver.onProgress(event);
         }
 
         @Override
         public boolean listenProgress() {
+            log.debug("listenProgress");
             return true;
         }
 
@@ -153,6 +176,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
         @Override
         public OutputStream getOutputStream() {
+            log.debug("getOutputStream");
             return receiver.getOutputStream();
         }
     };
@@ -163,6 +187,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        log.debug("paintContent");
         target.addVariable(this, "target", streamVariable);
         target.addAttribute("maxFileSize", maxFileSize);
         target.addAttribute("sizeErrorMsg", sizeErrorMsg);
@@ -195,10 +220,12 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
+        log.debug("changeVariables");
         if (variables.containsKey("filequeue")) {
             String[] fileQueue = (String[]) variables.get("filequeue");
             List<FileDetail> newFiles = new ArrayList<>(fileQueue.length);
-
+            log.debug("newFiles : {}", newFiles);
+            log.debug("newFiles size: {}", newFiles.size());
             for (String string : fileQueue) {
                 if (pendingFiles.size() + newFiles.size() >= maxFileCount) {
                     Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.WARNING_MESSAGE);
@@ -219,8 +246,9 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
     @Override
     public void interruptUpload(long fileId) {
+        log.debug("interruptUpload");
         int ndx = 0;
-        for (ListIterator<FileDetail> it = pendingFiles.listIterator(); it.hasNext();) {
+        for (ListIterator<FileDetail> it = pendingFiles.listIterator(); it.hasNext(); ) {
             FileDetail fileDetail = it.next();
             if (fileDetail.getId() == fileId) {
                 if (ndx == 0) {
@@ -238,9 +266,17 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     }
 
     public void registerDropComponent(MultiUploadDropHandler dropHandler) {
+        log.debug("registerDropComponent");
         dropHandler.addFilesReceivedListener((List<Html5File> html5Files) -> {
             final List<FileDetail> newFiles = new ArrayList<>();
             for (Html5File html5File : html5Files) {
+
+                log.debug("pendingFiles : {}", pendingFiles);
+                log.debug("pendingFiles.size : {}", pendingFiles.size());
+
+                log.debug("newFiles : {}", newFiles);
+                log.debug("newFiles.size : {}", newFiles.size());
+
                 if (pendingFiles.size() + newFiles.size() >= maxFileCount) {
                     Notification.show(UploadUtil.formatErrorMessage(fileCountErrorMsg, maxFileCount), Notification.Type.WARNING_MESSAGE);
                     break;
@@ -259,6 +295,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     }
 
     public Collection<FileDetail> getPendingFileNames() {
+        log.debug("getPendingFileNames");
         return Collections.unmodifiableCollection(pendingFiles);
     }
 
@@ -272,6 +309,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     }
 
     public boolean isUploading() {
+        log.debug("isUploading : {}", uploading);
         return uploading;
     }
 

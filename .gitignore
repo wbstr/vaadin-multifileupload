@@ -10,3 +10,5 @@ nbactions.xml
 target/
 gwt-unitCache/
 widgetsets/
+.idea/
+*.iml

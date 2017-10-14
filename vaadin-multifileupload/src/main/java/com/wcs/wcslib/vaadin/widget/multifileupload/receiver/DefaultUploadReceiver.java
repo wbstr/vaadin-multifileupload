@@ -15,6 +15,8 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.receiver;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,9 +26,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- *
  * @author gergo
  */
+@Slf4j
 public class DefaultUploadReceiver implements UploadReceiver {
 
     private static final String TEMPFILE_NAME_PREFIX = "upload_tmpfile_";
@@ -34,6 +36,7 @@ public class DefaultUploadReceiver implements UploadReceiver {
 
     @Override
     public OutputStream receiveUpload() {
+        log.debug("receiveUpload");
         try {
             if (file == null) {
                 file = createTempFile();
@@ -46,6 +49,7 @@ public class DefaultUploadReceiver implements UploadReceiver {
     }
 
     private File createTempFile() {
+        log.debug("createTempFile");
         final String tempFileName = TEMPFILE_NAME_PREFIX + System.currentTimeMillis();
         try {
             return File.createTempFile(tempFileName, null);
@@ -56,6 +60,7 @@ public class DefaultUploadReceiver implements UploadReceiver {
 
     @Override
     public void deleteTempFile() {
+        log.debug("deleteTempFile");
         if (file != null && file.exists()) {
             file.delete();
             file = null;
@@ -64,6 +69,7 @@ public class DefaultUploadReceiver implements UploadReceiver {
 
     @Override
     public InputStream getStream() {
+        log.debug("getStream");
         try {
             if (file != null) {
                 return new FileInputStream(file);

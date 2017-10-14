@@ -7,6 +7,8 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Html5File;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +17,7 @@ import java.util.List;
 /**
  * Created by Sander on 10-11-2016.
  */
+@Slf4j
 public class MultiUploadDropHandler extends DragAndDropWrapper implements DropHandler {
 
     private final Collection<FilesReceivedListener> listeners = new ArrayList<>();
@@ -25,6 +28,7 @@ public class MultiUploadDropHandler extends DragAndDropWrapper implements DropHa
     }
 
     public void addFilesReceivedListener(FilesReceivedListener filesReceivedListener) {
+        log.debug("addFilesReceivedListener : {}", filesReceivedListener);
         listeners.add(filesReceivedListener);
     }
 
