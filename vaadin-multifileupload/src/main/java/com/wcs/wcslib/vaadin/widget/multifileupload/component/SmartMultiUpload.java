@@ -21,11 +21,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Upload;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 /**
  * @author gergo
  */
+@Slf4j
 public class SmartMultiUpload extends CustomComponent {
 
     private static final String DEFAULT_UPLOAD_BUTTON_CAPTION = "...";
@@ -47,6 +50,7 @@ public class SmartMultiUpload extends CustomComponent {
     private MultiUploadDropHandler dropHandler;
 
     public SmartMultiUpload(MultiUploadHandler handler, final boolean multiple) {
+        log.debug("SmartMultiUpload");
         this.handler = handler;
         this.multiple = multiple;
     }
@@ -54,6 +58,7 @@ public class SmartMultiUpload extends CustomComponent {
     @Override
     public void attach() {
         super.attach();
+        log.debug("attach");
         webBrowser = getUI().getPage().getWebBrowser();
         createUpload(multiple);
         setCompositionRoot(upload);
@@ -70,10 +75,12 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     public UploadComponent getUpload() {
+        log.debug("getUpload");
         return upload;
     }
 
     public void interruptUpload(long fileId) {
+        log.debug("interruptUpload {}", fileId);
         if (upload != null) {
             upload.interruptUpload(fileId);
         }
@@ -135,6 +142,7 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     public void setAcceptFilter(String acceptFilter) {
+        log.debug("setAcceptFilter : {}", acceptFilter);
         this.acceptFilter = acceptFilter;
         initAcceptFilter();
     }
@@ -144,6 +152,7 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     public void setAcceptedMimeTypes(List<String> mimeTypes) {
+        log.debug("setAcceptedMimeTypes : {}", mimeTypes);
         this.acceptedMimeTypes = mimeTypes;
         initAcceptedMimeTypes();
     }
@@ -175,14 +184,18 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     private void createUpload(boolean multiple) {
+        log.debug("createUpload : {}", multiple);
         if (!multiple || isBrowserNotHtml5Capable()) {
+            log.debug("single");
             initSingleUpload();
         } else {
+            log.debug("multiple");
             initMultiUpload();
         }
     }
 
     private void initMultiUpload() {
+        log.debug("initMultiUpload");
         upload = new MultiUpload();
         MultiUpload multiUpload = (MultiUpload) upload;
         multiUpload.setHandler(handler);
@@ -194,6 +207,7 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     private void initSingleUpload() {
+        log.debug("initSingleUpload");
         upload = new CustomUpload();
         Upload singleUpload = (Upload) upload;
         singleUpload.setReceiver((String filename, String mimeType) -> handler.getOutputStream());
@@ -207,8 +221,8 @@ public class SmartMultiUpload extends CustomComponent {
 
     private boolean isBrowserNotHtml5Capable() {
         return (webBrowser.isOpera() && webBrowser.getBrowserMajorVersion() < 15)
-                || (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() < 10)
-                || webBrowser.isTooOldToFunctionProperly();
+            || (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() < 10)
+            || webBrowser.isTooOldToFunctionProperly();
     }
 
     private void initUploadButtonCaptions() {
@@ -274,6 +288,7 @@ public class SmartMultiUpload extends CustomComponent {
     }
 
     public DragAndDropWrapper createDropComponent(Component component) {
+        log.debug("createDropComponent");
         dropHandler = new MultiUploadDropHandler(component);
         if (upload != null && upload instanceof MultiUpload) {
             ((MultiUpload) upload).registerDropComponent(dropHandler);

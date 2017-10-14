@@ -21,11 +21,14 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Notification;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.SmartMultiUpload;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 /**
  * @author gergo
  */
+@Slf4j
 public class MultiFileUpload extends CustomComponent {
 
     private SmartMultiUpload smartUpload;
@@ -33,6 +36,7 @@ public class MultiFileUpload extends CustomComponent {
     private String interruptedMsg = "All uploads have been interrupted.";
 
     public MultiFileUpload(UploadStartedHandler uploadStartedHandler, UploadFinishedHandler uploadFinishedHandler, UploadStateWindow uploadStateWindow, boolean multiple) {
+        log.debug("MultiFileUpload");
         uploadStatePanel = createStatePanel(uploadStateWindow);
         initSmartUpload(uploadStartedHandler, uploadFinishedHandler, multiple);
     }
@@ -58,9 +62,8 @@ public class MultiFileUpload extends CustomComponent {
     }
 
     /**
-     *
      * @param component Wraps the given component to be a drop area for file upload. Only supported for HTML5 multiple
-     * upload.
+     *                  upload.
      * @return wrapped component
      */
     public DragAndDropWrapper createDropComponent(Component component) {
@@ -72,6 +75,7 @@ public class MultiFileUpload extends CustomComponent {
     }
 
     private void initSmartUpload(UploadStartedHandler uploadStartedHandler, UploadFinishedHandler uploadFinishedHandler, boolean multiple) {
+        log.debug("initSmartUpload : {}", multiple);
         smartUpload = new SmartMultiUpload(uploadStatePanel, multiple);
 
         uploadStatePanel.setMultiUpload(smartUpload);
@@ -123,7 +127,7 @@ public class MultiFileUpload extends CustomComponent {
 
     /**
      * @param pattern Pattern of the error message, which occurs when a user uploaded too big file. ({0} maxFileSize,
-     * {1} fileSize, {2} fileName)
+     *                {1} fileSize, {2} fileName)
      */
     public void setSizeErrorMsgPattern(String pattern) {
         smartUpload.setSizeErrorMsgPattern(pattern);
@@ -162,7 +166,7 @@ public class MultiFileUpload extends CustomComponent {
 
     /**
      * @param pattern Pattern of the error message, which occurs when a user uploaded a file that is not match to the
-     * given mime types. ({0} fileName)
+     *                given mime types. ({0} fileName)
      */
     public void setMimeTypeErrorMsgPattern(String pattern) {
         smartUpload.setMimeTypeErrorMsgPattern(pattern);
@@ -226,12 +230,14 @@ public class MultiFileUpload extends CustomComponent {
 
     @Override
     public void attach() {
+        log.debug("attach");
         super.attach();
         uploadStatePanel.getWindow().addPanel(uploadStatePanel);
     }
 
     @Override
     public void detach() {
+        log.debug("detach");
         if (uploadStatePanel.hasUploadInProgress()) {
             interruptAll();
             Notification.show(uploadStatePanel.getCaption(), interruptedMsg, Notification.Type.WARNING_MESSAGE);

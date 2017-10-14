@@ -22,11 +22,13 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author gergo
  */
+@Slf4j
 public class ConfirmDialog extends Window {
 
     private ConfirmAction action;
@@ -39,6 +41,7 @@ public class ConfirmDialog extends Window {
     private String confirmNo = "No";
 
     public ConfirmDialog() {
+        log.debug("ConfirmDialog");
         setClosable(false);
         setModal(true);
         setSizeUndefined();
@@ -47,6 +50,7 @@ public class ConfirmDialog extends Window {
     }
 
     private void initForm() {
+        log.debug("initForm");
         VerticalLayout windowLayout = new VerticalLayout();
         setContent(windowLayout);
         windowLayout.setSizeUndefined();
@@ -62,6 +66,7 @@ public class ConfirmDialog extends Window {
     }
 
     private HorizontalLayout createButtonLayout() {
+        log.debug("createButtonLayout");
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.setSpacing(true);
 
@@ -84,12 +89,14 @@ public class ConfirmDialog extends Window {
     }
 
     public void hide() {
+        log.debug("hide");
         if (getParent() != null && getParent().getUI() != null) {
             getParent().getUI().removeWindow(this);
         }
     }
 
     public void show() {
+        log.debug("show");
         if (this.getParent() == null) {
             UI.getCurrent().addWindow(this);
         }

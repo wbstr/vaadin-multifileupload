@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.wcs.wcslib</groupId>
     <artifactId>wcslib-vaadin-widget-multifileupload</artifactId>
     <packaging>jar</packaging>
     <version>3.0.2-SNAPSHOT</version>
     <name>MultiFileUpload</name>
-    
+
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -20,9 +21,10 @@
         <project.build.java.version>1.8</project.build.java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version.vaadin>8.0.3</version.vaadin>
         <widgetset>com.wcs.wcslib.vaadin.widget.multifileupload.WidgetSet</widgetset>
-		
+
+        <version.vaadin>8.1.5</version.vaadin>
+
         <!-- ZIP Manifest fields -->
         <Implementation-Version>${project.version}</Implementation-Version>
         <!-- Must not change this because of the Directory -->
@@ -48,7 +50,7 @@
             </snapshots>
         </repository>
     </repositories>
-	
+
     <pluginRepositories>
         <pluginRepository>
             <id>vaadin-snapshots</id>
@@ -74,8 +76,19 @@
             <version>${version.vaadin}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.12.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -150,7 +163,7 @@
                 </executions>
             </plugin>
         </plugins>
-		
+
         <!-- This is needed for the sources required by the client-side compiler to be 
         included in the produced JARs -->
         <resources>
@@ -165,7 +178,7 @@
             </resource>
         </resources>
     </build>
-    
+
     <distributionManagement>
         <repository>
             <id>nexus.wcs.local</id>
@@ -176,5 +189,5 @@
             <url>http://nexus.wcs.local:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-    
+
 </project>

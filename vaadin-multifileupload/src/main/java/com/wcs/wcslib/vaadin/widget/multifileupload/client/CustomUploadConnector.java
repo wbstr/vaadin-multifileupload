@@ -24,10 +24,10 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.shared.ui.Connect;
 import com.wcs.wcslib.vaadin.widget.multifileupload.component.CustomUpload;
+
 import java.util.Arrays;
 
 /**
- *
  * @author gergo
  */
 @Connect(CustomUpload.class)
@@ -79,7 +79,7 @@ public class CustomUploadConnector extends UploadConnector {
         if (icon != null) {
             getWidget().icon = icon;
             getWidget().submitButton.wrapper.insertBefore(icon.getElement(),
-                    getWidget().submitButton.captionElement);
+                getWidget().submitButton.captionElement);
         }
     }
 }
