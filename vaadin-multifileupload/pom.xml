@@ -7,6 +7,10 @@
     <packaging>jar</packaging>
     <version>4.0.1-SNAPSHOT</version>
     <name>MultiFileUpload</name>
+
+    <organization>
+        <name>Webstar Csoport</name>
+    </organization>
     
     <licenses>
         <license>
