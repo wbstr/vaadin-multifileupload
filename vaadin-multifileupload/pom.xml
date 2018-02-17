@@ -169,7 +169,36 @@
             </resource>
         </resources>
     </build>
-    
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>assembly/assembly.xml</descriptor>
+                            </descriptors>
+                            <attach>false</attach>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>install</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <distributionManagement>
         <repository>
             <id>nexus.wcs.local</id>
