@@ -5,7 +5,7 @@
     <groupId>com.wcs.wcslib</groupId>
     <artifactId>wcslib-vaadin-widget-multifileupload-demo</artifactId>
     <packaging>war</packaging>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>4.0</version>
     <name>MultiFileUpload Demo</name>
     
     <licenses>
