@@ -21,7 +21,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Upload;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gergo
@@ -32,6 +35,7 @@ public class SmartMultiUpload extends CustomComponent {
     private final MultiUploadHandler handler;
     private final boolean multiple;
     private UploadComponent upload;
+    private Set<String> uploadButtonStyles = new HashSet<>();
     private WebBrowser webBrowser;
     private String singleUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
     private String multiUploadCaption = DEFAULT_UPLOAD_BUTTON_CAPTION;
@@ -58,6 +62,7 @@ public class SmartMultiUpload extends CustomComponent {
         createUpload(multiple);
         setCompositionRoot(upload);
         initUploadButtonCaptions();
+        initUploadButtonStyles();
         initMaxFileSize();
         initSizeErrorMsg();
         initAcceptFilter();
@@ -83,6 +88,16 @@ public class SmartMultiUpload extends CustomComponent {
         this.singleUploadCaption = singleUploadCaption;
         this.multiUploadCaption = multiUploadCaption;
         initUploadButtonCaptions();
+    }
+
+    public void addUploadButtonStyleName(String styleName) {
+        uploadButtonStyles.add(styleName);
+        initUploadButtonStyles();
+    }
+
+    public void removeUploadButtonStyleName(String styleName) {
+        uploadButtonStyles.remove(styleName);
+        initUploadButtonStyles();
     }
 
     public void setMaxFileSize(long maxFileSize) {
@@ -216,6 +231,12 @@ public class SmartMultiUpload extends CustomComponent {
             upload.setButtonCaption(multiUploadCaption);
         } else if (upload instanceof Upload) {
             upload.setButtonCaption(singleUploadCaption);
+        }
+    }
+
+    private void initUploadButtonStyles() {
+        if(upload != null) {
+            upload.setButtonStyles(uploadButtonStyles);
         }
     }
 

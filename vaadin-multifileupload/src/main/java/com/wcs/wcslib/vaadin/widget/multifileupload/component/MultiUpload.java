@@ -42,6 +42,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
     private List<Long> interruptedFileIds = new ArrayList<>();
     private MultiUploadHandler receiver;
     private String buttonCaption = "...";
+    private Set<String> buttonStyles = new HashSet<>();
     private boolean uploading;
     private boolean ready;
     private boolean interrupted = false;
@@ -180,6 +181,7 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
             ready = false;
         }
         target.addAttribute("buttoncaption", getButtonCaption());
+        target.addAttribute("buttonstyle", getButtonStyles());
         if (!interruptedFileIds.isEmpty()) {
             target.addAttribute("interruptedFileIds", interruptedFileIds.toArray(new Long[interruptedFileIds.size()]));
             interruptedFileIds = new ArrayList<>();
@@ -269,6 +271,25 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
 
     public String getButtonCaption() {
         return buttonCaption;
+    }
+
+    @Override
+    public void addButtonStyleName(String styleName) {
+        buttonStyles.add(styleName);
+    }
+
+    @Override
+    public void removeButtonStyleName(String styleName) {
+        buttonStyles.remove(styleName);
+    }
+
+    @Override
+    public void setButtonStyles(Set<String> styleNames) {
+        buttonStyles = styleNames;
+    }
+
+    public String getButtonStyles() {
+        return String.join(" ", buttonStyles);
     }
 
     public boolean isUploading() {
