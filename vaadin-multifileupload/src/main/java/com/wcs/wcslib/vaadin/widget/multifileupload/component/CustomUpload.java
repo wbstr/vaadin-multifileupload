@@ -18,7 +18,10 @@ package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.*;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gergo
@@ -31,10 +34,12 @@ public class CustomUpload extends Upload implements UploadComponent {
     private String acceptFilter;
     private List<String> acceptedMimeTypes;
     private String mimeTypeErrorMsg;
+    private Set<String> buttonStyles = new HashSet<>();
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
+        target.addAttribute("buttonstyle", getButtonStyles());
         target.addAttribute("maxFileSize", maxFileSize);
         target.addAttribute("sizeErrorMsg", sizeErrorMsg);
         target.addAttribute("acceptFilter", acceptFilter);
@@ -48,6 +53,25 @@ public class CustomUpload extends Upload implements UploadComponent {
             target.addAttribute("focus", true);
             focus = false;
         }
+    }
+
+    @Override
+    public void addButtonStyleName(String styleName) {
+        buttonStyles.add(styleName);
+    }
+
+    @Override
+    public void removeButtonStyleName(String styleName) {
+        buttonStyles.remove(styleName);
+    }
+
+    @Override
+    public void setButtonStyles(Set<String> styleNames) {
+        buttonStyles = styleNames;
+    }
+
+    public String getButtonStyles() {
+        return String.join(" ", buttonStyles);
     }
 
     @Override

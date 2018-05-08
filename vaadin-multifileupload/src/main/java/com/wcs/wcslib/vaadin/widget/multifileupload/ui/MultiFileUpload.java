@@ -89,6 +89,14 @@ public class MultiFileUpload extends CustomComponent {
         smartUpload.setUploadButtonIcon(icon);
     }
 
+    public void addUploadButtonStyleName(String styleName) {
+        smartUpload.addUploadButtonStyleName(styleName);
+    }
+
+    public void removeUploadButtonStyleName(String styleName) {
+        smartUpload.removeUploadButtonStyleName(styleName);
+    }
+
     public void interruptAll() {
         uploadStatePanel.interruptAll();
     }

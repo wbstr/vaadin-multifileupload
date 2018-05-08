@@ -17,6 +17,7 @@ package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
 import com.vaadin.ui.Component;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -35,6 +36,12 @@ public interface UploadComponent extends Component, Component.Focusable {
     void setMimeTypeErrorMsgPattern(String pattern);
 
     void setButtonCaption(String buttonCaption);
+
+    void addButtonStyleName(String styleName);
+
+    void removeButtonStyleName(String styleName);
+
+    void setButtonStyles(Set<String> styleNames);
 
     void interruptUpload(long fileId);
 

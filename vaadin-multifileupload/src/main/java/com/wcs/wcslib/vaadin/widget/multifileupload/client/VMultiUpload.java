@@ -155,6 +155,12 @@ public class VMultiUpload extends SimplePanel implements Paintable {
         paintableId = uidl.getId();
         receiverUri = client.translateVaadinUri(uidl.getStringVariable("target"));
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
+        if(uidl.hasAttribute("buttonstyle")) {
+            for(String style : uidl.getStringAttribute("buttonstyle").split(" ")) {
+                submitButton.addStyleName(style);
+                submitButton.addStyleName("v-button-"+style);
+            }
+        }
         fu.setName(paintableId + "_file");
 
         if (uidl.hasAttribute("enabled")) {
