@@ -123,7 +123,9 @@ public class MultiUpload extends AbstractComponent implements LegacyComponent, U
                     return event.getBytesReceived();
                 }
             });
-            pendingFiles.remove(0);
+            if (!pendingFiles.isEmpty()) {
+                pendingFiles.remove(0);
+            }
         }
 
         @Override
