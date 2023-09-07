@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  * @author gergo
  */
 public class UploadStatePanel extends Panel implements MultiUploadHandler {
-
+    private static final long serialVersionUID = 8626939206459734557L;
     private static final Logger logger = Logger.getLogger(UploadStatePanel.class.getName());
     private static final String PANEL_STLYE_CLASS = "multiple-upload-state-panel";
     private final List<FileDetailBean> uploadQueue = new ArrayList<>();

@@ -15,13 +15,14 @@
  */
 package com.wcs.wcslib.vaadin.widget.multifileupload.component;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author gergo
  */
-public class FileDetail {
-
+public class FileDetail implements Serializable {
+    private static final long serialVersionUID = 540174746962917386L;
     private static final AtomicLong idCounter = new AtomicLong();
 
     private static final String DELIMITER = "---xXx---";

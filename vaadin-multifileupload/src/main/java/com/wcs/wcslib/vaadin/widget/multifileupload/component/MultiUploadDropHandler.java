@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Sander on 10-11-2016.
  */
 public class MultiUploadDropHandler extends DragAndDropWrapper implements DropHandler {
-
+    private static final long serialVersionUID = 8013374463449156963L;
     private final Collection<FilesReceivedListener> listeners = new ArrayList<>();
 
     public MultiUploadDropHandler(Component root) {

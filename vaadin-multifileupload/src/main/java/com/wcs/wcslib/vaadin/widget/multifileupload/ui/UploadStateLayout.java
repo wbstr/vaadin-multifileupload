@@ -29,7 +29,7 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.component.UploadUtil;
  * @author gergo
  */
 public class UploadStateLayout extends CssLayout {
-
+    private static final long serialVersionUID = -2836560779519994667L;
     private static final String CANCEL_BUTTON_STYLE_CLASS = "multiple-upload-state-cancelbutton";
     private static final String CANCEL_BUTTON_LAYOUT_STYLE_CLASS = "multiple-upload-state-cancelbuttonlayout";
     private final Label fileName = new Label();

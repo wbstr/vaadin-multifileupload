@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class SimpleFileUploadListener implements
         Upload.StartedListener, Upload.ProgressListener, Upload.FailedListener, Upload.FinishedListener {
-
+    private static final long serialVersionUID = 6054389583426914366L;
     private final MultiUploadHandler handler;
 
     public SimpleFileUploadListener(MultiUploadHandler handler) {

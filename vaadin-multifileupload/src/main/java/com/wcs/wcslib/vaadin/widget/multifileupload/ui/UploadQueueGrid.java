@@ -26,7 +26,7 @@ import java.util.List;
  * @author gergo
  */
 public class UploadQueueGrid extends Grid<FileDetailBean> {
-
+    private static final long serialVersionUID = -3418839627408741300L;
     private static final String GRID_STYLE_CLASS = "multiple-upload-queue-grid";
     protected int cancelColumnWidth = 50;
     protected int nameColumnWidth = 170;

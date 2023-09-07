@@ -33,9 +33,8 @@ import java.util.*;
  * This is a modified version of org.vaadin.easyuploads.MultiUpload.java which is part of the EasyUploads 7.0.0 Vaadin
  * addon.
  */
-@SuppressWarnings("serial")
 public class MultiUpload extends AbstractComponent implements LegacyComponent, UploadComponent {
-
+    private static final long serialVersionUID = 4488460374487355241L;
     private boolean focus = false;
     private int tabIndex = 0;
     List<FileDetail> pendingFiles = new ArrayList<>();
