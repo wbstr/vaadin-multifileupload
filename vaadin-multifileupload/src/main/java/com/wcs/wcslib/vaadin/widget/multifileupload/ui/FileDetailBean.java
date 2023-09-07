@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author gergo
  */
 public class FileDetailBean implements Serializable {
-
+    private static final long serialVersionUID = -314729461547381486L;
     private final long id;
     private final String fileName;
     private final long contentLength;

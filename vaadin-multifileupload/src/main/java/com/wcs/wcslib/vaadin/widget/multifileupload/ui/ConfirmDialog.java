@@ -29,6 +29,7 @@ import com.vaadin.ui.Window;
  */
 public class ConfirmDialog extends Window {
 
+    private static final long serialVersionUID = -797988641108717874L;
     private ConfirmAction action;
     private Label question;
     private Button yes;

@@ -27,7 +27,7 @@ import java.util.List;
  * @author gergo
  */
 public class MultiFileUpload extends CustomComponent {
-
+    private static final long serialVersionUID = -2105861810633493662L;
     private SmartMultiUpload smartUpload;
     private UploadStatePanel uploadStatePanel;
     private String interruptedMsg = "All uploads have been interrupted.";

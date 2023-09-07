@@ -27,7 +27,7 @@ import java.util.List;
  * @author gergo
  */
 public class SmartMultiUpload extends CustomComponent {
-
+    private static final long serialVersionUID = -6092053963894681887L;
     private static final String DEFAULT_UPLOAD_BUTTON_CAPTION = "...";
     private final MultiUploadHandler handler;
     private final boolean multiple;

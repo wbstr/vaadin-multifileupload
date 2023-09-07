@@ -24,7 +24,7 @@ import java.util.List;
  * @author gergo
  */
 public class CustomUpload extends Upload implements UploadComponent {
-
+    private static final long serialVersionUID = -3243301500896767738L;
     private boolean focus = false;
     private long maxFileSize;
     private String sizeErrorMsg;

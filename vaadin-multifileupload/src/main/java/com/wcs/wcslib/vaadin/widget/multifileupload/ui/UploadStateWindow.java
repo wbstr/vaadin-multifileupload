@@ -30,7 +30,7 @@ import java.util.List;
  */
 @StyleSheet("uploadstatewindow.css")
 public class UploadStateWindow extends Window {
-
+    private static final long serialVersionUID = -274632641783534434L;
     private static final String CANCEL_ICON = "../multifileupload/remove_small.png";
     private static final String WINDOW_STYLE_CLASS = "multiple-upload-state-window";
     private static final String WINDOW_LAYOUT_STYLE_CLASS = "multiple-upload-state-window-layout";
